@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container">
+        <form method="post" action="{% url 'add-ice'%}">
+            <legend class="border-bottom mb-4"> Add Type and Price</legend>
+            {% csrf_token %}
+            {{ form_type|crispy }}
+            <div class="form-group text-center">
+                <button class="btn btn-outline-info" type="submit"> Add Type</button>
+            </div>
+        </form>
+
+        <form method="POST" action="{% url 'add-ice'%}">
+            {% csrf_token %}
+            <fildset class="form-group">
+                <legend class="border-bottom mb-4"> Add Flavour</legend>
+                {{ form_flavour|crispy }}
+            </fildset>
+            <div class="form-group text-center">
+                <button class="btn btn-outline-info" type="submit"> Add Flavour</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

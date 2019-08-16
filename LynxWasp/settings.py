@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'product_manager_ices',
     'cloudinary',
+    'users_app.apps.UsersConfig',
 ]
 
 MIDDLEWARE = [
@@ -139,3 +140,6 @@ MEDIA_URL= "/media/"
 
 # close session at clos page
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+
+AUTH_USER_MODEL = "users_app.MyUser"

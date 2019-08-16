@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Twitecs</title>
+    <title>LynxWasp</title>
     {% load static %}
     {% load cloudinary %}
 
@@ -32,34 +32,38 @@
 
 <body>
 
-{% block navbar %}
-    {% include "upper_navbar.html" %}<!-- NAVBAR-->
-{% endblock %}
-{% block description %}
-{% endblock %}
-<!--django messages--->
-<div class="text-center">
-    {% if message %}
-        <ul class="messages">
-            {% for mess in message %}
-                <li{% if mess.tags %} class="{{ mess.tags }}"{% endif %}>{{ mess }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+<div class="container"> {#DIV CONTAINER#}
+
+    {% block navbar %}
+        {% include "upper_navbar.html" %}<!-- NAVBAR-->
+    {% endblock %}
+    {% block description %}
+    {% endblock %}
+    <!--django messages--->
+    <div class="text-center">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+
+
+    {% block content %}
+
+
+
+    {% endblock %}
+
+
+
+
+
+    {% block footer %}
+    {% endblock %}
 </div>
-
-{% block content %}
-
-
-{% endblock %}
-
-
-
-
-
-{% block footer %}
-{% endblock %}
-
 </body>
 
 </html>

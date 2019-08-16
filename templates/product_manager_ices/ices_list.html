@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load cloudinary %}
+{% block content %}
+    <ul>
+        {% for ice in object_list %}
+
+            <li>
+                {{ ice }}
+            </li>
+
+        {% endfor %}
+    </ul>
+
+
+
+
+
+{% endblock content %}
+
+
