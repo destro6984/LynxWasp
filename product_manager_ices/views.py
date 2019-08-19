@@ -1,12 +1,14 @@
+from django import forms
 from django.contrib import messages
+
 from django.shortcuts import render, redirect
 
 # Create your views here.
-from django.views.generic import ListView
+from django.views.generic import ListView, CreateView
 from django.views.generic.base import View
 
-from product_manager_ices.forms import AddIceForm, AddFlavourForm
-from product_manager_ices.models import Ices
+from product_manager_ices.forms import AddIceForm, AddFlavourForm, AddOrder
+from product_manager_ices.models import Ices, Order
 
 
 class Homepage(View):
@@ -42,4 +44,13 @@ class AddIce(View):
 
 class IcesView(ListView):
     model = Ices
+
+class CreateOrder(View):
+    def get(self,request):
+        # AddIceForm.base_fields['price'] = forms.ModelChoiceField(queryset=Price.objects.all())
+        # AddIceForm.base_fields['type'] = forms.ModelChoiceField(queryset=Ices.objects.all())
+        add_ice_form=AddIceForm()
+        add_order_form=AddOrder()
+        return render(request, 'product_manager_ices/order_form.html', context={"add_ice_form": add_ice_form,
+                                                                              "add_order_form": add_order_form, })
 

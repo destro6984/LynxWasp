@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load cloudinary %}
+{% block content %}
+    <form method="post">{% csrf_token %}
+        {% for choice in add_ice_form %}
+            {{ choice.choice_label }}
+            <span class="radio">{{ choice.tag }}</span>
+        {% endfor %}
+        {{ add_ice_form|crispy }}
+        {{ add_order_form|crispy }}
+        <input type="submit" value="Save">
+    </form>
+
+{% endblock content %}
+
+

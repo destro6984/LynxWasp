@@ -4,10 +4,11 @@
 {% load cloudinary %}
 {% block content %}
     <ul>
-        {% for ice in object_list %}
+        {% for ice in ices_list %}
 
             <li>
-                {{ ice }}
+                {{ ice.type}}  {{ ice.price }} {{ ice.flavour_type.all}}
+
             </li>
 
         {% endfor %}
