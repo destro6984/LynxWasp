@@ -10,23 +10,23 @@ class Flavour(models.Model):
     def __str__(self):
         return f"Flavour:{self.flavour}"
 
+
 class Ices(models.Model):
     type = models.CharField(max_length=50)
-    # price=models.ForeignKey(Price,on_delete=models.DO_NOTHING)
     price = models.DecimalField(max_digits=5, decimal_places=2)
-    flavour_type=models.ManyToManyField(Flavour)
+    # flavour_type=models.ManyToManyField(Flavour)
     def __str__(self):
-        return f"price:{self.price}, type:{self.type},Flavour:{self.flavour_type}"
-
+        return f"price:{self.price}, type:{self.type}"
 
 class OrderItem(models.Model):
     # worker = models.ForeignKey(MyUser,on_delete=models.CASCADE)
     # ordered = models.BooleanField(default=False)
     ice = models.ForeignKey(Ices, on_delete=models.CASCADE)
+    flavour=models.ManyToManyField(Flavour)
     quantity = models.IntegerField(default=1)
 
     def __str__(self):
-        return f"{self.quantity} of {self.ice.type}"
+        return f"{self.quantity} of {self.ice.type} {self.flavour}"
 
     def get_total_ice_price(self):
         return self.quantity * self.ice.price
@@ -82,34 +82,3 @@ class Order(models.Model):
         # if self.coupon:
         #     total -= self.coupon.amount
         return total
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-class Order(models.Model):
-    ice = models.ManyToManyField(Ices)
-    sell_time = models.DateTimeField(auto_now_add=True)
-    # worker=models.ForeignKey(MyUser,on_delete=models.SET_NULL, null=True)
-
-    def get_cart_items(self):
-        return self.ice.all()
-
-    def get_cart_total(self):
-        return sum([ice.price for ice in self.ice.all()])
-
-    def __str__(self):
-        return f"sell_time:{self.sell_time}"

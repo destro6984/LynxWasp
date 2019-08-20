@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect
 from django.views.generic import ListView, CreateView
 from django.views.generic.base import View
 
-from product_manager_ices.forms import AddIceForm, AddFlavourForm, AddOrder
+from product_manager_ices.forms import AddIceForm, AddFlavourForm, AddOrderItem
 from product_manager_ices.models import Ices, Order
 
 
@@ -49,8 +49,17 @@ class CreateOrder(View):
     def get(self,request):
         # AddIceForm.base_fields['price'] = forms.ModelChoiceField(queryset=Price.objects.all())
         # AddIceForm.base_fields['type'] = forms.ModelChoiceField(queryset=Ices.objects.all())
-        add_ice_form=AddIceForm()
-        add_order_form=AddOrder()
-        return render(request, 'product_manager_ices/order_form.html', context={"add_ice_form": add_ice_form,
-                                                                              "add_order_form": add_order_form, })
+        add_order_form=AddOrderItem()
+        return render(request, 'product_manager_ices/order_form.html', context={"add_order_form": add_order_form, })
+    def post(self,request):
+        add_order_form = AddOrderItem(request.POST)
+        # if add_order_form.is_valid():
+        #     add_order_form.save(commit=False)
+        #     messages.success(request, "Flavour Added")
+        #     return redirect("homepage")
+        # else:
+        #     add_order_form=AddOrderItem()
+        #     messages.success(request, "Wrong Data")
+        return render(request, 'product_manager_ices/order_form.html', context={"add_order_form": add_order_form})
+
 
