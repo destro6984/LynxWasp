@@ -18,11 +18,9 @@ class AddFlavourForm(ModelForm):
         model=Flavour
         fields = '__all__'
 
-class AddOrderItem(ModelForm):
+class AddOrderItem(forms.Form):
     flavoures = [(flav.id, flav.flavour) for flav in Flavour.objects.all()]
     type_ice = [(type_ice.id, Ices.objects.filter(id=type_ice.id)) for type_ice in Ices.objects.all()]
-    ice = forms.ChoiceField(widget=forms.RadioSelect, choices=type_ice)
+    ice = forms.ModelChoiceField(widget=forms.RadioSelect, queryset=Ices.objects.all())
     flavour = forms.MultipleChoiceField(choices=flavoures, widget=forms.CheckboxSelectMultiple)
-    class Meta:
-        model=OrderItem
-        fields = ["ice","quantity","flavour"]
+    quantity= forms.IntegerField(min_value=1)

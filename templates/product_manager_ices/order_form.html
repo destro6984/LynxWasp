@@ -12,7 +12,11 @@
         {{ add_order_form|crispy }}
         <input type="submit" value="Save">
     </form>
-
+    <ul>
+{% for ices in order_in_cart %}
+    <li>{{ ices.ices_ordered }}</li>
+{% endfor %}
+    </ul>
 {% endblock content %}
 
 

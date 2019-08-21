@@ -8,7 +8,7 @@ from django.views.generic import ListView, CreateView
 from django.views.generic.base import View
 
 from product_manager_ices.forms import AddIceForm, AddFlavourForm, AddOrderItem
-from product_manager_ices.models import Ices, Order
+from product_manager_ices.models import Ices, Order, OrderItem
 
 
 class Homepage(View):
@@ -50,16 +50,24 @@ class CreateOrder(View):
         # AddIceForm.base_fields['price'] = forms.ModelChoiceField(queryset=Price.objects.all())
         # AddIceForm.base_fields['type'] = forms.ModelChoiceField(queryset=Ices.objects.all())
         add_order_form=AddOrderItem()
-        return render(request, 'product_manager_ices/order_form.html', context={"add_order_form": add_order_form, })
+        order_in_cart=Order.objects.all()
+        return render(request, 'product_manager_ices/order_form.html', context={"add_order_form": add_order_form,
+                                                                                "order_in_cart":order_in_cart})
     def post(self,request):
         add_order_form = AddOrderItem(request.POST)
-        # if add_order_form.is_valid():
-        #     add_order_form.save(commit=False)
-        #     messages.success(request, "Flavour Added")
-        #     return redirect("homepage")
-        # else:
-        #     add_order_form=AddOrderItem()
-        #     messages.success(request, "Wrong Data")
+        valid = add_order_form.is_valid()
+        if valid:
+            ice=add_order_form.cleaned_data.get('ice')
+            quantity=add_order_form.cleaned_data.get('quantity')
+            ice_in_order=OrderItem.objects.create(ice=ice,quantity=quantity)
+            ice_in_order.flavour.set(request.POST.getlist('flavour'))
+            ord=Order.objects.create()
+            ord.ices_ordered.add(ice_in_order)
+            messages.success(request, "Order Added")
+            return redirect("create-order")
+        else:
+            add_order_form=AddOrderItem()
+            messages.success(request, "Wrong Data")
         return render(request, 'product_manager_ices/order_form.html', context={"add_order_form": add_order_form})
 
 

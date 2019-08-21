@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crispy_forms',
-    'product_manager_ices',
+    'product_manager_ices.apps.ProductManagerIcesConfig',
     'cloudinary',
     'users_app.apps.UsersConfig',
 ]

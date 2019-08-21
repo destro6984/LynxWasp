@@ -73,7 +73,7 @@ class Order(models.Model):
     '''
 
     def __str__(self):
-        return f"{self.ices_ordered}   {self.time_sell}"
+        return f"{self.ices_ordered.ice.ice}   {self.time_sell}"
 
     def get_total(self):
         total = 0
