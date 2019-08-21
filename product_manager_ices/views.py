@@ -51,8 +51,10 @@ class CreateOrder(View):
         # AddIceForm.base_fields['type'] = forms.ModelChoiceField(queryset=Ices.objects.all())
         add_order_form=AddOrderItem()
         order_in_cart=Order.objects.all()
+        huj=OrderItem.objects.all()
         return render(request, 'product_manager_ices/order_form.html', context={"add_order_form": add_order_form,
-                                                                                "order_in_cart":order_in_cart})
+                                                                                "order_in_cart":order_in_cart,
+                                                                                "huj":huj})
     def post(self,request):
         add_order_form = AddOrderItem(request.POST)
         valid = add_order_form.is_valid()

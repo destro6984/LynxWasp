@@ -8,7 +8,7 @@ from users_app.models import MyUser
 class Flavour(models.Model):
     flavour = models.CharField(max_length=45)
     def __str__(self):
-        return f"Flavour:{self.flavour}"
+        return f"{self.flavour}"
 
 
 class Ices(models.Model):
@@ -26,16 +26,11 @@ class OrderItem(models.Model):
     quantity = models.IntegerField(default=1)
 
     def __str__(self):
-        return f"{self.quantity} of {self.ice.type} {self.flavour}"
+        return f"{self.quantity} of {self.ice.type} Flavouers:{'/'.join([str(flav) for flav in self.flavour.all()])}"
 
     def get_total_ice_price(self):
         return self.quantity * self.ice.price
 
-    # def get_total_discount_item_price(self):
-    #     return self.quantity * self.item.discount_price
-
-    # def get_amount_saved(self):
-    #     return self.get_total_item_price() - self.get_total_discount_item_price()
     def get_final_price(self):
         # if self.item.discount_price:
         #     return self.get_total_discount_item_price()
@@ -73,7 +68,7 @@ class Order(models.Model):
     '''
 
     def __str__(self):
-        return f"{self.ices_ordered.ice.ice}   {self.time_sell}"
+        return f"Order:{'/'.join([str(ic) for ic in self.ices_ordered.all()])}   {self.time_sell}"
 
     def get_total(self):
         total = 0
