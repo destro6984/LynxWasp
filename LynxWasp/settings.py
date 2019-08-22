@@ -81,7 +81,8 @@ WSGI_APPLICATION = 'LynxWasp.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'lynxwasp.db'),
+        # 'NAME': os.path.join(BASE_DIR, 'lynxwasp.db'),
+        'NAME': '/home/destro6984/LynxWasp/db.sqlite3',
     }
 }
 

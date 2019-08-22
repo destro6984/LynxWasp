@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-# Create your models here.
 from users_app.models import MyUser
 
 
@@ -14,7 +13,6 @@ class Flavour(models.Model):
 class Ices(models.Model):
     type = models.CharField(max_length=50)
     price = models.DecimalField(max_digits=5, decimal_places=2)
-    # flavour_type=models.ManyToManyField(Flavour)
     def __str__(self):
         return f"price:{self.price}, type:{self.type}"
 
@@ -39,10 +37,11 @@ class OrderItem(models.Model):
 class Order(models.Model):
     # worker = models.ForeignKey(MyUser,on_delete=models.CASCADE)
     # ref_code = models.CharField(max_length=20, blank=True, null=True)
-    ices_ordered = models.ManyToManyField(OrderItem)
+    worker_owner=models.ForeignKey(MyUser,on_delete=models.CASCADE)
+    ices_ordered = models.ForeignKey(OrderItem,on_delete=models.CASCADE)
     time_sell = models.DateTimeField(auto_now_add=True)
     # ordered_date = models.DateTimeField()
-    # ordered = models.BooleanField(default=False)
+    finished = models.BooleanField(default=False)
     # shipping_address = models.ForeignKey(
     #     'Address', related_name='shipping_address', on_delete=models.SET_NULL, blank=True, null=True)
     # billing_address = models.ForeignKey(
@@ -68,7 +67,8 @@ class Order(models.Model):
     '''
 
     def __str__(self):
-        return f"Order:{'/'.join([str(ic) for ic in self.ices_ordered.all()])}   {self.time_sell}"
+        # return f"Order:{'/'.join([str(ic) for ic in self.ices_ordered.all()])}   {self.time_sell}"
+        return f"Order:{self.ices_ordered.ice.type}   {'/'.join([str(ic) for ic in self.ices_ordered.flavour.all()])}  {self.time_sell}"
 
     def get_total(self):
         total = 0

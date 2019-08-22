@@ -50,11 +50,13 @@ class CreateOrder(View):
         # AddIceForm.base_fields['price'] = forms.ModelChoiceField(queryset=Price.objects.all())
         # AddIceForm.base_fields['type'] = forms.ModelChoiceField(queryset=Ices.objects.all())
         add_order_form=AddOrderItem()
-        order_in_cart=Order.objects.all()
-        huj=OrderItem.objects.all()
+        flavour_add_form=AddFlavourForm()
+        order_in_cart=Order.objects.filter(worker_owner=request.user,finished=False)
+        order_items=OrderItem.objects.all()
         return render(request, 'product_manager_ices/order_form.html', context={"add_order_form": add_order_form,
                                                                                 "order_in_cart":order_in_cart,
-                                                                                "huj":huj})
+                                                                                "order_items":order_items,
+                                                                                "flavour_add_form":flavour_add_form})
     def post(self,request):
         add_order_form = AddOrderItem(request.POST)
         valid = add_order_form.is_valid()
@@ -63,9 +65,14 @@ class CreateOrder(View):
             quantity=add_order_form.cleaned_data.get('quantity')
             ice_in_order=OrderItem.objects.create(ice=ice,quantity=quantity)
             ice_in_order.flavour.set(request.POST.getlist('flavour'))
-            ord=Order.objects.create()
-            ord.ices_ordered.add(ice_in_order)
-            messages.success(request, "Order Added")
+            if Order.objects.filter(worker_owner=request.user,finished=False).exists():
+                orde=Order.objects.get(worker_owner=request.user, finished=False)
+                orde.ices_ordered.add(ice_in_order=ice_in_order)
+                orde.save()
+            else:
+                orde=Order.objects.create(worker_owner=request.user,finished=False,ices_ordered=ice_in_order)
+
+            messages.success(request, "OrderItem Added to cart")
             return redirect("create-order")
         else:
             add_order_form=AddOrderItem()

@@ -8,20 +8,24 @@
             {{ choice.choice_label }}
             <span class="radio">{{ choice.tag }}</span>
         {% endfor %}
-        {{ add_ice_form|crispy }}
         {{ add_order_form|crispy }}
+        {{ flavour_add_form|crispy }}
+
         <input type="submit" value="Save">
     </form>
+    <h1>CART</h1>
     <ul>
-{% for ices in order_in_cart %}
-    <li>{{ ices}}</li>
-{% endfor %}
+        {% for ices in order_in_cart %}
+            <li>{{ ices }}</li>
+        {% endfor %}
     </ul>
-{#        <ul>#}
-{#{% for elo in huj %}#}
-{#    <li>{{ elo}}</li>#}
-{#{% endfor %}#}
-{#    </ul>#}
+    {#        <ul>#}
+    {#{% for elo in huj %}#}
+{#        <li>{{ elo}}</li>#}
+    {#{% endfor %}#}
+    {#    </ul>#}
+
+        {{ order_in_cart }}
 
 {% endblock content %}
 

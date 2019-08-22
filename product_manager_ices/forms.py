@@ -13,14 +13,14 @@ class AddIceForm(ModelForm):
 
 
 class AddFlavourForm(ModelForm):
-
+    flavoures = [(flav.id, flav.flavour) for flav in Flavour.objects.all()]
+    flavour = forms.MultipleChoiceField(choices=flavoures, widget=forms.CheckboxSelectMultiple)
     class Meta:
         model=Flavour
         fields = '__all__'
 
 class AddOrderItem(forms.Form):
-    flavoures = [(flav.id, flav.flavour) for flav in Flavour.objects.all()]
     type_ice = [(type_ice.id, Ices.objects.filter(id=type_ice.id)) for type_ice in Ices.objects.all()]
     ice = forms.ModelChoiceField(widget=forms.RadioSelect, queryset=Ices.objects.all())
-    flavour = forms.MultipleChoiceField(choices=flavoures, widget=forms.CheckboxSelectMultiple)
-    quantity= forms.IntegerField(min_value=1)
+    quantity= forms.IntegerField(min_value=1,initial=1)
+
