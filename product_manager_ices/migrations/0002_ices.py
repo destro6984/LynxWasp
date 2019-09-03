@@ -5,17 +5,18 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    initial = True
-
     dependencies = [
+        ('product_manager_ices', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Flavour',
+            name='Ices',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('flavour', models.CharField(max_length=45)),
+                ('type', models.CharField(max_length=50)),
+                ('price', models.DecimalField(decimal_places=2, max_digits=5)),
+                ('flavour', models.ManyToManyField(to='product_manager_ices.Flavour')),
             ],
         ),
     ]

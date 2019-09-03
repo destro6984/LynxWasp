@@ -4,7 +4,8 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 
 # Create your views here.
-from django.views.generic import ListView, CreateView
+from django.urls import reverse_lazy
+from django.views.generic import ListView, CreateView, DeleteView
 from django.views.generic.base import View
 
 from product_manager_ices.forms import AddIceForm, AddFlavourForm, AddOrderItem
@@ -50,13 +51,10 @@ class CreateOrder(View):
         # AddIceForm.base_fields['price'] = forms.ModelChoiceField(queryset=Price.objects.all())
         # AddIceForm.base_fields['type'] = forms.ModelChoiceField(queryset=Ices.objects.all())
         add_order_form=AddOrderItem()
-        flavour_add_form=AddFlavourForm()
-        order_in_cart=Order.objects.filter(worker_owner=request.user,finished=False)
-        order_items=OrderItem.objects.all()
+        order_in_cart=Order.objects.get(worker_owner=request.user,finished=False)
         return render(request, 'product_manager_ices/order_form.html', context={"add_order_form": add_order_form,
                                                                                 "order_in_cart":order_in_cart,
-                                                                                "order_items":order_items,
-                                                                                "flavour_add_form":flavour_add_form})
+                                                                                })
     def post(self,request):
         add_order_form = AddOrderItem(request.POST)
         valid = add_order_form.is_valid()
@@ -64,14 +62,13 @@ class CreateOrder(View):
             ice=add_order_form.cleaned_data.get('ice')
             quantity=add_order_form.cleaned_data.get('quantity')
             ice_in_order=OrderItem.objects.create(ice=ice,quantity=quantity)
-            ice_in_order.flavour.set(request.POST.getlist('flavour'))
+            ice_in_order.flavour.set(request.POST.getlist('flavour')) #1 of thai  Flavouers:czekolada
             if Order.objects.filter(worker_owner=request.user,finished=False).exists():
                 orde=Order.objects.get(worker_owner=request.user, finished=False)
-                orde.ices_ordered.add(ice_in_order=ice_in_order)
+                orde.ices_ordered.add(ice_in_order)
                 orde.save()
             else:
                 orde=Order.objects.create(worker_owner=request.user,finished=False,ices_ordered=ice_in_order)
-
             messages.success(request, "OrderItem Added to cart")
             return redirect("create-order")
         else:
@@ -80,3 +77,7 @@ class CreateOrder(View):
         return render(request, 'product_manager_ices/order_form.html', context={"add_order_form": add_order_form})
 
 
+def delete_orderitem(request,id=None):
+    order_to_delete=OrderItem.objects.get(id=id)
+    order_to_delete.delete()
+    return redirect('create-order')
