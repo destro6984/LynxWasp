@@ -7,4 +7,14 @@ $(function () {
     $('.close').click(function () {
         $('.bg-modal').css('display', 'none')
     });
+    // end
+
+
+    //calculator for counting change
+    var summm=$("#sumtopay").attr("value");
+    $("#clientmoney").on("input", function () {
+        var forclient= summm - $("#clientmoney").val();
+        $('#clientchange').text(forclient+"zł");
+    })
+    // /end
 });

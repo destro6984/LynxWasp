@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.shortcuts import render, redirect
 
@@ -46,14 +47,16 @@ class AddIce(View):
 class IcesView(ListView):
     model = Ices
 
-class CreateOrder(View):
+class CreateOrder(LoginRequiredMixin,View):
     def get(self,request):
         # AddIceForm.base_fields['price'] = forms.ModelChoiceField(queryset=Price.objects.all())
         # AddIceForm.base_fields['type'] = forms.ModelChoiceField(queryset=Ices.objects.all())
         add_order_form=AddOrderItem()
         order_in_cart=Order.objects.get(worker_owner=request.user,finished=False)
+        sumarize=order_in_cart.get_total()
         return render(request, 'product_manager_ices/order_form.html', context={"add_order_form": add_order_form,
                                                                                 "order_in_cart":order_in_cart,
+                                                                                "sumarize":sumarize,
                                                                                 })
     def post(self,request):
         add_order_form = AddOrderItem(request.POST)
@@ -80,4 +83,10 @@ class CreateOrder(View):
 def delete_orderitem(request,id=None):
     order_to_delete=OrderItem.objects.get(id=id)
     order_to_delete.delete()
+    return redirect('create-order')
+
+def change_status_order_for_finish(request,id=None):
+    order_to_change_status=Order.objects.get(worker_owner=request.user,finished=False)
+    order_to_change_status.finished=True
+    order_to_change_status.save()
     return redirect('create-order')
