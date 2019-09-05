@@ -11,10 +11,17 @@ $(function () {
 
 
     //calculator for counting change
-    var summm=$("#sumtopay").attr("value");
+    var summm = $("#sumtopay").attr("value");
     $("#clientmoney").on("input", function () {
-        var forclient= summm - $("#clientmoney").val();
-        $('#clientchange').text(forclient+"zł");
+        var forclient = summm - $("#clientmoney").val();
+        $('#clientchange').text(forclient + "zł");
     })
     // /end
+
+
+    $(document).ready(function () {
+        $("#id_ice li").addClass('btn btn-secondary').css("cursor","pointer");
+        $("#id_ice input").css("visibility","hidden");
+        $("#id_flavour li").addClass('btn btn-secondary');
+    });
 });

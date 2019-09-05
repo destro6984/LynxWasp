@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ObjectDoesNotExist
 
 from django.shortcuts import render, redirect
 
@@ -31,11 +32,11 @@ class AddIce(View):
         if form_type.is_valid():
             form_type.save()
             messages.success(request, "Type Added")
-            return redirect("homepage")
+            return redirect("add-ice")
         if form_flavour.is_valid():
             form_flavour.save()
             messages.success(request, "Flavour Added")
-            return redirect("homepage")
+            return redirect("add-ice")
         else:
             form_type = AddIceForm()
             form_flavour = AddFlavourForm()
@@ -52,8 +53,12 @@ class CreateOrder(LoginRequiredMixin,View):
         # AddIceForm.base_fields['price'] = forms.ModelChoiceField(queryset=Price.objects.all())
         # AddIceForm.base_fields['type'] = forms.ModelChoiceField(queryset=Ices.objects.all())
         add_order_form=AddOrderItem()
-        order_in_cart=Order.objects.get(worker_owner=request.user,finished=False)
-        sumarize=order_in_cart.get_total()
+        try:
+            order_in_cart=Order.objects.get(worker_owner=request.user,finished=False)
+            sumarize = order_in_cart.get_total()
+        except ObjectDoesNotExist:
+            order_in_cart = None
+            sumarize=None
         return render(request, 'product_manager_ices/order_form.html', context={"add_order_form": add_order_form,
                                                                                 "order_in_cart":order_in_cart,
                                                                                 "sumarize":sumarize,
@@ -71,7 +76,9 @@ class CreateOrder(LoginRequiredMixin,View):
                 orde.ices_ordered.add(ice_in_order)
                 orde.save()
             else:
-                orde=Order.objects.create(worker_owner=request.user,finished=False,ices_ordered=ice_in_order)
+                orde=Order.objects.create(worker_owner=request.user,finished=False)
+                orde.ices_ordered.add(ice_in_order)
+                orde.save()
             messages.success(request, "OrderItem Added to cart")
             return redirect("create-order")
         else:

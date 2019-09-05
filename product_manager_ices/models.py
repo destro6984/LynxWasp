@@ -1,6 +1,5 @@
 from django.contrib.auth.models import User
 from django.db import models
-
 from users_app.models import MyUser
 
 
@@ -17,8 +16,6 @@ class Ices(models.Model):
         return f"price:{self.price}, type:{self.type}"
 
 class OrderItem(models.Model):
-    # worker = models.ForeignKey(MyUser,on_delete=models.CASCADE)
-    # ordered = models.BooleanField(default=False)
     ice = models.ForeignKey(Ices, on_delete=models.CASCADE)
     flavour=models.ManyToManyField(Flavour)
     quantity = models.IntegerField(default=1)
@@ -34,26 +31,20 @@ class OrderItem(models.Model):
         return self.get_total_ice_price()
 
 class Order(models.Model):
-    # worker = models.ForeignKey(MyUser,on_delete=models.CASCADE)
     # ref_code = models.CharField(max_length=20, blank=True, null=True)
     worker_owner=models.ForeignKey(MyUser,on_delete=models.CASCADE)
     ices_ordered = models.ManyToManyField(OrderItem)
     time_sell = models.DateTimeField(auto_now_add=True)
     # ordered_date = models.DateTimeField()
     finished = models.BooleanField(default=False)
-    # billing_address = models.ForeignKey(
-    #     'Address', related_name='billing_address', on_delete=models.SET_NULL, blank=True, null=True)
+
     # payment = models.ForeignKey(
     #     'Payment', on_delete=models.SET_NULL, blank=True, null=True)
     # coupon = models.ForeignKey(
     #     'Coupon', on_delete=models.SET_NULL, blank=True, null=True)
-    # being_delivered = models.BooleanField(default=False)
-    # received = models.BooleanField(default=False)
-    # refund_requested = models.BooleanField(default=False)
-    # refund_granted = models.BooleanField(default=False)
 
     def __str__(self):
-        # return f"Order:{'/'.join([str(ic) for ic in self.ices_ordered.all()])}   {self.time_sell}"
+
         return f"Order content:{self.ices_ordered} {self.time_sell}"
 
     def get_total(self):
