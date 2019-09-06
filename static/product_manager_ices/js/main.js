@@ -19,9 +19,10 @@ $(function () {
     // /end
 
 
-    $(document).ready(function () {
-        $("#id_ice li").addClass('btn btn-secondary').css("cursor","pointer");
-        $("#id_ice input").css("visibility","hidden");
-        $("#id_flavour li").addClass('btn btn-secondary');
-    });
+    $("input[type='radio']:checked").on("click", function () {
+        this.closest("label").css("color", "white")
+    })
+
+
+
 });
