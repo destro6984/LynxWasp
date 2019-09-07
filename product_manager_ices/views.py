@@ -68,7 +68,6 @@ class CreateOrder(LoginRequiredMixin,View):
         valid = add_order_form.is_valid()
         if valid:
             ice=add_order_form.cleaned_data.get('ice')
-            print(ice)
             quantity=add_order_form.cleaned_data.get('quantity')
             ice_in_order=OrderItem.objects.create(ice_id=ice,quantity=quantity)
             ice_in_order.flavour.set(request.POST.getlist('flavour')) #1 of thai  Flavouers:czekolada

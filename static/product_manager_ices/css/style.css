@@ -1,7 +1,7 @@
 /*css for popupwidnow to add tweet*/
 .bg-modal {
     background-color: rgba(0, 0, 0, 0.2);
-    width: 100%;
+    width: 66%;
     height: 100%;
     position: absolute;
     top: 0;
@@ -22,58 +22,86 @@
 
 
 .close {
-    position: absolute;
-    top: 0;
-    right: 10px;
-    font-size: 42px;
-    color: #333;
-    transform: rotate(45deg);
-    cursor: pointer;
-
-&
-:hover {
-    color: #666;
+	position: absolute;
+	top: 0;
+	right: 10px;
+	font-size: 42px;
+	color: #333;
+	transform: rotate(45deg);
+	cursor: pointer;
+	&:hover {
+		color: #666;
+	}
+}
+/*radio buttons to chose type of ice */
+.radio-toolbar {
+  margin: 10px;
 }
 
+.radio-toolbar input[type="radio"] {
+  opacity: 0;
+  position: fixed;
+  width: 0;
 }
-/*end */
 
-/*buttony for ice type*/
+.radio-toolbar label {
+    display: inline-block;
+    background-color: #ddd;
+    padding: 10px 20px;
+    font-family: sans-serif, Arial;
+    font-size: 16px;
+    border: 2px solid #444;
+    border-radius: 4px;
+}
 
-/*#id_ice li {*/
-/*    list-style: none;*/
-/*	display: inline;*/
-/*}*/
+.radio-toolbar label:hover {
+  background-color: #dfd;
+}
 
-/*#id_ice li label  {*/
-/*    cursor: pointer;*/
-/*    background-color: #4CAF50; !* Green *!*/
-/*    border: none;*/
-/*    padding: 15px 32px;*/
-/*    text-align: center;*/
+.radio-toolbar input[type="radio"]:focus + label {
+    border: 2px dashed #444;
+}
 
-/*    font-size: 16px;*/
-/*    border-radius: 12px;*/
-/*}*/
-
-/*input[type="radio"]:checked+ #id_ice li label {*/
-/*    background-color: #4CAF53;*/
-/*}*/
+.radio-toolbar input[type="radio"]:checked + label {
+    background-color: #bfb;
+    border-color: #4c4;
+}
 
 
-/*#id_ice {*/
-/*    list-style: none;*/
-/*}*/
-/*#id_ice li {*/
-/*    display: inline-block;*/
-/*    margin-right: 15px;*/
-/*}*/
-/*!*#id_ice li input {*!*/
-/*!*    visibility:hidden;*!*/
-/*!*}*!*/
-/*#id_ice label {*/
-/*    cursor: pointer;*/
-/*}*/
-/*input:checked + label {*/
-/*    background: red;*/
-/*}*/
+/*checkbox to add flavoures*/
+.flavour-toolbar {
+  margin: 10px;
+}
+
+.flavour-toolbar input[type="checkbox"] {
+  opacity: 0;
+  position: fixed;
+  width: 0;
+}
+
+.flavour-toolbar label {
+    display: inline-block;
+    background-color: #ddd;
+    padding: 10px 20px;
+    font-family: sans-serif, Arial;
+    font-size: 16px;
+    border: 2px solid #444;
+    border-radius: 4px;
+}
+
+.flavour-toolbar label:hover {
+  background-color: #dfd;
+}
+
+.flavour-toolbar input[type="checkbox"]:focus + label {
+    border: 2px dashed #444;
+}
+
+.flavour-toolbar input[type="checkbox"]:checked + label {
+    background-color: #bfb;
+    border-color: #4c4;
+}
+/*end*/
+
+
+/*buttons plus minu qunter*/

@@ -19,10 +19,6 @@ $(function () {
     // /end
 
 
-    $("input[type='radio']:checked").on("click", function () {
-        this.closest("label").css("color", "white")
-    })
-
 
 
 });

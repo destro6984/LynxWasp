@@ -3,13 +3,31 @@
 {% load static %}
 {% load cloudinary %}
 {% block content %}
-    <div id="donate">
-        <form method="post">{% csrf_token %} <!--form to add orderitem-ice -->
-            {{ add_order_form.as_p }}
 
-            <input type="submit" value="Add to cart">
-        </form>
-    </div>
+    <form method="post">{% csrf_token %} <!--form to add orderitem-ice -->
+        <div class="radio-toolbar">
+            <h3>Type of ice</h3>
+            {% for radio in add_order_form.ice %}
+                {{ radio.tag }}
+                <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+            {% endfor %}
+        </div>
+        <h3>Flavours</h3>
+        <div class="flavour-toolbar">
+            {% for radio in add_order_form.flavour %}
+                {{ radio.tag }}
+                <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+            {% endfor %}
+        </div>
+        <div class="quantity">
+            <h3>Quantity</h3>
+            {{ add_order_form.quantity }}
+        </div>
+        <div class="addtocart text-center">
+            <input class="btn btn-success btn-lg" type="submit" value="Add to cart">
+        </div>
+    </form>
+
 
     {#List of products in cart#}
     <div>
@@ -57,7 +75,6 @@
         </div>
 
     </div>
-
 
 {% endblock content %}
 

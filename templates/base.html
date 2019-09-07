@@ -29,10 +29,7 @@
     <script src="{% static 'product_manager_ices/js/main.js' %}"></script>
 </head>
 
-
-<body>
-
-<div class="container"> {#DIV CONTAINER#}
+<div class="container">
 
     {% block navbar %}
         {% include "upper_navbar.html" %}<!-- NAVBAR-->
@@ -50,12 +47,9 @@
         {% endif %}
     </div>
 
+    {% block content %}
 
-        {% block content %}
-
-
-
-        {% endblock %}
+    {% endblock %}
 
 
 
