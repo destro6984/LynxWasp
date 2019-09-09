@@ -31,12 +31,17 @@ class OrderItem(models.Model):
         return self.get_total_ice_price()
 
 class Order(models.Model):
+    STATUS_CHOICE = (
+        ('1', 'Started'),
+        ('2', 'Waiting'),
+        ('3', 'Finished'),
+    )
     # ref_code = models.CharField(max_length=20, blank=True, null=True)
     worker_owner=models.ForeignKey(MyUser,on_delete=models.CASCADE)
     ices_ordered = models.ManyToManyField(OrderItem)
     time_sell = models.DateTimeField(auto_now_add=True)
     # ordered_date = models.DateTimeField()
-    finished = models.BooleanField(default=False)
+    status = models.CharField(max_length=9, choices=STATUS_CHOICE,default="1")
 
     # payment = models.ForeignKey(
     #     'Payment', on_delete=models.SET_NULL, blank=True, null=True)
@@ -44,8 +49,7 @@ class Order(models.Model):
     #     'Coupon', on_delete=models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
-
-        return f"Order content:{self.ices_ordered} {self.time_sell}"
+        return f"Order content:{self.ices_ordered} {self.time_sell} {self.status}"
 
     def get_total(self):
         total = 0

@@ -48,52 +48,84 @@ class AddIce(View):
 class IcesView(ListView):
     model = Ices
 
-class CreateOrder(LoginRequiredMixin,View):
-    def get(self,request):
-        # AddIceForm.base_fields['price'] = forms.ModelChoiceField(queryset=Price.objects.all())
-        # AddIceForm.base_fields['type'] = forms.ModelChoiceField(queryset=Ices.objects.all())
-        add_order_form=AddOrderItem()
+
+class CreateOrder(LoginRequiredMixin, View):
+    def get(self, request):
+        add_order_form = AddOrderItem()
         try:
-            order_in_cart=Order.objects.get(worker_owner=request.user,finished=False)
+            order_in_cart = Order.objects.get(worker_owner=request.user, status="1")
             sumarize = order_in_cart.get_total()
         except ObjectDoesNotExist:
             order_in_cart = None
-            sumarize=None
+            sumarize = None
         return render(request, 'product_manager_ices/order_form.html', context={"add_order_form": add_order_form,
-                                                                                "order_in_cart":order_in_cart,
-                                                                                "sumarize":sumarize,
+                                                                                "order_in_cart": order_in_cart,
+                                                                                "sumarize": sumarize,
                                                                                 })
-    def post(self,request):
+
+    def post(self, request):
         add_order_form = AddOrderItem(request.POST)
         valid = add_order_form.is_valid()
         if valid:
-            ice=add_order_form.cleaned_data.get('ice')
-            quantity=add_order_form.cleaned_data.get('quantity')
-            ice_in_order=OrderItem.objects.create(ice_id=ice,quantity=quantity)
-            ice_in_order.flavour.set(request.POST.getlist('flavour')) #1 of thai  Flavouers:czekolada
-            if Order.objects.filter(worker_owner=request.user,finished=False).exists():
-                orde=Order.objects.get(worker_owner=request.user, finished=False)
+            ice = add_order_form.cleaned_data.get('ice')
+            quantity = add_order_form.cleaned_data.get('quantity')
+            ice_in_order = OrderItem.objects.create(ice_id=ice, quantity=quantity)
+            ice_in_order.flavour.set(request.POST.getlist('flavour'))  # 1 of thai  Flavouers:czekolada
+            if Order.objects.filter(worker_owner=request.user, status=1).exists():
+                orde = Order.objects.get(worker_owner=request.user, status=1)
                 orde.ices_ordered.add(ice_in_order)
                 orde.save()
             else:
-                orde=Order.objects.create(worker_owner=request.user,finished=False)
+                orde = Order.objects.create(worker_owner=request.user, status=1)
                 orde.ices_ordered.add(ice_in_order)
                 orde.save()
             messages.success(request, "OrderItem Added to cart")
             return redirect("create-order")
         else:
-            add_order_form=AddOrderItem()
+            add_order_form = AddOrderItem()
             messages.success(request, "Wrong Data")
         return render(request, 'product_manager_ices/order_form.html', context={"add_order_form": add_order_form})
 
 
-def delete_orderitem(request,id=None):
-    order_to_delete=OrderItem.objects.get(id=id)
+def delete_orderitem(request, id=None):
+    order_to_delete = OrderItem.objects.get(id=id)
     order_to_delete.delete()
     return redirect('create-order')
 
-def change_status_order_for_finish(request,id=None):
-    order_to_change_status=Order.objects.get(worker_owner=request.user,finished=False)
-    order_to_change_status.finished=True
+
+def change_status_order_for_finish(request):
+    order_to_change_status = Order.objects.get(worker_owner=request.user, status="1")
+    order_to_change_status.status = "3"
     order_to_change_status.save()
     return redirect('create-order')
+
+
+def postpone_order(request):
+    order_to_change_status = Order.objects.get(worker_owner=request.user, status="1")
+    order_to_change_status.status = "2"
+    order_to_change_status.save()
+    return redirect('create-order')
+
+
+def return_order(request,id=None):
+    if Order.objects.filter(status="1").exists():
+        messages.error(request,"You have active order opened, Please postpone or delete it")
+        return redirect('create-order')
+    else:
+        order_to_change_status = Order.objects.get(worker_owner=request.user, id=id)
+        order_to_change_status.status = "1"
+        order_to_change_status.save()
+        return redirect('list_order')
+
+
+class OrderDelete(DeleteView):
+    model = Order
+    success_url = reverse_lazy("create-order")
+
+
+class ListOfOrders(ListView):
+    model = Order
+    context_object_name = "orderlist"
+
+    def get_queryset(self):
+        return Order.objects.filter(worker_owner=self.request.user)

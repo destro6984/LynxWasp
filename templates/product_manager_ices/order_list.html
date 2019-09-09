@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load cloudinary %}
+{% block content %}
+    <h1> My Orders</h1>
+    <ul>
+        {% for order in orderlist %}
+            <li>Nr zamówiania:{{ order.id }}///{{ order }} <a href=" {% url 'return_order' id=order.id %}">Return</a></li>
+        {% empty %}
+            <li>No orders yet.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

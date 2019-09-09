@@ -3,8 +3,8 @@
 {% load static %}
 {% load cloudinary %}
 {% block content %}
-
-    <form method="post">{% csrf_token %} <!--form to add orderitem-ice -->
+    <!--form to add orderitem-ice -->
+    <form method="post">{% csrf_token %}
         <div class="radio-toolbar">
             <h3>Type of ice</h3>
             {% for radio in add_order_form.ice %}
@@ -30,51 +30,61 @@
 
 
     {#List of products in cart#}
-    <div>
-        <h1 class="d-inline">CART</h1>
+    <div class="insideofcart">
+        <h1>CART</h1>
+        <h3>{% if sumarize %}Sum: {{ sumarize }}zł{% else %}Sum: 0zł {% endif %}</h3>
+        {% if order_in_cart %}<!-- postpone or delete order-->
+            <a href="{% url 'postpone_order' id=order_in_cart.id %}" class="btn btn-primary text-center btn-lg">Postpone</a>
+            <form method="POST" action="{% url 'delete_order' pk=order_in_cart.id %}">
+                {% csrf_token %}
+                <input class="btn btn-outline-danger text-right btn-lg" type="submit" value="Delete">
+            </form>
+            <ul>
+                {% for ices in order_in_cart.ices_ordered.all %}
+                    <form action="{% url 'delete_oi' id=ices.id %}" method="post">
+                        {% csrf_token %}
+                        <li>{{ ices }}<input type="submit" value="Delete"></li>
+                    </form>
+                {% endfor %}
+            </ul>
+
+            <a class="btn btn-primary btn-lg" id="checkout">Pay</a>
 
 
-        <ul>
-            {% for ices in order_in_cart.ices_ordered.all %}
-                <form action="{% url 'delete_oi' id=ices.id %}" method="post">
-                    {% csrf_token %}
-                    <li>{{ ices }}<input type="submit" value="Delete"></li>
-                </form>
-            {% endfor %}
-        </ul>
-        {% if order_in_cart %}
-            <a class="btn btn-primary" id="checkout">Pay</a>
-        {% endif %}
-        <div class="bg-modal"><!-- popup window to confirm order-->
-            <div class="modal-contents">
+            <!-- popup window to confirm order-->
+            <div class="bg-modal">
+                <div class="modal-contents">
+                    <!-- form to sumarize payment -->
+                    <div class="close">+</div>
+                    <form method="post" action="{% url 'change_to_finish' id=order_in_cart.id %}"
+                          style="display: block">
+                        {% csrf_token %}
+                        <label>Order: </label>
+                        <div id="div_id_content" class="form-group">
+                            <ul>
+                                {% for ices in order_in_cart.ices_ordered.all %}
+                                    {% csrf_token %}
+                                    <li>{{ ices }}</li>
+                                {% endfor %}
 
-                <div class="close">+</div>             <!-- form to sumarize payment -->
-                <form method="post" action="{% url 'change_to_finish' id=1 %}" style="display: block">
-                    {% csrf_token %}
-                    <label>Order: </label>
-                    <div id="div_id_content" class="form-group">
-                        <ul>
-
-                            {% for ices in order_in_cart.ices_ordered.all %}
-                                {% csrf_token %}
-                                <li>{{ ices }}</li>
-                            {% endfor %}
-
-                        </ul> <!-- Callculator for counting change  -->
-                        <div id="sumtopay" value="{{ sumarize }}"><p>Sum:{{ sumarize }} zł</p>
-                            <label>Calculator</label>
-                            <input type="number" id="clientmoney">
-                            <label>Change:</label>
-                            <output id="clientchange">zł</output>
+                            </ul>
+                            <!-- Callculator for counting change  -->
+                            <div id="sumtopay" value="{{ sumarize }}"><p>Sum:{{ sumarize }} zł</p>
+                                <label>Calculator</label>
+                                <input type="number" id="clientmoney">
+                                <label>Change:</label>
+                                <output id="clientchange">zł</output>
+                            </div>
                         </div>
-                    </div>
-                    <input type="submit" value="Finish">
-                </form>
+                        <input class="btn btn-outline-success mx-auto btn-lg" style="width: 50%;" type="submit" value="Finish">
+                    </form>
 
+                </div>
             </div>
-        </div>
+        {% endif %}
 
     </div>
+
 
 {% endblock content %}
 
