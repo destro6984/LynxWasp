@@ -53,7 +53,7 @@ class CreateOrder(LoginRequiredMixin, View):
     def get(self, request):
         add_order_form = AddOrderItem()
         try:
-            order_in_cart = Order.objects.get(worker_owner=request.user, status="1")
+            order_in_cart = Order.objects.get(worker_owner=request.user, status=1)
             sumarize = order_in_cart.get_total()
         except ObjectDoesNotExist:
             order_in_cart = None
@@ -93,27 +93,27 @@ def delete_orderitem(request, id=None):
     return redirect('create-order')
 
 
-def change_status_order_for_finish(request):
-    order_to_change_status = Order.objects.get(worker_owner=request.user, status="1")
-    order_to_change_status.status = "3"
+def change_status_order_for_finish(request,id=None):
+    order_to_change_status = Order.objects.get(id=id,worker_owner=request.user, status=1)
+    order_to_change_status.status = 3
     order_to_change_status.save()
     return redirect('create-order')
 
 
-def postpone_order(request):
-    order_to_change_status = Order.objects.get(worker_owner=request.user, status="1")
-    order_to_change_status.status = "2"
+def postpone_order(request,id):
+    order_to_change_status = Order.objects.get(id=id,worker_owner=request.user, status="1")
+    order_to_change_status.status = 2
     order_to_change_status.save()
     return redirect('create-order')
 
 
 def return_order(request,id=None):
-    if Order.objects.filter(status="1").exists():
+    if Order.objects.filter(worker_owner=request.user,status=1).exists():
         messages.error(request,"You have active order opened, Please postpone or delete it")
         return redirect('create-order')
     else:
         order_to_change_status = Order.objects.get(worker_owner=request.user, id=id)
-        order_to_change_status.status = "1"
+        order_to_change_status.status = 1
         order_to_change_status.save()
         return redirect('list_order')
 
@@ -123,9 +123,8 @@ class OrderDelete(DeleteView):
     success_url = reverse_lazy("create-order")
 
 
-class ListOfOrders(ListView):
+class ListOfOrders(LoginRequiredMixin, ListView):
     model = Order
     context_object_name = "orderlist"
-
     def get_queryset(self):
         return Order.objects.filter(worker_owner=self.request.user)

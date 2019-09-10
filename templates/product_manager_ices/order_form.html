@@ -4,52 +4,68 @@
 {% load cloudinary %}
 {% block content %}
     <!--form to add orderitem-ice -->
-    <form method="post">{% csrf_token %}
-        <div class="radio-toolbar">
-            <h3>Type of ice</h3>
-            {% for radio in add_order_form.ice %}
-                {{ radio.tag }}
-                <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
-            {% endfor %}
-        </div>
-        <h3>Flavours</h3>
-        <div class="flavour-toolbar">
-            {% for radio in add_order_form.flavour %}
-                {{ radio.tag }}
-                <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
-            {% endfor %}
-        </div>
-        <div class="quantity">
-            <h3>Quantity</h3>
-            {{ add_order_form.quantity }}
-        </div>
-        <div class="addtocart text-center">
-            <input class="btn btn-success btn-lg" type="submit" value="Add to cart">
-        </div>
-    </form>
+    <div class="form-to-add-orderitem">
+
+        <form method="post">{% csrf_token %}
+            <div class="radio-toolbar text-center">
+                <h3>Type of ice</h3>
+                {% for radio in add_order_form.ice %}
+                    {{ radio.tag }}
+                    <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+                {% endfor %}
+            </div>
+            <div class="quantity text-center">
+                <h3>Quantity</h3>
+                {{ add_order_form.quantity }}
+            </div>
+
+            <div class="flavour-toolbar text-center">
+                <h3>Flavours</h3>
+                {% for radio in add_order_form.flavour %}
+                    {{ radio.tag }}
+                    <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+                {% endfor %}
+            </div>
+
+            <div class="addtocart text-center my-1">
+                <input class="btn btn-success btn-lg" type="submit" value="Add to cart">
+            </div>
+        </form>
+    </div>
 
 
     {#List of products in cart#}
-    <div class="insideofcart">
-        <h1>CART</h1>
-        <h3>{% if sumarize %}Sum: {{ sumarize }}zł{% else %}Sum: 0zł {% endif %}</h3>
+    <div class="insideofcart border border-primary rounded col-">
+
+        <h1 class="text-center">CART</h1>
         {% if order_in_cart %}<!-- postpone or delete order-->
-            <a href="{% url 'postpone_order' id=order_in_cart.id %}" class="btn btn-primary text-center btn-lg">Postpone</a>
-            <form method="POST" action="{% url 'delete_order' pk=order_in_cart.id %}">
-                {% csrf_token %}
-                <input class="btn btn-outline-danger text-right btn-lg" type="submit" value="Delete">
-            </form>
-            <ul>
-                {% for ices in order_in_cart.ices_ordered.all %}
-                    <form action="{% url 'delete_oi' id=ices.id %}" method="post">
-                        {% csrf_token %}
-                        <li>{{ ices }}<input type="submit" value="Delete"></li>
-                    </form>
-                {% endfor %}
-            </ul>
 
-            <a class="btn btn-primary btn-lg" id="checkout">Pay</a>
+            <div class="order_list my-1">
+                <ul class="list-unstyled">
+                    {% for ices in order_in_cart.ices_ordered.all %}
+                        <form action="{% url 'delete_oi' id=ices.id %}" method="post">
+                            {% csrf_token %}
+                            <li class="my-2">{{ ices }}<span class="float-right "><input class="btn btn-primary btn-sm"
+                                                                                         type="submit"
+                                                                                         value="Delete"></span></li>
+                        </form>
+                    {% endfor %}
+                    <p>Total:{% if sumarize %}Sum: {{ sumarize }}zł{% else %} 0zł {% endif %}</p>
+                </ul>
+                <p class="text-center"><a class="btn btn-primary btn-lg" id="checkout">Pay</a></p>
+            </div>
 
+            <div class="text-right">
+                <a href="{% url 'postpone_order' id=order_in_cart.id %}" class="btn btn-primary btn-lg">Postpone</a>
+                <form class="d-inline" method="POST" action="{% url 'delete_order' pk=order_in_cart.id %}">
+                    {% csrf_token %}
+                    <input class="btn btn-outline-danger btn-lg" type="submit" value="Delete">
+                </form>
+
+            </div>
+
+
+            </div>
 
             <!-- popup window to confirm order-->
             <div class="bg-modal">
@@ -76,14 +92,16 @@
                                 <output id="clientchange">zł</output>
                             </div>
                         </div>
-                        <input class="btn btn-outline-success mx-auto btn-lg" style="width: 50%;" type="submit" value="Finish">
+                        <p class="text-center"><input class="btn btn-outline-success mx-auto btn-lg" style="width: 50%;"
+                                                      type="submit"
+                                                      value="Finish"></p>
                     </form>
 
                 </div>
             </div>
         {% endif %}
 
-    </div>
+
 
 
 {% endblock content %}
