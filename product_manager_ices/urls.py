@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 from product_manager_ices.views import Homepage, AddIce, IcesView, CreateOrder, delete_orderitem, \
-    change_status_order_for_finish, postpone_order, OrderDelete, ListOfOrders, return_order
+    change_status_order_for_finish, postpone_order, OrderDelete, ListOfOrders, return_order, OrderDetail
 
 urlpatterns = [
 
@@ -17,5 +17,6 @@ urlpatterns = [
     path('delete-order/<pk>',OrderDelete.as_view() , name='delete_order'),
     path('return-order/<id>',return_order , name='return_order'),
     path('list-orders',ListOfOrders.as_view() , name='list_order'),
+    path('detail-order/<pk>',OrderDetail.as_view() , name='detail-order'),
 
 ]

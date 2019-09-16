@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load cloudinary %}
+{% block content %}
+<h1> Order Details</h1>
+<p>Employee name: {{ object.worker_owner }}</p>
+<p>Sell-time: {{ object.time_sell|date }}</p>
+    <h3>Products in order:</h3>
+<ul>
+    {% for product in object.ices_ordered.all %}
+        <li>{{ product }}</li>
+    {% empty %}
+        <p>Order was empty</p>
+    {% endfor %}
+</ul>
+
+
+{% endblock %}

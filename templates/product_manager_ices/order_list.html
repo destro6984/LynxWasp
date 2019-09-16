@@ -3,10 +3,22 @@
 {% load static %}
 {% load cloudinary %}
 {% block content %}
-    <h1> My Orders</h1>
+    <div>
+        <div class="d-inline-block">
+            <h1> My Orders</h1>
+        </div>
+        <div class="d-inline-block float-right">
+            <form class="form-inline my-2 my-lg-0" method="get" action="{% url 'list_order' %}">
+            <input class="form-control mr-sm-2" type="search" name="q" value="{{ request.GET.q }}" placeholder="Search"
+                   aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+        </div>
+    </div>
     <ul>
         {% for order in orderlist %}
-            <li>Nr zamówiania:{{ order.id }}///{{ order }} <a class="btn btn-info" href=" {% url 'return_order' id=order.id %}">Return Order to Active</a></li>
+            <li><a href="{% url 'detail-order' pk=order.id %}">Nr zamówiania:{{ order.id }}</a>///{{ order }} <a
+                    class="btn btn-info" href=" {% url 'return_order' id=order.id %}">Return Order to Active</a></li>
         {% empty %}
             <li>No orders yet.</li>
         {% endfor %}

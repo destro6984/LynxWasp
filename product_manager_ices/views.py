@@ -2,12 +2,13 @@ from django import forms
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 
 from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, DeleteView
+from django.views.generic import ListView, CreateView, DeleteView, DetailView
 from django.views.generic.base import View
 
 from product_manager_ices.forms import AddIceForm, AddFlavourForm, AddOrderItem
@@ -93,23 +94,23 @@ def delete_orderitem(request, id=None):
     return redirect('create-order')
 
 
-def change_status_order_for_finish(request,id=None):
-    order_to_change_status = Order.objects.get(id=id,worker_owner=request.user, status=1)
+def change_status_order_for_finish(request, id=None):
+    order_to_change_status = Order.objects.get(id=id, worker_owner=request.user, status=1)
     order_to_change_status.status = 3
     order_to_change_status.save()
     return redirect('create-order')
 
 
-def postpone_order(request,id):
-    order_to_change_status = Order.objects.get(id=id,worker_owner=request.user, status="1")
+def postpone_order(request, id):
+    order_to_change_status = Order.objects.get(id=id, worker_owner=request.user, status="1")
     order_to_change_status.status = 2
     order_to_change_status.save()
     return redirect('create-order')
 
 
-def return_order(request,id=None):
-    if Order.objects.filter(worker_owner=request.user,status=1).exists():
-        messages.error(request,"You have active order opened, Please postpone or delete it")
+def return_order(request, id=None):
+    if Order.objects.filter(worker_owner=request.user, status=1).exists():
+        messages.error(request, "You have active order opened, Please postpone or delete it")
         return redirect('create-order')
     else:
         order_to_change_status = Order.objects.get(worker_owner=request.user, id=id)
@@ -126,5 +127,18 @@ class OrderDelete(DeleteView):
 class ListOfOrders(LoginRequiredMixin, ListView):
     model = Order
     context_object_name = "orderlist"
+
     def get_queryset(self):
-        return Order.objects.filter(worker_owner=self.request.user)
+        query = self.request.GET.get('q')
+        if query:
+            queryset = Order.objects.filter(Q(worker_owner__username__icontains=query) |
+                                            Q(time_sell__day=query) |
+                                            Q(time_sell__year=query))
+
+        else:
+            queryset = Order.objects.filter(worker_owner=self.request.user)
+        return queryset
+
+
+class OrderDetail(DetailView):
+    model = Order
