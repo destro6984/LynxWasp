@@ -132,9 +132,9 @@ class ListOfOrders(LoginRequiredMixin, ListView):
         query = self.request.GET.get('q')
         if query:
             queryset = Order.objects.filter(Q(worker_owner__username__icontains=query) |
-                                            Q(time_sell__day=query) |
-                                            Q(time_sell__year=query))
-
+                                            Q(time_sell__icontains=query)|
+                                            Q(ices_ordered__flavour__flavour__icontains=query) |
+                                            Q(ices_ordered__ice__type__contains=query))
         else:
             queryset = Order.objects.filter(worker_owner=self.request.user)
         return queryset
