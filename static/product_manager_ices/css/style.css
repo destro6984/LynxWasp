@@ -1,43 +1,41 @@
 /*css for popupwidnow to add tweet*/
-.container{
-    position: relative;
-}
 
 
-.bg-modal {
-    background-color: rgba(0, 0, 0, 0.2);
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 1;
-}
 
-.modal-contents {
+/*.bg-modal {*/
+/*    background-color: rgba(0, 0, 0, 0.2);*/
+/*    width: 100%;*/
+/*    height: 100%;*/
+/*    position: absolute;*/
+/*    top: 0;*/
+/*    display: none;*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+/*    z-index: 1;*/
+/*}*/
 
-    width: 500px;
-    background-color: white;
-    padding: 20px;
-    position: relative;
-    border-radius: 4px;
-}
+/*.modal-contents {*/
+
+/*    width: 500px;*/
+/*    background-color: white;*/
+/*    padding: 20px;*/
+/*    position: relative;*/
+/*    border-radius: 4px;*/
+/*}*/
 
 
-.close {
-	position: absolute;
-	top: 0;
-	right: 10px;
-	font-size: 42px;
-	color: #333;
-	transform: rotate(45deg);
-	cursor: pointer;
-	&:hover {
-		color: #666;
-	}
-}
+/*.close {*/
+/*	position: absolute;*/
+/*	top: 0;*/
+/*	right: 10px;*/
+/*	font-size: 42px;*/
+/*	color: #333;*/
+/*	transform: rotate(45deg);*/
+/*	cursor: pointer;*/
+/*	&:hover {*/
+/*		color: #666;*/
+/*	}*/
+/*}*/
 /*radio buttons to chose type of ice */
 .radio-toolbar {
   margin: 10px;
@@ -73,6 +71,8 @@
     background-color: #bfb;
     border-color: #4c4;
 }
+
+/*end*/
 
 
 /*checkbox to add flavoures*/
@@ -112,5 +112,28 @@
 }
 /*end*/
 
+
+article
+{
+    align-content: center;
+}
+
+#paybutton
+{
+    height: 60px;
+    width: 110px;
+    font-size: 30px;
+}
+
+#div_id_content ul
+{
+    list-style-type: none;
+    padding: 0;
+    margin-left: 4px;
+}
+#finish-order-btn
+{
+    width: 50%;
+}
 
 /*buttons plus minu qunter*/
