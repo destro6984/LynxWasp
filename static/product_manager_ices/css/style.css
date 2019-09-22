@@ -1,66 +1,49 @@
-/*css for popupwidnow to add tweet*/
-
-
-
-/*.bg-modal {*/
-/*    background-color: rgba(0, 0, 0, 0.2);*/
-/*    width: 100%;*/
-/*    height: 100%;*/
-/*    position: absolute;*/
-/*    top: 0;*/
-/*    display: none;*/
-/*    justify-content: center;*/
-/*    align-items: center;*/
-/*    z-index: 1;*/
-/*}*/
-
-/*.modal-contents {*/
-
-/*    width: 500px;*/
-/*    background-color: white;*/
-/*    padding: 20px;*/
-/*    position: relative;*/
-/*    border-radius: 4px;*/
-/*}*/
-
-
-/*.close {*/
-/*	position: absolute;*/
-/*	top: 0;*/
-/*	right: 10px;*/
-/*	font-size: 42px;*/
-/*	color: #333;*/
-/*	transform: rotate(45deg);*/
-/*	cursor: pointer;*/
-/*	&:hover {*/
-/*		color: #666;*/
-/*	}*/
-/*}*/
-/*radio buttons to chose type of ice */
-.radio-toolbar {
-  margin: 10px;
+body {
+    background-image: url("doodles.png");
 }
 
-.radio-toolbar input[type="radio"] {
-  opacity: 0;
-  position: fixed;
-  width: 0;
+/*quantty change*/
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
+}
+#id_quantity
+{
+    width: 90%;
+}
+
+
+
+/*end*/
+/*radio buttons to chose type of ice */
+.radio-toolbar {
+    margin: 0;
+}
+
+.radio-toolbar input[type="radio"]
+{
+    display: none;
 }
 
 .radio-toolbar label {
     display: inline-block;
-    background-color: #ddd;
+    background-color: #66ccff;
     padding: 10px 20px;
     font-family: sans-serif, Arial;
-    font-size: 16px;
+    font-size: 40px;
     border: 2px solid #444;
     border-radius: 4px;
-    width: 20%;
     text-align: center;
+    width: 40%;
+    overflow: hidden;
+
 }
 
 .radio-toolbar label:hover {
-  background-color: #dfd;
+    background-color: #dfd;
 }
 
 .radio-toolbar input[type="radio"]:focus + label {
@@ -77,30 +60,33 @@
 
 /*checkbox to add flavoures*/
 .flavour-toolbar {
-  margin: 10px;
+    margin: 10px;
 }
 
 .flavour-toolbar input[type="checkbox"] {
-  opacity: 0;
-  position: fixed;
-  width: 0;
+    opacity: 0;
+    position: fixed;
+    width: 0;
 }
 
 .flavour-toolbar label {
     display: inline-block;
     background-color: #ddd;
-    padding: 10px 20px;
-    font-family: sans-serif, Arial;
-    font-size: 16px;
     border: 2px solid #444;
     border-radius: 4px;
-    width: 20%;
+    width: 140px;
+    height: 130px;
+    overflow: hidden;
+    font-size: 20px;
     text-align: center;
+    padding-top: 45px;
+    margin: 0;
 }
 
 .flavour-toolbar label:hover {
-  background-color: #dfd;
+    background-color: #44cc44;
 }
+
 
 .flavour-toolbar input[type="checkbox"]:focus + label {
     border: 2px dashed #444;
@@ -110,30 +96,25 @@
     background-color: #bfb;
     border-color: #4c4;
 }
+
 /*end*/
 
 
-article
-{
-    align-content: center;
-}
-
-#paybutton
-{
+#paybutton {
     height: 60px;
     width: 110px;
     font-size: 30px;
 }
 
-#div_id_content ul
-{
+#div_id_content ul {
     list-style-type: none;
     padding: 0;
     margin-left: 4px;
 }
-#finish-order-btn
-{
+
+#finish-order-btn {
     width: 50%;
+    height: 70px;
 }
 
 /*buttons plus minu qunter*/

@@ -4,16 +4,107 @@
 {% load cloudinary %}
 {% block content %}
     <section>
+        <article>
+            <div class="row">
+                <div class="col-8 pl-0">
+                    <form class="p-0" method="post">{% csrf_token %}
+                        <!--form to add orderitem-ice -->
+                        <div class="border border-primary rounded col-md-9 d-inline-block p-0"
+                             id="form-to-add-type-ice">
+                            <div class="form-group mb-0 text-center">
+                                <label class="mb-0 ">TYPE OF ICE</label>
+                                <div class="radio-toolbar">
+                                    {% for radio in add_order_form.ice %}
+                                        {{ radio.tag }}
+                                        <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                        </div>
+                        <!--form to add quantity-->
+                        <div class="border border-primary rounded col-md-2 d-inline-block p-1 float-right" id="form-to-quantity">
+
+                            <div class="form-group">
+                                <label for="{{ add_order_form.quantity.id_for_label }}">Quantity</label>
+                                <input type="number" name="{{ add_order_form.quantity.html_name }}"
+                                       value="{{ add_order_form.quantity.value }}"
+                                       min="{{ add_order_form.quantity.initial }}"
+                                       required id="{{ add_order_form.quantity.id_for_label }}" width="10">
+                            </div>
+
+                        </div>
+                        <!--form to add flavour-->
+                        <div class="flavour-toolbar border border-primary rounded col-md-12 m-0 text-justify p-0">
+                            {% for radio in add_order_form.flavour %}
+                                {{ radio.tag }}
+                                <label for="{{ radio.id_for_label }}" >{{ radio.choice_label }}</label>
+                            {% endfor %}
+                        </div>
+                        <!--button to add to cart-->
+                        <div class="addtocart text-center my-1 col-md-12">
+                            <input class="btn btn-success btn-lg" type="submit" value="Add to cart">
+                        </div>
+                    </form>
+                </div>
+                <div class="col-4 p-0" id="cart">
+                    <!-- CART -->
+                    {% if order_in_cart %}
+                        <div class="insideofcart border border-primary rounded d-inline-block">
+                            <h1 class="text-center">CART</h1>
+                            <!-- postpone or delete order-->
+
+                            <div class="order_list my-1">
+                                <ul class="list-unstyled">
+                                    {% for ices in order_in_cart.ices_ordered.all %}
+                                        <form action="{% url 'delete_oi' id=ices.id %}" method="post">
+                                            {% csrf_token %}
+                                            <li class="my-2">{{ ices }}<span class="float-right "><input
+                                                    class="btn btn-primary btn-sm"
+                                                    type="submit"
+                                                    value="Delete"></span></li>
+                                        </form>
+                                    {% endfor %}
+                                    <p>Total:{% if sumarize %}Sum: {{ sumarize }}zł{% else %} 0zł {% endif %}</p>
+                                </ul>
+                            </div>
+
+                            <div class="text-right">
+
+                                <a href="{% url 'postpone_order' id=order_in_cart.id %}"
+                                   class="btn btn-primary btn-lg">Postpone</a>
+                                <form class="d-inline" method="POST"
+                                      action="{% url 'delete_order' pk=order_in_cart.id %}">
+                                    {% csrf_token %}
+                                    <input class="btn btn-outline-danger btn-lg" type="submit" value="Delete">
+                                </form>
+
+                            </div>
+
+
+                        </div>
+                        <!-- Button trigger modal -->
+                        <div class=" col-md-12 text-center  mt-5">
+                            <button id="paybutton" type="button" class="btn btn-primary btn-lg" data-toggle="modal"
+                                    data-target="#exampleModalCenter">
+                                PAY
+                            </button>
+                        </div>
+                    {% endif %}
+
+                </div>
+
+
+            </div>
+
+
+        </article>
+
+
+
         {% if order_in_cart %}
             <article>
 
-                <!-- Button trigger modal -->
-                <div class="text-center">
-                    <button id="paybutton" type="button" class="btn btn-primary btn-lg" data-toggle="modal"
-                            data-target="#exampleModalCenter">
-                        PAY
-                    </button>
-                </div>
                 <!-- Modal -->
                 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
                      aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -48,155 +139,21 @@
                                             <output id="clientchange">zł</output>
                                         </div>
                                         <div class="text-center mt-2">
-                                            <input class="btn btn-outline-success mx-auto btn-lg" id="finish-order-btn"
+                                            <input class="btn btn-outline-success mx-auto btn-lg"
+                                                   id="finish-order-btn"
                                                    type="submit"
                                                    value="Finish">
                                         </div>
                                     </div>
-
                                 </form>
                             </div>
-
-
                         </div>
                     </div>
                 </div>
             </article>
         {% endif %}
+
     </section>
-    <!--form to add orderitem-ice -->
-    <div class="form-to-add-orderitem">
-
-        <form method="post">{% csrf_token %}
-            <div class="radio-toolbar text-center">
-                <h3>Type of ice</h3>
-                {% for radio in add_order_form.ice %}
-                    {{ radio.tag }}
-                    <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
-                {% endfor %}
-            </div>
-            <div class="quantity text-center">
-                <h3>Quantity</h3>
-                {{ add_order_form.quantity }}
-            </div>
-
-            <div class="flavour-toolbar text-center">
-                <h3>Flavours</h3>
-                {% for radio in add_order_form.flavour %}
-                    {{ radio.tag }}
-                    <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
-                {% endfor %}
-            </div>
-
-            <div class="addtocart text-center my-1">
-                <input class="btn btn-success btn-lg" type="submit" value="Add to cart">
-            </div>
-        </form>
-    </div>
-
-
-    {#List of products in cart#}
-    <div class="insideofcart border border-primary rounded col-">
-
-        <h1 class="text-center">CART</h1>
-        {% if order_in_cart %}<!-- postpone or delete order-->
-
-            <div class="order_list my-1">
-                <ul class="list-unstyled">
-                    {% for ices in order_in_cart.ices_ordered.all %}
-                        <form action="{% url 'delete_oi' id=ices.id %}" method="post">
-                            {% csrf_token %}
-                            <li class="my-2">{{ ices }}<span class="float-right "><input
-                                    class="btn btn-primary btn-sm"
-                                    type="submit"
-                                    value="Delete"></span></li>
-                        </form>
-                    {% endfor %}
-                    <p>Total:{% if sumarize %}Sum: {{ sumarize }}zł{% else %} 0zł {% endif %}</p>
-                </ul>
-                <p class="text-center"><a class="btn btn-primary btn-lg" id="checkout">Pay</a></p>
-            </div>
-
-            <div class="text-right">
-
-                <a href="{% url 'postpone_order' id=order_in_cart.id %}" class="btn btn-primary btn-lg">Postpone</a>
-                <form class="d-inline" method="POST" action="{% url 'delete_order' pk=order_in_cart.id %}">
-                    {% csrf_token %}
-                    <input class="btn btn-outline-danger btn-lg" type="submit" value="Delete">
-                </form>
-
-            </div>
-
-
-            </div>
-
-            <!-- popup window to confirm order-->
-            <div class="bg-modal">
-                <div class="modal-contents">
-                    <!-- form to sumarize payment -->
-                    <div class="close">+</div>
-                    <form method="post" action="{% url 'change_to_finish' id=order_in_cart.id %}"
-                          style="display: block">
-                        {% csrf_token %}
-                        <label>Order: </label>
-                        <div id="div_id_content" class="form-group">
-                            <ul>
-                                {% for ices in order_in_cart.ices_ordered.all %}
-                                    {% csrf_token %}
-                                    <li>{{ ices }}</li>
-                                {% endfor %}
-
-                            </ul>
-                            <!-- Callculator for counting change  -->
-                            <div id="sumtopay" value="{{ sumarize }}"><p>Sum:{{ sumarize }} zł</p>
-                                <label>Calculator</label>
-                                <input type="number" id="clientmoney">
-                                <label>Change:</label>
-                                <output id="clientchange">zł</output>
-                            </div>
-                        </div>
-                        <p class="text-center"><input class="btn btn-outline-success mx-auto btn-lg"
-                                                      style="width: 50%;"
-                                                      type="submit"
-                                                      value="Finish"></p>
-                    </form>
-
-                </div>
-            </div>
-
-
-
-            <!-- Button trigger modal -->
-
-            <button type="button" class="btn btn-primary align-items-center" data-toggle="modal"
-                    data-target="#exampleModalCenter">
-                PAY
-            </button>
-
-            <!-- Modal -->
-            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
-                 aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalCenterTitle">Order Cart</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            ...
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-        {% endif %}
 
 
 

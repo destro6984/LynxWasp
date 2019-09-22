@@ -67,6 +67,7 @@ class CreateOrder(LoginRequiredMixin, View):
     def post(self, request):
         add_order_form = AddOrderItem(request.POST)
         valid = add_order_form.is_valid()
+        print(request.POST)
         if valid:
             ice = add_order_form.cleaned_data.get('ice')
             quantity = add_order_form.cleaned_data.get('quantity')
