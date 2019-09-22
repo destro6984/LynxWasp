@@ -2,7 +2,10 @@ body {
     background-image: url("doodles.png");
 }
 
-
+.insideofcart
+{
+    min-width: 378px;
+}
 
 
 /*end*/
@@ -71,14 +74,14 @@ body {
     margin: 0;
 }
 
-.flavour-toolbar label:hover {
-    background-color: #44cc44;
-}
+/*.flavour-toolbar label:hover {*/
+/*    background-color: #44cc44;*/
+/*}*/
 
 
-.flavour-toolbar input[type="checkbox"]:focus + label {
-    border: 2px dashed #444;
-}
+/*.flavour-toolbar input[type="checkbox"]:focus + label {*/
+/*    border: 2px dashed #444;*/
+/*}*/
 
 .flavour-toolbar input[type="checkbox"]:checked + label {
     background-color: #bfb;
@@ -107,31 +110,22 @@ body {
 
 /*buttons plus minu qunter /*quantty change*/
 
-
-
-
-
-
 #id_quantity {
-
     vertical-align: middle;
-    font-size: 50px;
     font-weight: 700;
-    line-height: 30px;
-    width: 20%;
     ;min-width: 35px;
-    border-radius: 0;
+    border: none;
+    font-size: 50px;
+    width: 20%;
 }
 .add-odd-button {
-    cursor: pointer;
-    display: inline-block;
+    width: 60px;
+    height: 60px;
     vertical-align: middle;
-    color: white;
-    width: 55px;
-    height: 55px;
-    border-radius: 50%;
     font-size: 40px;
-    text-align: center;
+    color: #444444;
+    cursor: pointer;
+
 
     }
 

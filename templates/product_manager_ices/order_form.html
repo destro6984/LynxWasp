@@ -23,29 +23,34 @@
 
                         </div>
                         <!--form to add quantity-->
-                        <div class=" d-inline-block col-md-3 align-text-bottom ml-3"
+                        <div class=" d-inline-block col-md-3 align-text-bottom ml-3 "
                              id="form-to-quantity">
-                            <div class="asdf">
-                                <label class="d-none" for="{{ add_order_form.quantity.id_for_label }}">Quantity</label>
-                                <span class="minus add-odd-button bg-info d-inline-block">-</span>
-                                <input type="number" class="count d-inline-block"
-                                       name="{{ add_order_form.quantity.html_name }}"
-                                       value="{{ add_order_form.quantity.value }}"
-                                       min="{{ add_order_form.quantity.initial }}"
-                                       required id="{{ add_order_form.quantity.id_for_label }}">
-                                <span class="plus add-odd-button bg-info d-inline-block">+</span>
+
+                            <label class="d-none" for="{{ add_order_form.quantity.id_for_label }}">Quantity</label>
+                            <div class="add-odd-button d-inline-block col-md-4 bg-info text-center rounded border-dark border ">
+                                <span class="minus add-odd-button">-</span>
+                            </div>
+                            <div class=" d-inline-block col-md-3 text-center pl-1"><input type="number" class="count"
+                                                                                          name="{{ add_order_form.quantity.html_name }}"
+                                                                                          value="{{ add_order_form.quantity.value }}"
+                                                                                          min="{{ add_order_form.quantity.initial }}"
+                                                                                          required
+                                                                                          id="{{ add_order_form.quantity.id_for_label }}">
+                            </div>
+                            <div class="add-odd-button d-inline-block col-md-4 bg-info text-center rounded border-dark border">
+                                <span class="plus">+</span>
                             </div>
                         </div>
 
                         <!--form to add flavour-->
-                        <div class="flavour-toolbar border border-primary rounded col-md-12 m-0 text-justify p-0">
+                        <div class="flavour-toolbar col-md-12 m-0 p-1 ">
                             {% for radio in add_order_form.flavour %}
                                 {{ radio.tag }}
                                 <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
                             {% endfor %}
                         </div>
                         <!--button to add to cart-->
-                        <div class="addtocart text-center my-1 col-md-12">
+                        <div class="addtocart text-center col-md-12">
                             <input class="btn btn-success btn-lg" type="submit" value="Add to cart">
                         </div>
                     </form>
@@ -93,14 +98,16 @@
                                 PAY
                             </button>
                         </div>
+                    {% else %}
+                        <div class="text-center border border-dark rounded">
+                            <h1>Cart</h1>
+                            <h3>No product in the cart</h3>
+                        </div>
+
                     {% endif %}
 
                 </div>
-
-
             </div>
-
-
         </article>
 
 
@@ -154,12 +161,13 @@
                     </div>
                 </div>
             </article>
+
         {% endif %}
 
 
     </section>
 
-
+{{ add_order_form.ice }}
 
 
 {% endblock content %}

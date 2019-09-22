@@ -19,14 +19,23 @@ $(function () {
     // /end
 
     // quantity
-    var quantity=$('.count');
+    var quantity = $('.count');
     $('.plus').on('click', function () {
         quantity.val(parseInt(quantity.val()) + 1);
     });
-    $('.minus').on('click',function () {
+    $('.minus').on('click', function () {
         quantity.val(parseInt(quantity.val()) - 1);
     });
+// end
+// adding scope with flavour
+    if ($("input[value='2']:checked")) {
+        $('input[name=flavour]').one('click', function () {
+            $('.count').val(parseInt(quantity.val()) + 1);
+        });
 
-
+    } else {
+        $('.count').val(parseInt(quantity.val()) + 1)
+    }
+// /end
 
 });

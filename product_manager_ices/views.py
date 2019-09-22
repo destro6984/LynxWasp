@@ -67,7 +67,6 @@ class CreateOrder(LoginRequiredMixin, View):
     def post(self, request):
         add_order_form = AddOrderItem(request.POST)
         valid = add_order_form.is_valid()
-        print(request.POST)
         if valid:
             ice = add_order_form.cleaned_data.get('ice')
             quantity = add_order_form.cleaned_data.get('quantity')
@@ -85,7 +84,7 @@ class CreateOrder(LoginRequiredMixin, View):
             return redirect("create-order")
         else:
             add_order_form = AddOrderItem()
-            messages.success(request, "Wrong Data")
+            messages.info(request, "Wrong Data")
         return render(request, 'product_manager_ices/order_form.html', context={"add_order_form": add_order_form})
 
 
