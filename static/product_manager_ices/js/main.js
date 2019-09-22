@@ -15,9 +15,17 @@ $(function () {
     $("#clientmoney").on("input", function () {
         var forclient = summm - $("#clientmoney").val();
         $('#clientchange').text(forclient + "zł");
-    })
+    });
     // /end
 
+    // quantity
+    var quantity=$('.count');
+    $('.plus').on('click', function () {
+        quantity.val(parseInt(quantity.val()) + 1);
+    });
+    $('.minus').on('click',function () {
+        quantity.val(parseInt(quantity.val()) - 1);
+    });
 
 
 

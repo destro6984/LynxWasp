@@ -2,18 +2,6 @@ body {
     background-image: url("doodles.png");
 }
 
-/*quantty change*/
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    margin: 0;
-}
-#id_quantity
-{
-    width: 90%;
-}
 
 
 
@@ -38,7 +26,7 @@ input[type=number]::-webkit-outer-spin-button {
     border-radius: 4px;
     text-align: center;
     width: 40%;
-    overflow: hidden;
+
 
 }
 
@@ -117,4 +105,49 @@ input[type=number]::-webkit-outer-spin-button {
     height: 70px;
 }
 
-/*buttons plus minu qunter*/
+/*buttons plus minu qunter /*quantty change*/
+
+
+
+
+
+
+#id_quantity {
+
+    vertical-align: middle;
+    font-size: 50px;
+    font-weight: 700;
+    line-height: 30px;
+    width: 20%;
+    ;min-width: 35px;
+    border-radius: 0;
+}
+.add-odd-button {
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
+    color: white;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    font-size: 40px;
+    text-align: center;
+
+    }
+
+
+.minus:hover{
+    background-color: #717fe0 !important;
+}
+.plus:hover{
+    background-color: #717fe0 !important;
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
+}
+
+/*end*/
