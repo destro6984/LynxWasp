@@ -16,7 +16,7 @@
                                 <div class="radio-toolbar">
                                     {% for radio in add_order_form.ice %}
                                         {{ radio.tag }}
-                                        <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+                                        <label for="{{ radio.id_for_label }}" id="{{ radio.choice_label }}">{{ radio.choice_label }}</label>
                                     {% endfor %}
                                 </div>
                             </div>
@@ -166,9 +166,6 @@
 
 
     </section>
-
-{{ add_order_form.ice }}
-
 
 {% endblock content %}
 

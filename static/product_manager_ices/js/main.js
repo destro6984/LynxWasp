@@ -27,15 +27,35 @@ $(function () {
         quantity.val(parseInt(quantity.val()) - 1);
     });
 // end
-// adding scope with flavour
-    if ($("input[value='2']:checked")) {
-        $('input[name=flavour]').one('click', function () {
-            $('.count').val(parseInt(quantity.val()) + 1);
-        });
+// adding scope by adding flavoures
 
-    } else {
-        $('.count').val(parseInt(quantity.val()) + 1)
-    }
-// /end
+    var type_ice = $(".radio-toolbar input[name='ice']").change(function (event) {
+        if (type_ice.eq(1).is(":checked")) {
+            $('input[name=flavour]').click(function (event) {
+                var input_flavour = $('input[name=flavour]:checked').length;
+                $('.count').attr('value', input_flavour);
 
-});
+            });
+        }
+    });
+    // adding thai ice
+    var type_ice = $(".radio-toolbar input[name='ice']").change(function (event) {
+        if (type_ice.eq(0).is(":checked")) {
+            $('input[name=flavour]').click(function (event) {
+                $('.count').attr('value', 1);
+
+            });
+        }
+    });
+// reset checkboxe after change
+    $(".radio-toolbar input[name=ice]").change(function (event) {
+        $('input[name=flavour]').prop("checked", false);
+        $('.count').attr('value', 1);
+    });
+
+
+// end
+
+
+})
+;

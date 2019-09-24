@@ -49,6 +49,18 @@ class AddIce(View):
 class IcesView(ListView):
     model = Ices
 
+def price_of_ice(request):
+    order=Order.objects.get(worker_owner=request.user, status=1)
+    if len(request.POST.getlist('flavour')) == 1:
+        order.ices_ordered
+    elif len(request.POST.getlist('flavour')) == 2:
+        order.ices_ordered.ice.price=15
+    elif len(request.POST.getlist('flavour')) ==3:
+        order.ices_ordered.ice.price=16
+
+
+
+
 
 class CreateOrder(LoginRequiredMixin, View):
     def get(self, request):
@@ -71,14 +83,17 @@ class CreateOrder(LoginRequiredMixin, View):
             ice = add_order_form.cleaned_data.get('ice')
             quantity = add_order_form.cleaned_data.get('quantity')
             ice_in_order = OrderItem.objects.create(ice_id=ice, quantity=quantity)
-            ice_in_order.flavour.set(request.POST.getlist('flavour'))  # 1 of thai  Flavouers:czekolada
+            flavoures=ice_in_order.flavour.set(request.POST.getlist('flavour')) # 1 of thai  Flavouers:czekolada
+            print(len(request.POST.getlist('flavour')))
             if Order.objects.filter(worker_owner=request.user, status=1).exists():
                 orde = Order.objects.get(worker_owner=request.user, status=1)
                 orde.ices_ordered.add(ice_in_order)
+                price_of_ice(request)
                 orde.save()
             else:
                 orde = Order.objects.create(worker_owner=request.user, status=1)
                 orde.ices_ordered.add(ice_in_order)
+                price_of_ice(request)
                 orde.save()
             messages.success(request, "OrderItem Added to cart")
             return redirect("create-order")
