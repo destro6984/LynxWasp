@@ -1,12 +1,20 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-    <div class="container">
-        <form method="post">
-            {% csrf_token %}
-            {{ form|crispy }}
-            <input type="submit" value="Log in">
-        </form>
-    </div>
+
+    <section>
+
+        <article>
+            <div class="bg-secondary col-4 offset-4 rounded mt-5">
+                <h1 class="h3 mb-1 font-weight-normal text-center text-light">Please sign in</h1>
+                <form method="post" class="p-2">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <input class="btn btn-lg btn-primary btn-block" type="submit" value="Log in">
+                </form>
+            </div>
+
+        </article>
+    </section>
 
 {% endblock %}
