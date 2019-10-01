@@ -25,7 +25,7 @@ SECRET_KEY = 'eh0#gwt1o7_ag%z+sjstw5@s=p9fxa%hz1rd^le27_pj-z(pez'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["lynxwasp.herokuapp.com"]
 
 
 # Application definition
