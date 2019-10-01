@@ -9,39 +9,40 @@
                 <div class="col-8 pl-0 pr-1">
                     <form class="p-0 m-0" method="post">{% csrf_token %}
                         <!--form to add orderitem-ice -->
-                        <div class="border border-primary rounded col-md-8 d-inline-block p-0"
+                        <div class="border border-primary rounded col-md-7 d-inline-block p-0"
                              id="form-to-add-type-ice">
                             <div class="form-group mb-0 text-center">
                                 <label class="mb-0 ">TYPE OF ICE</label>
                                 <div class="radio-toolbar">
                                     {% for radio in add_order_form.ice %}
                                         {{ radio.tag }}
-                                        <label for="{{ radio.id_for_label }}" id="{{ radio.choice_label }}">{{ radio.choice_label }}</label>
+                                        <label for="{{ radio.id_for_label }}"
+                                               id="{{ radio.choice_label }}">{{ radio.choice_label }}</label>
                                     {% endfor %}
                                 </div>
                             </div>
 
                         </div>
                         <!--form to add quantity-->
-                        <div class=" d-inline-block col-md-3 align-text-bottom ml-3"
+                        <div class=" d-inline-block col-md-4 align-text-bottom p-0 pl-4"
                              id="form-to-quantity">
 
                             <label class="d-none" for="{{ add_order_form.quantity.id_for_label }}">Quantity</label>
-                            <div class="add-odd-button d-inline-block col-md-4 bg-info text-center rounded border-dark border ">
+                            <div class="add-odd-button d-inline-block bg-info text-center rounded border-dark border ">
                                 <span class="minus add-odd-button">-</span>
                             </div>
-                            <div class=" d-inline-block col-md-3 text-center pl-1"><input type="number" class="count"
-                                                                                          name="{{ add_order_form.quantity.html_name }}"
-                                                                                          value="{{ add_order_form.quantity.value }}"
-                                                                                          min="{{ add_order_form.quantity.initial }}"
-                                                                                          required
-                                                                                          id="{{ add_order_form.quantity.id_for_label }}">
+                            <div class="d-inline-block text-center" style="width: 25%"><input type="number"
+                                                                                              class="count"
+                                                                                              name="{{ add_order_form.quantity.html_name }}"
+                                                                                              value="{{ add_order_form.quantity.value }}"
+                                                                                              min="{{ add_order_form.quantity.initial }}"
+                                                                                              required
+                                                                                              id="{{ add_order_form.quantity.id_for_label }}">
                             </div>
-                            <div class="add-odd-button d-inline-block col-md-4 bg-info text-center rounded border-dark border">
+                            <div class="add-odd-button d-inline-block bg-info text-center rounded border-dark border">
                                 <span class="plus">+</span>
                             </div>
                         </div>
-
                         <!--form to add flavour-->
                         <div class="flavour-toolbar col-md-12 m-0 p-1 ">
                             {% for radio in add_order_form.flavour %}
@@ -55,49 +56,59 @@
                         </div>
                     </form>
                 </div>
+                <!-- CART -->
                 <div class="col-4 p-0" id="cart">
-                    <!-- CART -->
                     {% if order_in_cart %}
-                        <div class="insideofcart border border-primary rounded d-inline-block bg-light py-1">
-                            <h1 class="text-center">CART</h1>
-                            <!-- postpone or delete order-->
+                        <div class="insideofcart border border-primary rounded d-inline-block bg-light pb-1 col-md-4 p-0">
+                        <h1 class="text-center bg-warning col-md-12">CART</h1>
+                        <!-- postpone or delete order-->
 
-                            <div class="order_list my-1">
-                                <ul class="list-unstyled">
-                                    {% for ices in order_in_cart.ices_ordered.all %}
-                                        <form action="{% url 'delete_oi' id=ices.id %}" method="post">
-                                            {% csrf_token %}
-                                            <li class="my-2">{{ ices }}<span class="float-right "><input
-                                                    class="btn btn-primary btn-sm"
-                                                    type="submit"
-                                                    value="Delete"></span></li>
-                                        </form>
-                                    {% endfor %}
-                                    <p>Total:{% if sumarize %}Sum: {{ sumarize }}zł{% else %} 0zł {% endif %}</p>
-                                </ul>
-                            </div>
+                        <div class="order_list my-1 p-0">
+                            <ul class="list-unstyled list-group">
+                                {% for ices in order_in_cart.ices_ordered.all %}
+                                    <form action="{% url 'delete_oi' id=ices.id %}" method="post">
+                                        {% csrf_token %}
+                                        <div class="d-inline-block col-md-12 p-0 align-text-center">
+                                            <li class="list-group-item list-group-item-info px-0 py-1">
+                                                <span class="text-truncate d-inline-block col-md-9 p-0">{{ ices }}</span>
+                                                <span class="pl-2 d-inline-block align-text-bottom col-2"><input
+                                                        class="btn btn-primary btn-sm"
+                                                        type="submit"
+                                                        value="Delete"></span></li>
+                                        </div>
 
-                            <div class="text-right">
+                                    </form>
+                                {% endfor %}
+                                <p>Total:{% if sumarize %}Sum: {{ sumarize }}zł{% else %} 0zł {% endif %}</p>
+                                <div class="col-12 px-0 my-2 bg-warning">
+                                    <span class="d-inline-block col-md-6 text-uppercase">Total:</span>
+                                    <span class="d-inline-block text-truncate col-md-5 align-bottom text-right">{% if sumarize %}
+                                        {{ sumarize }}zł{% else %} 0zł {% endif %}</span>
+                                </div>
+                            </ul>
+                        </div>
 
-                                <a href="{% url 'postpone_order' id=order_in_cart.id %}"
-                                   class="btn btn-primary btn-lg">Postpone</a>
-                                <form class="d-inline" method="POST"
-                                      action="{% url 'delete_order' pk=order_in_cart.id %}">
-                                    {% csrf_token %}
-                                    <input class="btn btn-outline-danger btn-lg" type="submit" value="Delete">
-                                </form>
+                        <div class="text-right">
 
-                            </div>
-
+                            <a href="{% url 'postpone_order' id=order_in_cart.id %}"
+                               class="btn btn-primary btn-lg">Postpone</a>
+                            <form class="d-inline" method="POST"
+                                  action="{% url 'delete_order' pk=order_in_cart.id %}">
+                                {% csrf_token %}
+                                <input class="btn btn-outline-danger btn-lg" type="submit" value="Delete">
+                            </form>
 
                         </div>
                         <!-- Button trigger modal -->
-                        <div class=" col-md-12 text-center  mt-5">
-                            <button id="paybutton" type="button" class="btn btn-primary btn-lg" data-toggle="modal"
+                        <div class=" col-md-12 text-center  mt-5 ">
+                            <button id="paybutton" type="button" class="btn btn-primary btn-lg col-md-6"
+                                    data-toggle="modal"
                                     data-target="#exampleModalCenter">
                                 PAY
                             </button>
                         </div>
+
+
                     {% else %}
                         <div class="text-center border border-dark rounded">
                             <h1>Cart</h1>
@@ -106,11 +117,10 @@
 
                     {% endif %}
 
+                    </div>
                 </div>
             </div>
         </article>
-
-
 
         {% if order_in_cart %}
             <article>

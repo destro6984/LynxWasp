@@ -6,7 +6,6 @@ from django.db.models import Q
 
 from django.shortcuts import render, redirect
 
-# Create your views here.
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DeleteView, DetailView
 from django.views.generic.base import View
@@ -124,7 +123,7 @@ def postpone_order(request, id):
 
 def return_order(request, id=None):
     if Order.objects.filter(worker_owner=request.user, status=1).exists():
-        messages.error(request, "You have active order opened, Please postpone or delete it")
+        messages.info(request, "You have active order opened, Please postpone or delete it")
         return redirect('create-order')
     else:
         order_to_change_status = Order.objects.get(worker_owner=request.user, id=id)

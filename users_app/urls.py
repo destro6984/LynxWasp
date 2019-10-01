@@ -23,8 +23,8 @@ from . import views
 
 urlpatterns = [
 
-    url(r"^login/$", auth_views.LoginView.as_view(template_name="users/login.html"), name='login'),
-    url(r"^logout/$", auth_views.LogoutView.as_view(template_name="users/logout.html"), name='logout'),
+    url(r"^login/$", auth_views.LoginView.as_view(template_name="users_app/login.html"), name='login'),
+    url(r"^logout/$", auth_views.LogoutView.as_view(template_name="users_app/logout.html"), name='logout'),
     url(r"^register/$", Registration.as_view(), name='register'),
     url(r"^profile/$", views.profile_user, name='profile'),
     url(r"^delete/(?P<pk>\d*$)", DeleteUser.as_view(), name='delete'),

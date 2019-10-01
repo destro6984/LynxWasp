@@ -14,7 +14,7 @@ from .models import MyUser, ProfileUser
 class Registration(View):
     def get(self, request):
         form = UserRegistryForm()
-        return render(request, 'users/register.html', context={"form": form})
+        return render(request, 'users_app/register.html', context={"form": form})
 
     def post(self, request):
         form = UserRegistryForm(request.POST)
@@ -25,7 +25,7 @@ class Registration(View):
             return redirect('login')
         else:
             form = UserRegistryForm(request.POST)
-        return render(request, 'users/register.html', context={'form': form})
+        return render(request, 'users_app/register.html', context={'form': form})
 
 
 @login_required
@@ -45,7 +45,7 @@ def profile_user(request):
     else:
         user_update_form = UpdateUser(instance=request.user)
         profile_user_update_form = UpdateProfileUser(instance=request.user.profileuser)
-    return render(request, 'users/profile.html', context={"user_update_form": user_update_form,
+    return render(request, 'users_app/profile.html', context={"user_update_form": user_update_form,
                                                           "profile_user_update_form": profile_user_update_form})
 
 
