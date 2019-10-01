@@ -144,5 +144,7 @@ MEDIA_URL= "/media/"
 # close session at clos page
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
+# django heroku local
+django_heroku.settings(locals())
 
 AUTH_USER_MODEL = "users_app.MyUser"
