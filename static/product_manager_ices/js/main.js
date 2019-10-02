@@ -28,9 +28,12 @@ $(function () {
     });
 // end
 // adding scope by adding flavoures
+    console.log($("#scoope").prev("input[name='ice']"));
+    console.log("asdf")
 
-    var type_ice = $(".radio-toolbar input[name='ice']").change(function (event) {
-        if (type_ice.eq(1).is(":checked")) {
+
+    var type_ice_s = $("#scoope").prev("input[name='ice']").change(function (event) {
+        if (type_ice_s.is(":checked")) {
             $('input[name=flavour]').click(function (event) {
                 var input_flavour = $('input[name=flavour]:checked').length;
                 $('.count').attr('value', input_flavour);
@@ -39,8 +42,8 @@ $(function () {
         }
     });
     // adding thai ice
-    var type_ice = $(".radio-toolbar input[name='ice']").change(function (event) {
-        if (type_ice.eq(0).is(":checked")) {
+    var type_ice = $("#Thai").prev("input[name='ice']").change(function (event) {
+        if (type_ice.is(":checked")) {
             $('input[name=flavour]').click(function (event) {
                 $('.count').attr('value', 1);
 

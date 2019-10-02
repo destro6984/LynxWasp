@@ -28,7 +28,8 @@ body {
     border: 2px solid #444;
     border-radius: 4px;
     text-align: center;
-    width: 40%;
+    width: 47%;
+    cursor: pointer;
 
 
 }
@@ -105,10 +106,12 @@ body {
 #id_quantity {
     vertical-align: middle;
     font-weight: 700;
-    ;min-width: 35px;
+    min-width: 35px;
     border: none;
-    font-size: 50px;
+    font-size: 48px;
     width: 100%;
+    text-align: inherit;
+
 }
 .add-odd-button {
     width: 60px;
