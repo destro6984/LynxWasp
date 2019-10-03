@@ -9,6 +9,9 @@ class AddIceForm(ModelForm):
         model = Ices
         fields = "__all__"
 
+    def clean_type(self):
+        return self.cleaned_data['type'].lower()
+
 
 class AddFlavourForm(ModelForm):
     class Meta:

@@ -86,12 +86,12 @@ class CreateOrder(LoginRequiredMixin, View):
             if Order.objects.filter(worker_owner=request.user, status=1).exists():
                 orde = Order.objects.get(worker_owner=request.user, status=1)
                 orde.ices_ordered.add(ice_in_order)
-                # price_of_ice(request)
+                # price_of_ice(request)todo
                 orde.save()
             else:
                 orde = Order.objects.create(worker_owner=request.user, status=1)
                 orde.ices_ordered.add(ice_in_order)
-                # price_of_ice(request)
+                # price_of_ice(request) todo
                 orde.save()
             messages.success(request, "OrderItem Added to cart")
             return redirect("create-order")

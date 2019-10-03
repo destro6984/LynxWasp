@@ -42,7 +42,7 @@ $(function () {
         }
     });
     // adding thai ice
-    var type_ice = $("#Thai").prev("input[name='ice']").change(function (event) {
+    var type_ice = $("#thai").prev("input[name='ice']").change(function (event) {
         if (type_ice.is(":checked")) {
             $('input[name=flavour]').click(function (event) {
                 $('.count').attr('value', 1);

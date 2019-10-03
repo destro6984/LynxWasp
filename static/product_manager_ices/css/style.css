@@ -2,11 +2,6 @@ body {
     background-image: url("doodles.png");
 }
 
-.insideofcart
-{
-    min-width: 378px;
-}
-
 
 /*end*/
 /*radio buttons to chose type of ice */
@@ -30,6 +25,7 @@ body {
     text-align: center;
     width: 47%;
     cursor: pointer;
+    overflow: hidden;
 
 
 }
