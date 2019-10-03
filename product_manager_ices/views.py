@@ -1,10 +1,10 @@
 from django import forms
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DeleteView, DetailView
@@ -12,6 +12,7 @@ from django.views.generic.base import View
 
 from product_manager_ices.forms import AddIceForm, AddFlavourForm, AddOrderItem
 from product_manager_ices.models import Ices, Order, OrderItem
+from users_app.models import MyUser
 
 
 class Homepage(View):
@@ -154,5 +155,8 @@ class ListOfOrders(LoginRequiredMixin, ListView):
         return queryset
 
 
-class OrderDetail(DetailView):
+class OrderDetail(UserPassesTestMixin,LoginRequiredMixin,DetailView):
     model = Order
+    def test_func(self):
+        user = get_object_or_404(MyUser, id=self.kwargs.get('pk'))
+        return self.request.user == user
