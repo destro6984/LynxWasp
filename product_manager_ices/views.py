@@ -158,5 +158,5 @@ class ListOfOrders(LoginRequiredMixin, ListView):
 class OrderDetail(UserPassesTestMixin,LoginRequiredMixin,DetailView):
     model = Order
     def test_func(self):
-        user = get_object_or_404(MyUser, id=self.kwargs.get('pk'))
-        return self.request.user == user
+        user = Order.objects.get(id=self.kwargs.get("pk"))
+        return self.request.user.id == user.worker_owner.id

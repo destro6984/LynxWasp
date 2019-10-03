@@ -24,12 +24,14 @@
                             <div class="d-inline-block col-md-12 p-0" data-toggle='tooltip'
                                  title="{{ order.worker_owner }}">
                                 <a class="list-group-item list-group-item-action list-group-item-light d-block"
-                                   href="{% url 'detail-order' pk=order.id %}">Nr:{{ order.id }} Data:{{ order.time_sell | date:'Y-m-d H:i' }} Employee: {{ order.worker_owner }}<br>Status:{{order.status}}</a>
+                                   href="{% url 'detail-order' pk=order.id %}">Nr:{{ order.id }} Data:{{ order.time_sell | date:'Y-m-d H:i' }} Employee: {{ order.worker_owner }}<br>Status:<span class="statusoforder">{{order.status}}</span></a>
                             </div>
+                            {% if request.user.id == order.worker_owner_id %}
                             <div class="d-inline-block col-md-3">
                                 <a class="badge badge-pill badge-primary d-block" href=" {% url 'return_order' id=order.id %}">Return
                                     Order to Active</a>
                             </div>
+                        {% endif %}
                         </li>
 
                     {% empty %}

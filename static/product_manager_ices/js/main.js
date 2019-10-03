@@ -28,10 +28,6 @@ $(function () {
     });
 // end
 // adding scope by adding flavoures
-    console.log($("#scoope").prev("input[name='ice']"));
-    console.log("asdf")
-
-
     var type_ice_s = $("#scoope").prev("input[name='ice']").change(function (event) {
         if (type_ice_s.is(":checked")) {
             $('input[name=flavour]').click(function (event) {
@@ -58,7 +54,20 @@ $(function () {
 
 
 // end
+// change number to status
+    sts = ($(".statusoforder"));
+    switch (sts.text()) {
+        case "1":
+            sts.text('Started');
+        case "2":
+            sts.text('Postponed');
+        case "3":
+            sts.each(function () {
+                sts.text('Finished')
+            });
+    }
 
 
+    // end
 })
 ;
