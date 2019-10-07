@@ -17,3 +17,6 @@ Credentials for testing:
 - pass testing1234  
   
 *Program is one of my first adventures of programming with Python/Django and it is still in progress so please bear it in mind.*
+*Things to do/in progress
+-ajax the forms
+-improve search specific for day/ month /year*

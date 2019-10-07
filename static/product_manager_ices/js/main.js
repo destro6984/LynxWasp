@@ -54,7 +54,7 @@ $(function () {
 
 
 // end
-// change number to status
+// change number to status detail view
     sts = ($(".statusoforder"));
     switch (sts.text()) {
         case "1":
@@ -62,9 +62,8 @@ $(function () {
         case "2":
             sts.text('Postponed');
         case "3":
-            sts.each(function () {
-                sts.text('Finished')
-            });
+            sts.text('Finished')
+
     }
 
 

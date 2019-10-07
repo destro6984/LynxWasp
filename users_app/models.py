@@ -9,7 +9,6 @@ class MyUser(AbstractUser):
     email = models.EmailField(unique=True)
 
 
-
 class ProfileUser(models.Model):
     user = models.OneToOneField(MyUser, on_delete=models.CASCADE)
     # image = models.ImageField(upload_to="profiles", default="default.jpg") local solution
@@ -19,6 +18,7 @@ class ProfileUser(models.Model):
 
     def __str__(self):
         return f" {self.user.username} Profile, First_name: {self.user.first_name}, Last_name: {self.user.last_name}, Location: {self.location}, Birth Date: {self.birth_date}"
+
 # local solution
     # def save(self,**kwargs):
     #     super().save()
