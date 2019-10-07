@@ -16,11 +16,18 @@ from users_app.models import MyUser
 
 
 class Homepage(View):
+    """
+    Welcome Page
+    """
     def get(self, request):
         return render(request, 'Homepage.html')
 
 
 class AddIce(View):
+    """
+    Class to add products by type and flavoures,
+    Two separate forms given
+    """
     def get(self, request):
         form_type = AddIceForm()
         form_flavour = AddFlavourForm()
@@ -60,6 +67,12 @@ class AddIce(View):
 
 
 class CreateOrder(LoginRequiredMixin, View):
+    """
+    Main Page to service the Ice sale:
+    Chosing type,quantity,flavoures
+    SideBar Shop Cart
+    Only one order can be open and being active / orders can be postpone or deleted
+    """
     def get(self, request):
         add_order_form = AddOrderItem()
         try:
@@ -100,12 +113,19 @@ class CreateOrder(LoginRequiredMixin, View):
 
 
 def delete_orderitem(request, id=None):
+    """
+    Deleting orderitems in current order CART
+    """
     order_to_delete = OrderItem.objects.get(id=id)
     order_to_delete.delete()
     return redirect('create-order')
 
 
 def change_status_order_for_finish(request, id=None):
+    """
+    Change status of order to finished
+    Boostrap Modal > buttons PAY>Finish
+    """
     order_to_change_status = Order.objects.get(id=id, worker_owner=request.user, status=1)
     order_to_change_status.status = 3
     order_to_change_status.save()
@@ -113,6 +133,10 @@ def change_status_order_for_finish(request, id=None):
 
 
 def postpone_order(request, id):
+    """
+    Postpone current order in CART
+    button> POSTPONE
+    """
     order_to_change_status = Order.objects.get(id=id, worker_owner=request.user, status="1")
     order_to_change_status.status = 2
     order_to_change_status.save()
@@ -120,6 +144,12 @@ def postpone_order(request, id):
 
 
 def return_order(request, id=None):
+    """
+    Change status of order form postpone to started
+    List-of-orders button> return order to active
+    Only the same user can return the order to active
+    ONLY ONE ORDER CAN BE ACTIVE IN CART
+    """
     if Order.objects.filter(worker_owner=request.user, status=1).exists():
         messages.info(request, "You have active order opened, Please postpone or delete it")
         return redirect('create-order')
@@ -131,28 +161,40 @@ def return_order(request, id=None):
 
 
 class OrderDelete(DeleteView):
+    """
+    Deleting whole current order in CART
+    """
     model = Order
     success_url = reverse_lazy("create-order")
 
 
 class ListOfOrders(LoginRequiredMixin, ListView):
+
+    """
+    List of finished orders
+    Search of orders,
+    Only the same user can return the order to active
+    """
     model = Order
     context_object_name = "orderlist"
     paginate_by = 7
-
     def get_queryset(self):
         query = self.request.GET.get('q')
         if query:
             queryset = Order.objects.filter(Q(worker_owner__username__icontains=query) |
                                             Q(time_sell__icontains=query)|
                                             Q(ices_ordered__flavour__flavour__icontains=query) |
-                                            Q(ices_ordered__ice__type__contains=query))
+                                            Q(ices_ordered__ice__type__contains=query)).order_by("-time_sell")
         else:
-            queryset = Order.objects.filter(worker_owner=self.request.user)
+            queryset = Order.objects.filter(worker_owner=self.request.user).order_by("-time_sell")
         return queryset
 
 
 class OrderDetail(UserPassesTestMixin,LoginRequiredMixin,DetailView):
+    """
+    Detail of every order
+    Only owner of order can see the details.
+    """
     model = Order
     def test_func(self):
         user = Order.objects.get(id=self.kwargs.get("pk"))

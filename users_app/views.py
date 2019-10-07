@@ -12,6 +12,10 @@ from .models import MyUser, ProfileUser
 
 
 class Registration(View):
+    """
+    Registation View, extended default User and RegistrationForm
+    Profile of user created in signals.py
+    """
     def get(self, request):
         form = UserRegistryForm()
         return render(request, 'users_app/register.html', context={"form": form})
@@ -30,6 +34,9 @@ class Registration(View):
 
 @login_required
 def profile_user(request):
+    """
+    Update of user profile
+    """
     if request.method == "POST":
         user_update_form = UpdateUser(request.POST, instance=request.user)
         profile_user_update_form = UpdateProfileUser(request.POST, request.FILES, instance=request.user.profileuser)
@@ -50,6 +57,10 @@ def profile_user(request):
 
 
 class DeleteUser(LoginRequiredMixin,DeleteView):
+    """
+    delete of user
+    USER can be deleted onyl by him self
+    """
     model = MyUser
     success_url = reverse_lazy("homepage")
     def delete(self, request, *args, **kwargs):
