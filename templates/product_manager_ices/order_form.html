@@ -62,7 +62,7 @@
                     {% if order_in_cart %}
                         <div class="insideofcart border border-primary rounded d-inline-block bg-light col-md-12 pb-1 p-0">
                         <h1 class="text-center bg-warning col-md-12">CART</h1>
-                        <!-- postpone or delete order-->
+
 
                         <div class="order_list my-1 p-0">
                             <ul class="list-unstyled list-group">
@@ -71,12 +71,16 @@
                                         {% csrf_token %}
                                         <div class="d-inline-block col-md-12 p-0 align-text-center">
                                             <li class="list-group-item list-group-item-info px-0 py-1">
-                                                <span class="text-truncate d-inline-block col-md-8 p-0">{{ ices.ice.type }}{{ ices.quantity }}{{ ices.flavour.all }}</span>
-                                                <span class=" p-0 d-inline-block align-text-bottom col-md-3 float-right"><input
-                                                        class="btn btn-primary btn-sm"
+
+                                                <span class="text-truncate d-inline-block col-md-9 p-0">{{ ices.ice.type }} {{ ices.quantity }}
+                                                    {% for ices_flavour in ices.flavour.all %}
+                                                        {{ ices_flavour }} {% endfor %}</span>
+
+                                                <button class="d-inline-block col-md-2 bg-info border-1 rounded p-0 px-auto align-text-bottom"
                                                         type="submit"
-                                                        value="Delete"
-                                                        style="width: 100%"></span></li>
+                                                        value="Delete"><i class="fas fa-trash"></i></button>
+                                            </li>
+
                                         </div>
 
                                     </form>
@@ -89,7 +93,7 @@
                                 </div>
                             </ul>
                         </div>
-
+                        <!-- postpone or delete order-->
                         <div class="text-right">
 
                             <a href="{% url 'postpone_order' id=order_in_cart.id %}"
@@ -147,7 +151,10 @@
                                             <ul class="d-inline-block">
                                                 {% for ices in order_in_cart.ices_ordered.all %}
                                                     {% csrf_token %}
-                                                    <li>{{ ices }}</li>
+                                                    <li> <span
+                                                            class="text-truncate d-inline-block ">{{ ices.ice.type }} {{ ices.quantity }}
+                                                        {% for ices_flavour in ices.flavour.all %}
+                                                            {{ ices_flavour }} {% endfor %}</span></li>
                                                 {% endfor %}
                                             </ul>
                                             <p class="d-inline-block float-right">Sum:{{ sumarize }} zł</p>

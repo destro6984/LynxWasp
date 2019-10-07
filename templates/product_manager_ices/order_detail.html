@@ -17,13 +17,14 @@
                 <ul class="list-unstyled">
                     {% for product in object.ices_ordered.all %}
                         <li>{{ product }}</li>
-                        <p>Total: {{ product.get_total_ice_price }}</p>
+
                     {% empty %}
                         <li>Order was empty</li>
                         </ul>
                     {% endfor %}
+                <p>Total: {{ object.get_total }}</p>
                 <h7 class="float-right">{{ object.worker_owner }}</h7>
-                <h7 class="float-left">Status:<span class="statusoforder">{{order.status}}</span></h7>
+                <h7 class="float-left">Status:<span class="statusoforder">{{ order.status }}</span></h7>
 
             </div>
 
