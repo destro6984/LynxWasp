@@ -46,9 +46,7 @@ class AddIce(View):
                                                                               "form_flavour": form_flavour, })
 
 
-class IcesView(ListView):
-    model = Ices
-
+# TODO/inprogress
 # def price_of_ice(request):
 #     order=Order.objects.get(worker_owner=request.user, status=1)
 #     if len(request.POST.getlist('flavour')) == 1:
@@ -57,7 +55,6 @@ class IcesView(ListView):
 #         order.ices_ordered.ice.price=15
 #     elif len(request.POST.getlist('flavour')) ==3:
 #         order.ices_ordered.ice.price=16
-
 
 
 
@@ -141,7 +138,7 @@ class OrderDelete(DeleteView):
 class ListOfOrders(LoginRequiredMixin, ListView):
     model = Order
     context_object_name = "orderlist"
-    paginate_by = 10
+    paginate_by = 7
 
     def get_queryset(self):
         query = self.request.GET.get('q')
