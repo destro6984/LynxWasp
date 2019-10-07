@@ -25,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'eh0#gwt1o7_ag%z+sjstw5@s=p9fxa%hz1rd^le27_pj-z(pez'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["lynxwasp.herokuapp.com"]
 
@@ -113,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Warsaw'
 
 USE_I18N = True
 
@@ -133,7 +133,6 @@ LOGIN_URL="login"
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
-    # '/var/www/static/',
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
@@ -141,7 +140,7 @@ MEDIA_ROOT= os.path.join(BASE_DIR, "media")
 
 MEDIA_URL= "/media/"
 
-# close session at clos page
+# close session at close page
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # django heroku local
