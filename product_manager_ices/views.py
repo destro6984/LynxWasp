@@ -23,7 +23,7 @@ class Homepage(View):
         return render(request, 'Homepage.html')
 
 
-class AddIce(View):
+class AddIce(LoginRequiredMixin,View):
     """
     Class to add products by type and flavoures,
     Two separate forms given
