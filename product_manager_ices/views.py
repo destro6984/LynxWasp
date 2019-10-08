@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
@@ -111,38 +112,42 @@ class CreateOrder(LoginRequiredMixin, View):
             messages.info(request, "Wrong Data")
         return render(request, 'product_manager_ices/order_form.html', context={"add_order_form": add_order_form})
 
-
-def delete_orderitem(request, id=None):
+@login_required
+def delete_orderitem(request,id=None):
     """
     Deleting orderitems in current order CART
     """
-    order_to_delete = OrderItem.objects.get(id=id)
-    order_to_delete.delete()
+    if request.method == "POST":
+        id_to_del=request.POST.get("oi_to_delete")
+        order_to_delete = OrderItem.objects.get(id=id)
+        order_to_delete.delete()
     return redirect('create-order')
 
-
+@login_required
 def change_status_order_for_finish(request, id=None):
     """
     Change status of order to finished
     Boostrap Modal > buttons PAY>Finish
     """
-    order_to_change_status = Order.objects.get(id=id, worker_owner=request.user, status=1)
-    order_to_change_status.status = 3
-    order_to_change_status.save()
+    if request.method == "POST":
+        order_to_change_status = Order.objects.get(id=id, worker_owner=request.user, status=1)
+        order_to_change_status.status = 3
+        order_to_change_status.save()
     return redirect('create-order')
 
-
+@login_required
 def postpone_order(request, id):
     """
     Postpone current order in CART
     button> POSTPONE
     """
-    order_to_change_status = Order.objects.get(id=id, worker_owner=request.user, status="1")
-    order_to_change_status.status = 2
-    order_to_change_status.save()
+    if request.method == "POST":
+        order_to_change_status = Order.objects.get(id=id, worker_owner=request.user, status="1")
+        order_to_change_status.status = 2
+        order_to_change_status.save()
     return redirect('create-order')
 
-
+@login_required
 def return_order(request, id=None):
     """
     Change status of order form postpone to started
@@ -160,7 +165,7 @@ def return_order(request, id=None):
         return redirect('list_order')
 
 
-class OrderDelete(DeleteView):
+class OrderDelete(LoginRequiredMixin,DeleteView):
     """
     Deleting whole current order in CART
     """
