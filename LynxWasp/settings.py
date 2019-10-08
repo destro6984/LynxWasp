@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 import django_heroku
+
+# https://devcenter.heroku.com/articles/cloudinary
 import cloudinary
 
 
