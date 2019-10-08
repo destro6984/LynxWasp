@@ -38,7 +38,8 @@
                                                                                               value="{{ add_order_form.quantity.value }}"
                                                                                               min="{{ add_order_form.quantity.initial }}"
                                                                                               required
-                                                                                              id="{{ add_order_form.quantity.id_for_label }}">
+                                                                                              id="{{ add_order_form.quantity.id_for_label }}"
+                                                                                              onKeyDown="return false">
                             </div>
                             <div class="add-odd-button d-inline-block bg-info text-center rounded border-dark border plus">
                                 <span class=" add-odd-button">+</span>
@@ -79,7 +80,7 @@
                                                 <button class="d-inline-block col-md-2 bg-info border-1 rounded p-0 px-auto align-text-bottom"
                                                         type="submit"
                                                         value="{{ ices.id }}"
-                                                name="oi_to_delete"><i class="fas fa-trash"></i></button>
+                                                        name="oi_to_delete"><i class="fas fa-trash"></i></button>
                                             </li>
 
                                         </div>
