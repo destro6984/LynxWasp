@@ -28,10 +28,9 @@ $(function () {
     });
 // end
 // adding scope by adding flavoures
-    var type_ice_s = $("#scoope").prev("input[name='ice']").change(function (event) {
-        if (type_ice_s.is(":checked")) {
+    $("input[name='ice']").change(function (event) {
+        if ($("#scoope").prev("input[name='ice']").is(":checked")) {
             $('input[name=flavour]').click(function (event) {
-
                 var input_flavour = $('input[name=flavour]:checked').length;
                 $('.count').attr('value', input_flavour);
 
@@ -39,8 +38,8 @@ $(function () {
         }
     });
     // adding thai ice limitation on 3 ices
-    var type_ice = $("#thai").prev("input[name='ice']").change(function (event) {
-        if (type_ice.is(":checked")) {
+    $("input[name='ice']").change(function (event) {
+        if ($("#thai").prev("input[name='ice']").is(":checked")) {
             $('input[name=flavour]').click(function (event) {
                 $('.count').attr('value', 1);
                 if ($('input[name=flavour]:checked').length >= 3) {
@@ -54,7 +53,6 @@ $(function () {
                 }
 
             });
-
         }
     });
 // reset checkboxes after change
