@@ -4,7 +4,7 @@ This program is a web based Application developed in Python/Django as a simple P
 - There are mainly 2 types of ices
 - Each type can have different flavoures (thai type can mix only 3 flavoures)
 ##### Price list:
-###### - Scoope: certaint price depending on number of scoope
+###### - Scoope: certaint price depending on number of scoope(one scoope-one flavour)
 ###### - Thai-Ice: set price for all ices of that type.
 #### Features:
 - adding new products/flavoures
