@@ -30,8 +30,8 @@ $(function () {
         $('input[name=flavour]').click(function () {
             // adding thai ice
             if ($("#thai").prev("input[name='ice']").is(":checked")) {
-                $('.count').attr('value', 1)
-                // only 3 flavoures can be picked
+                $('.count').attr('value', 1);
+                // only 3 flavoures can be picked for Thai ice
                 if ($('input[name=flavour]:checked').length >= 3) {
                     $(':checkbox:not(:checked)').prop('disabled', true);
                 } else {
