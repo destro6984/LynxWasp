@@ -1,13 +1,5 @@
 $(function () {
-// open popup window to add new message
-    $('#checkout').click(function (e) {
-        $('.bg-modal').css('display', 'flex')
-    });
 
-    $('.close').click(function () {
-        $('.bg-modal').css('display', 'none')
-    });
-    // end
 
 
     //calculator for counting change
@@ -21,46 +13,40 @@ $(function () {
     // quantity
     var quantity = $('.count');
     $('.plus').on('click', function () {
-        quantity.val(parseInt(quantity.val()) + 1);
+        quantity.attr('value', parseInt(quantity.val()) + 1);
     });
     $('.minus').on('click', function () {
-        quantity.val(parseInt(quantity.val()) - 1);
+        quantity.attr('value', parseInt(quantity.val()) - 1);
     });
 // end
-// adding scope by adding flavoures
-    $("input[name='ice']").change(function (event) {
-        if ($("#scoope").prev("input[name='ice']").is(":checked")) {
-            $('input[name=flavour]').click(function (event) {
+// Adding ices
+
+    $("input[name='ice']").change(function () {
+        // reset checkboxe after change
+        $('input[name=flavour]').prop("checked", false);
+        $('.count').attr('value', 1);
+        $('input[name=flavour]').prop("disabled", false);
+
+        $('input[name=flavour]').click(function () {
+            // adding thai ice
+            if ($("#thai").prev("input[name='ice']").is(":checked")) {
+                $('.count').attr('value', 1)
+                // only 3 flavoures can be picked
+                if ($('input[name=flavour]:checked').length >= 3) {
+                    $(':checkbox:not(:checked)').prop('disabled', true);
+                } else {
+                    $('input[name=flavour]').prop("disabled", false);
+                }
+            }
+            // adding scope depending on flavoures number
+            else if ($("#scoope").prev("input[name='ice']").is(":checked")) {
                 var input_flavour = $('input[name=flavour]:checked').length;
                 $('.count').attr('value', input_flavour);
 
-            });
-        }
-    });
-    // adding thai ice limitation on 3 ices
-    $("input[name='ice']").change(function (event) {
-        if ($("#thai").prev("input[name='ice']").is(":checked")) {
-            $('input[name=flavour]').click(function (event) {
-                $('.count').attr('value', 1);
-                if ($('input[name=flavour]:checked').length >= 3) {
-                    $("input:checkbox:not(:checked)").each(function () {
-                        $(this).prop('disabled', true);
-                    });
-                } else {
-                    $("input:checkbox:not(:checked)").each(function () {
-                        $(this).prop('disabled', false);
-                    });
-                }
+            }
+        });
 
-            });
-        }
     });
-// reset checkboxes after change
-    $(".radio-toolbar input[name='ice']").change(function (event) {
-        $('input[name=flavour]').prop("checked", false);
-        $('.count').attr('value', 1);
-    });
-
 
 // end
 // change number to status detail view
