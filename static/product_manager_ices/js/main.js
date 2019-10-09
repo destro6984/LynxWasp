@@ -1,7 +1,5 @@
 $(function () {
 
-
-
     //calculator for counting change
     var summm = $("#sumtopay").attr("value");
     $("#clientmoney").on("input", function () {
@@ -20,14 +18,16 @@ $(function () {
     });
 // end
 // Adding ices
+    var input_name_ice = $("input[name='ice']");
+    var input_name_flavour = $('input[name=flavour]');
 
-    $("input[name='ice']").change(function () {
+    input_name_ice.change(function () {
         // reset checkboxe after change
-        $('input[name=flavour]').prop("checked", false);
+        input_name_flavour.prop("checked", false);
         $('.count').attr('value', 1);
-        $('input[name=flavour]').prop("disabled", false);
+        input_name_flavour.prop("disabled", false);
 
-        $('input[name=flavour]').click(function () {
+        input_name_flavour.click(function () {
             // adding thai ice
             if ($("#thai").prev("input[name='ice']").is(":checked")) {
                 $('.count').attr('value', 1);
@@ -35,7 +35,7 @@ $(function () {
                 if ($('input[name=flavour]:checked').length >= 3) {
                     $(':checkbox:not(:checked)').prop('disabled', true);
                 } else {
-                    $('input[name=flavour]').prop("disabled", false);
+                    input_name_flavour.prop("disabled", false);
                 }
             }
             // adding scope depending on flavoures number

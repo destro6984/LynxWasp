@@ -62,7 +62,31 @@
                 <div class="col-md-4 p-0" id="cart">
                     {% if order_in_cart %}
                         <div class="insideofcart border border-primary rounded d-inline-block bg-light col-md-12 pb-1 p-0">
-                        <h1 class="text-center bg-warning col-md-12">CART</h1>
+                        {#                        tittle and dropdwon menu to delete order or pospone#}
+                        <div>
+                            <div class="h2 text-center bg-warning text-uppercase d-inline-block col-md-12 p-0 align-center">
+                                cart
+                                <div class="btn-group float-right m-1">
+                                    <button type="button" class="btn btn-secondary rounded "
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <!-- postpone or delete order-->
+                                        <form class="d-inline" method="POST"
+                                              action="{% url 'delete_order' pk=order_in_cart.id %}">
+                                            {% csrf_token %}
+                                            <input class="btn btn-outline-danger btn-lg" type="submit" value="Delete">
+                                        </form>
+                                        <form method="POST"
+                                              action="{% url 'postpone_order' id=order_in_cart.id %}">
+                                            {% csrf_token %}
+                                            <input class="btn btn-outline-danger btn-lg" type="submit" value="Postpone">
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
 
                         <div class="order_list my-1 p-0">
@@ -95,18 +119,8 @@
                                 </div>
                             </ul>
                         </div>
-                        <!-- postpone or delete order-->
-                        <div class="text-right">
 
-                            <a href="{% url 'postpone_order' id=order_in_cart.id %}"
-                               class="btn btn-primary btn-lg">Postpone</a>
-                            <form class="d-inline" method="POST"
-                                  action="{% url 'delete_order' pk=order_in_cart.id %}">
-                                {% csrf_token %}
-                                <input class="btn btn-outline-danger btn-lg" type="submit" value="Delete">
-                            </form>
 
-                        </div>
                         <!-- Button trigger modal -->
                         <div class=" col-md-12 text-center  mt-5 ">
                             <button id="paybutton" type="button" class="btn btn-primary btn-lg col-md-6"
@@ -115,7 +129,6 @@
                                 PAY
                             </button>
                         </div>
-
 
                     {% else %}
                         <div class="text-center border border-dark rounded">

@@ -93,8 +93,10 @@ class CreateOrder(LoginRequiredMixin, View):
         if valid:
             ice = add_order_form.cleaned_data.get('ice')
             quantity = add_order_form.cleaned_data.get('quantity')
+            # create order_items-ices
             ice_in_order = OrderItem.objects.create(ice_id=ice, quantity=quantity)
             ice_in_order.flavour.set(request.POST.getlist('flavour')) # 1 of thai  Flavouers:czekolada
+            # Order exists - add order_items-ices to cart not-exists- create order and add order_items-ices
             if Order.objects.filter(worker_owner=request.user, status=1).exists():
                 orde = Order.objects.get(worker_owner=request.user, status=1)
                 orde.ices_ordered.add(ice_in_order)
@@ -118,7 +120,6 @@ def delete_orderitem(request,id=None):
     Deleting orderitems in current order CART
     """
     if request.method == "POST":
-        id_to_del=request.POST.get("oi_to_delete")
         order_to_delete = OrderItem.objects.get(id=id)
         order_to_delete.delete()
     return redirect('create-order')
