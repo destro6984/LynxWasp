@@ -67,22 +67,24 @@
                             <div class="h2 text-center bg-warning text-uppercase d-inline-block col-md-12 p-0 align-center">
                                 cart
                                 <div class="btn-group float-right m-1">
-                                    <button type="button" class="btn btn-secondary rounded "
+                                    <button type="button" class="btn btn-info rounded "
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i class="fas fa-chevron-down"></i>
                                     </button>
-                                    <div class="dropdown-menu dropdown-menu-right">
+                                    <div class="dropdown-menu dropdown-menu-right text-center py-0 rounded">
                                         <!-- postpone or delete order-->
-                                        <form class="d-inline" method="POST"
-                                              action="{% url 'delete_order' pk=order_in_cart.id %}">
-                                            {% csrf_token %}
-                                            <input class="btn btn-outline-danger btn-lg" type="submit" value="Delete">
-                                        </form>
-                                        <form method="POST"
-                                              action="{% url 'postpone_order' id=order_in_cart.id %}">
-                                            {% csrf_token %}
-                                            <input class="btn btn-outline-danger btn-lg" type="submit" value="Postpone">
-                                        </form>
+
+											<form class="dropdown-item p-0 border bg-danger rounded" method="POST"
+												  action="{% url 'delete_order' pk=order_in_cart.id %}">
+												{% csrf_token %}
+												<input class="border-0 bg-transparent col-12 py-3 text-white text-uppercase" type="submit" value="Delete">
+											</form>
+											<form class="dropdown-item p-0 border bg-primary rounded" method="POST"
+												  action="{% url 'postpone_order' id=order_in_cart.id %}">
+												{% csrf_token %}
+												<input class="border-0 bg-transparent col-12 py-3 text-white text-uppercase" type="submit" value="Postpone">
+											</form>
+
                                     </div>
                                 </div>
                             </div>
@@ -111,7 +113,7 @@
 
                                     </form>
                                 {% endfor %}
-                                <p>Total:{% if sumarize %}Sum: {{ sumarize }}zł{% else %} 0zł {% endif %}</p>
+
                                 <div class="col-12 px-0 my-2 bg-warning">
                                     <span class="d-inline-block col-md-6 text-uppercase">Total:</span>
                                     <span class="d-inline-block text-truncate col-md-5 align-bottom text-right">{% if sumarize %}
@@ -151,6 +153,7 @@
                 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
                      aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
+
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h4 class="modal-title" id="exampleModalCenterTitle">Order Cart</h4>
@@ -158,40 +161,89 @@
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                            <div class="modal-body mb-0">
+                            <div class="modal-body mb-0 p-1">
                                 <form method="post" action="{% url 'change_to_finish' id=order_in_cart.id %}">
                                     {% csrf_token %}
                                     <div id="div_id_content" class="form-group mb-0">
-                                        <div class="border rounded border-primary mb-2">
-                                            <ul class="d-inline-block">
+                                        <div class=" table-responsive border rounded border-primary mb-2">
+                                            <table class="table table-info m-0">
+                                                <thead class="tablename">
+                                                <tr>
+                                                    <th scope="col">#</th>
+                                                    <th scope="col">Quantity</th>
+                                                    <th scope="col">Type</th>
+                                                    <th scope="col">Flavoures</th>
+                                                    <th scope="col">Price</th>
+                                                </tr>
+                                                </thead>
+
+                                                <tbody>
                                                 {% for ices in order_in_cart.ices_ordered.all %}
-                                                    {% csrf_token %}
-                                                    <li> <span
-                                                            class="text-truncate d-inline-block ">{{ ices.ice.type }} {{ ices.quantity }}
-                                                        {% for ices_flavour in ices.flavour.all %}
-                                                            {{ ices_flavour }} {% endfor %}</span></li>
+                                                    <tr>
+
+
+                                                        <th scope="row">{{ forloop.counter }}</th>
+                                                        <td>{{ ices.quantity }}</td>
+                                                        <td>{{ ices.ice.type }}</td>
+
+                                                        <td>{% for ices_flavour in ices.flavour.all %}
+                                                            {{ ices_flavour }}, {% endfor %}
+                                                        </td>
+                                                        <td>{{ ices.ice.price }}</td>
+
+                                                    </tr>
                                                 {% endfor %}
-                                            </ul>
-                                            <p class="d-inline-block float-right">Sum:{{ sumarize }} zł</p>
+                                                <tr>
+                                                    <th scope="row">Total:</th>
+                                                    <td>{{ sumarize }}zł</td>
+                                                </tr>
+
+
+                                                </tbody>
+
+                                            </table>
+
                                         </div>
                                         <!-- Callculator for counting change  -->
+                                        <div>
+                                            <div class="text-center">
+                                                <button class="btn btn-primary pb-1" type="button"
+                                                        data-toggle="collapse" data-target="#collapseExample"
+                                                        aria-expanded="false" aria-controls="collapseExample">
+                                                    CALCULATOR
+                                                </button>
+                                            </div>
+                                            <div class="collapse" id="collapseExample">
+                                                <div id="sumtopay" value="{{ sumarize }}" class="card card-body p-2">
 
-                                        <div id="sumtopay" value="{{ sumarize }}">
-                                            <label for="clientmoney">Calculator</label>
-                                            <input type="number" id="clientmoney">
+                                                    <div class="col-12 text-center">
+                                                        <label for="clientmoney">Money:</label>
+                                                        <input type="number" id="clientmoney" placeholder="Give Amount">
+                                                    </div>
 
-                                            <label class="border rounded">Change:</label>
-                                            <output id="clientchange">zł</output>
+
+                                                    <div class="col-12 text-center">
+                                                        <label class="">Change:</label>
+                                                        <output id="clientchange"></output>
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+
+                                            <div class="text-center mt-2">
+                                                <input class="btn btn-outline-success mx-auto btn-lg"
+                                                       id="finish-order-btn"
+                                                       type="submit"
+                                                       value="Finish">
+                                            </div>
                                         </div>
-                                        <div class="text-center mt-2">
-                                            <input class="btn btn-outline-success mx-auto btn-lg"
-                                                   id="finish-order-btn"
-                                                   type="submit"
-                                                   value="Finish">
-                                        </div>
+
                                     </div>
                                 </form>
                             </div>
+
                         </div>
                     </div>
                 </div>

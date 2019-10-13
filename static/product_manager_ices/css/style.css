@@ -9,8 +9,7 @@ body {
     margin: 0;
 }
 
-.radio-toolbar input[type="radio"]
-{
+.radio-toolbar input[type="radio"] {
     display: none;
 }
 
@@ -75,6 +74,12 @@ body {
 .flavour-toolbar input[type="checkbox"]:checked + label {
     background-color: #bfb;
     border-color: #4c4;
+    opacity: 1;
+}
+
+input[name=flavour]:disabled ~ label {
+    opacity: 0.2;
+
 }
 
 /*end*/
@@ -109,6 +114,7 @@ body {
     text-align: inherit;
 
 }
+
 .add-odd-button {
     width: 60px;
     height: 60px;
@@ -117,16 +123,21 @@ body {
     color: #444444;
     cursor: pointer;
 
-    }
+}
 
 
-.minus:hover{
+.minus:hover {
     background-color: #717fe0 !important;
 }
-.plus:hover{
+
+.plus:hover {
     background-color: #717fe0 !important;
 }
-input[type="number"] { -moz-appearance: textfield; }
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -137,16 +148,32 @@ input[type=number]::-webkit-outer-spin-button {
 
 /*end*/
 
-/*modal with pay and calculator*/
 
-#clientmoney
-{
-    width: 50px;
-}
-
-/*end*/
 
 #form-to-quantity
 {
     min-width: 158px;
 }
+
+/* tabel for finishing order */
+
+table {
+    width: 100%;
+}
+
+.tablename th {
+    text-align: center;
+    padding: 2px 5px 2px 5px;
+    max-width: 20%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+}
+
+.tablename tr {
+    padding: 0px 5px 0px 5px;
+
+}
+
+/* end */

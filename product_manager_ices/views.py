@@ -163,7 +163,7 @@ def return_order(request, id=None):
         order_to_change_status = Order.objects.get(worker_owner=request.user, id=id)
         order_to_change_status.status = 1
         order_to_change_status.save()
-        return redirect('list_order')
+        return redirect('create-order')
 
 
 class OrderDelete(LoginRequiredMixin,DeleteView):
