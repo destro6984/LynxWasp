@@ -167,40 +167,33 @@
                                     <div id="div_id_content" class="form-group mb-0">
                                         <div class=" table-responsive border rounded border-primary mb-2">
                                             <table class="table table-info m-0">
-                                                <thead class="tablename">
-                                                <tr>
-                                                    <th scope="col">#</th>
-                                                    <th scope="col">Quantity</th>
+                                                <thead>
+                                                <tr class="table-head-names">
+                                                    <th scope="col">Nr</th>
+                                                    <th scope="col" >Amount</th>
                                                     <th scope="col">Type</th>
-                                                    <th scope="col">Flavoures</th>
+                                                    <th scope="col" >Flavoures</th>
                                                     <th scope="col">Price</th>
                                                 </tr>
                                                 </thead>
 
                                                 <tbody>
                                                 {% for ices in order_in_cart.ices_ordered.all %}
-                                                    <tr>
-
-
-                                                        <th scope="row">{{ forloop.counter }}</th>
+                                                    <tr >
+                                                        <th scope="row" class="text-center" >{{ forloop.counter }}</th>
                                                         <td>{{ ices.quantity }}</td>
                                                         <td>{{ ices.ice.type }}</td>
-
-                                                        <td>{% for ices_flavour in ices.flavour.all %}
-                                                            {{ ices_flavour }}, {% endfor %}
+                                                        <td id="flavoure-cell" >{% for ices_flavour in ices.flavour.all %}
+                                                            ({{ ices_flavour }}), {% endfor %}
                                                         </td>
-                                                        <td>{{ ices.ice.price }}</td>
-
+                                                        <td>{{ ices.get_total_ice_price }}</td>
                                                     </tr>
                                                 {% endfor %}
                                                 <tr>
                                                     <th scope="row">Total:</th>
-                                                    <td>{{ sumarize }}zł</td>
+                                                    <td colspan="4" class="text-right">{{ sumarize }}zł</td>
                                                 </tr>
-
-
                                                 </tbody>
-
                                             </table>
 
                                         </div>

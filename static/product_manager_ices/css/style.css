@@ -157,22 +157,21 @@ input[type=number]::-webkit-outer-spin-button {
 
 /* tabel for finishing order */
 
-table {
-    width: 100%;
+
+#flavoure-cell
+{
+    padding: 2px 2px 2px 2px;
+    /*max-width: 20%;*/
+    /*overflow: hidden;*/
+    /*white-space: nowrap;*/
+    /*text-overflow: ellipsis;*/
+
 }
 
-.tablename th {
+.table-head-names th
+{
+    padding: 2px 2px 2px 2px;
     text-align: center;
-    padding: 2px 5px 2px 5px;
-    max-width: 20%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-
-}
-
-.tablename tr {
-    padding: 0px 5px 0px 5px;
 
 }
 
