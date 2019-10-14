@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 
@@ -29,6 +29,7 @@ class AddIce(LoginRequiredMixin,View):
     Class to add products by type and flavoures,
     Two separate forms given
     """
+
     def get(self, request):
         form_type = AddIceForm()
         form_flavour = AddFlavourForm()
@@ -36,6 +37,7 @@ class AddIce(LoginRequiredMixin,View):
                                                                               "form_flavour": form_flavour, })
 
     def post(self, request):
+
         form_type = AddIceForm(request.POST)
         form_flavour = AddFlavourForm(request.POST)
         if form_type.is_valid():

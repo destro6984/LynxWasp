@@ -2,7 +2,9 @@
 {% load crispy_forms_tags %}
 {% block content %}
     <article class="text-center mt-1">
+
         <div class="col-md-5 d-inline-block bg-light border border-dark rounded">
+            {% if request.user.is_superuser %}
             <form method="post" action="{% url 'add-ice' %}">
                 <legend class="border-bottom mb-4"> Add Type and Price</legend>
                 {% csrf_token %}
@@ -11,7 +13,11 @@
                     <button class="btn btn-outline-info" type="submit"> Add Type</button>
                 </div>
             </form>
+            {% else %}
+                <h3>Log in as admin to add new ices</h3>
+            {% endif %}
         </div>
+
         <div class="col-md-6 d-inline-block bg-light border border-dark rounded align-top">
             <form method="POST" action="{% url 'add-ice' %}">
                 {% csrf_token %}

@@ -28,7 +28,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'eh0#gwt1o7_ag%z+sjstw5@s=p9fxa%hz1rd^le27_pj-z(pez'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = ["lynxwasp.herokuapp.com"]
 
 
@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'product_manager_ices.apps.ProductManagerIcesConfig',
     'cloudinary',
     'users_app.apps.UsersConfig',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
