@@ -7,4 +7,8 @@ admin.site.register(Ices)
 admin.site.register(Flavour)
 
 admin.site.register(OrderItem)
+<<<<<<< HEAD
 admin.site.register(Order)
+=======
+admin.site.register(Order)
+>>>>>>> usahe drf check add falvour
