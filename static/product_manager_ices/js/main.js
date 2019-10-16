@@ -1,5 +1,7 @@
 $(function () {
 
+
+
     //calculator for counting change
     var summm = $("#sumtopay").attr("value");
     $("#clientmoney").on("input", function () {

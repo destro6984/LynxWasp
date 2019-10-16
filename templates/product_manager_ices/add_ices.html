@@ -1,34 +1,93 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
+
     <article class="text-center mt-1">
 
         <div class="col-md-5 d-inline-block bg-light border border-dark rounded">
             {% if request.user.is_superuser %}
-            <form method="post" action="{% url 'add-ice' %}">
-                <legend class="border-bottom mb-4"> Add Type and Price</legend>
-                {% csrf_token %}
-                {{ form_type|crispy }}
-                <div class="form-group text-center">
-                    <button class="btn btn-outline-info" type="submit"> Add Type</button>
-                </div>
-            </form>
+                <form method="post" action="{% url 'add-ice' %}">
+                    <legend class="border-bottom mb-4"> Add Type and Price</legend>
+                    {% csrf_token %}
+                    {{ form_type|crispy }}
+                    <div class="form-group text-center">
+                        <button class="btn btn-outline-info" type="submit"> Add Type</button>
+                    </div>
+                </form>
             {% else %}
                 <h3>Log in as admin to add new ices</h3>
             {% endif %}
         </div>
 
         <div class="col-md-6 d-inline-block bg-light border border-dark rounded align-top">
-            <form method="POST" action="{% url 'add-ice' %}">
+            <form method="POST">
                 {% csrf_token %}
                 <fildset class="form-group">
                     <legend class="border-bottom mb-4"> Add Flavour</legend>
                     {{ form_flavour|crispy }}
                 </fildset>
                 <div class="form-group text-center">
-                    <button class="btn btn-outline-info" type="submit"> Add Flavour</button>
+                    <button class="btn btn-outline-info" type="submit" id="addflavour"> Add Flavour</button>
                 </div>
             </form>
         </div>
     </article>
+
+    <script>
+
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        var csrftoken = getCookie('csrftoken');
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+
+
+        $('#addflavour').click(function (e) {
+            e.preventDefault();
+            var flavour = $('input[name=flavour]').val();
+            // Create Ajax Call
+
+            $.ajax({
+                url: "{% url 'add-flavour' %}",
+                type: 'POST',
+                data: {
+                    'flavour': flavour,
+
+                },
+                dataType: 'json',
+                success: function () {
+                    console.log("saved")
+                },
+                error: function () {
+                    alert('err')
+                }
+            });
+        });
+
+    </script>
 {% endblock %}
