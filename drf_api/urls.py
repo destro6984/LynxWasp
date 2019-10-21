@@ -5,6 +5,9 @@ from rest_framework import routers
 
 from .views import AddIceCreateAPIView, AddFlavourCreateAPIView
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 99a397cf8c0d34db95c537a6cf444b4c7d5fa1ad
 
 urlpatterns = [
     # url(r'^$', OrdersListAPIView.as_view(), name='order-list'),
@@ -12,6 +15,7 @@ urlpatterns = [
     url(r'add-flavour/$', AddFlavourCreateAPIView.as_view(), name='add-flavour'),
 
 ]
+<<<<<<< HEAD
 =======
 
 urlpatterns = [
@@ -21,3 +25,5 @@ urlpatterns = [
 
 ]
 >>>>>>> usahe drf check add falvour
+=======
+>>>>>>> 99a397cf8c0d34db95c537a6cf444b4c7d5fa1ad

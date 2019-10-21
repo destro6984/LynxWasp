@@ -58,15 +58,19 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'LynxWasp.urls'
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 # Rest framwork validations
 =======
 >>>>>>> usahe drf check add falvour
+=======
+>>>>>>> 99a397cf8c0d34db95c537a6cf444b4c7d5fa1ad
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ]
 }
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 
@@ -77,6 +81,10 @@ REST_FRAMEWORK = {
 
 # crsf token form cookies
 >>>>>>> adde flavour api
+=======
+
+# crsf token form cookies
+>>>>>>> 99a397cf8c0d34db95c537a6cf444b4c7d5fa1ad
 CSRF_USE_SESSIONS = False
 
 TEMPLATES = [
