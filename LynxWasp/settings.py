@@ -57,14 +57,17 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'LynxWasp.urls'
 
-
 # Rest framwork validations
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-    ]
+    ],
+    # DEFAULT PAGINATION
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 7,
+
 }
 
 # crsf token form cookies
