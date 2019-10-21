@@ -68,10 +68,15 @@ REST_FRAMEWORK = {
     ]
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 # crsf token form cookies
 =======
 >>>>>>> usahe drf check add falvour
+=======
+
+# crsf token form cookies
+>>>>>>> adde flavour api
 CSRF_USE_SESSIONS = False
 
 TEMPLATES = [
