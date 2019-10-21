@@ -5,14 +5,14 @@
 
         <div class="col-md-5 d-inline-block bg-light border border-dark rounded">
             {% if request.user.is_superuser %}
-            <form method="post" action="{% url 'add-ice' %}">
-                <legend class="border-bottom mb-4"> Add Type and Price</legend>
-                {% csrf_token %}
-                {{ form_type|crispy }}
-                <div class="form-group text-center">
-                    <button class="btn btn-outline-info" type="submit"> Add Type</button>
-                </div>
-            </form>
+                <form method="post" action="{% url 'add-ice' %}">
+                    <legend class="border-bottom mb-4"> Add Type and Price</legend>
+                    {% csrf_token %}
+                    {{ form_type|crispy }}
+                    <div class="form-group text-center">
+                        <button class="btn btn-outline-info" type="submit"> Add Type</button>
+                    </div>
+                </form>
             {% else %}
                 <h3>Log in as admin to add new ices</h3>
             {% endif %}
@@ -26,9 +26,33 @@
                     {{ form_flavour|crispy }}
                 </fildset>
                 <div class="form-group text-center">
-                    <button class="btn btn-outline-info" type="submit"> Add Flavour</button>
+                    <button class="btn btn-outline-info" type="submit" id="addflavour"> Add Flavour</button>
                 </div>
             </form>
         </div>
     </article>
+    <script>
+        {#adding ice flavour#}
+        {#$('#addflavour').click(function (e) {#}
+        {#    e.preventDefault();#}
+        {#    var flavour = $('input[name=flavour]').val();#}
+        {#    // ajax adding ices#}
+        {#    $.ajax({#}
+        {#        url: "{% url 'add-flavour' %}",#}
+        {#        type: 'POST',#}
+        {#        data: {#}
+        {#            'flavour': flavour,#}
+        {#        },#}
+        {#        dataType: 'json',#}
+        {#        success: function () {#}
+        {#            alert("added")#}
+        {#        },#}
+        {#        error: function () {#}
+        {#            alert('error')#}
+        {#        }#}
+        {#    });#}
+        //});
+        {#end#}
+        {#adding ice type#}
+    </script>
 {% endblock %}

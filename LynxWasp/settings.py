@@ -60,6 +60,17 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'LynxWasp.urls'
 
+# Rest framwork validations
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ]
+}
+
+# crsf token form cookies
+CSRF_USE_SESSIONS = False
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
