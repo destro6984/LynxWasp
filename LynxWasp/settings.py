@@ -58,7 +58,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'LynxWasp.urls'
 
 
-# Rest framwork authentication
+# Rest framwork validations
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -68,6 +68,7 @@ REST_FRAMEWORK = {
 }
 
 # crsf token form cookies
+
 CSRF_USE_SESSIONS = False
 
 TEMPLATES = [

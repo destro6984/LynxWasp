@@ -9,7 +9,6 @@ from drf_api.serializers import AddIcesSerializers, AddFlavourSerializers
 
 
 
-
 class AddIceCreateAPIView(CreateAPIView):
     permission_classes = [IsAdminUser]
     serializer_class = AddIcesSerializers
