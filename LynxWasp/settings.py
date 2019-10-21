@@ -63,6 +63,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ]
 }
+
+# crsf token form cookies
 CSRF_USE_SESSIONS = False
 
 TEMPLATES = [
