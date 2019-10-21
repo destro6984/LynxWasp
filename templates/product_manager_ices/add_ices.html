@@ -11,7 +11,7 @@
                     {% csrf_token %}
                     {{ form_type|crispy }}
                     <div class="form-group text-center">
-                        <button class="btn btn-outline-info" type="submit"> Add Type</button>
+                        <button class="btn btn-outline-info" type="submit" id="addtype"> Add Type</button>
                     </div>
                 </form>
             {% else %}
@@ -34,11 +34,11 @@
     </article>
 
     <script>
-{#adding ice flavour#}
+        {#adding ice flavour#}
         $('#addflavour').click(function (e) {
             e.preventDefault();
             var flavour = $('input[name=flavour]').val();
-            // ajax adding ices
+            // ajax adding flavoures
 
             $.ajax({
                 url: "{% url 'add-flavour' %}",
@@ -49,15 +49,40 @@
                 },
                 dataType: 'json',
                 success: function () {
-                    alert("added")
+                    alert("added flavour")
                 },
                 error: function () {
-                    alert('error')
+                    alert('error flavour')
                 }
             });
         });
         {#end#}
-{#adding ice type#}
+        {#adding ice type#}
+        $('#addtype').click(function (e) {
+            e.preventDefault();
+            var type = $('input[name=type]').val();
+            var price = $('input[name=price]').val();
+            // ajax adding ices
+
+            $.ajax({
+                url: "{% url 'create-ice' %}",
+                type: 'POST',
+                data: {
+                    'type': type,
+                    'price': price,
+
+                },
+                dataType: 'json',
+                success: function () {
+                    alert("added flavour")
+                },
+                error: function () {
+                    alert('error flavour')
+                }
+            });
+        });
+        {#end#}
+        {#adding ice type#}
 
 
     </script>

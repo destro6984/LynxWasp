@@ -1,13 +1,12 @@
 from rest_framework import serializers
 
-from product_manager_ices.models import Order, Ices, Flavour
 
+from product_manager_ices.models import Order, Ices, Flavour
 
 class AddIcesSerializers(serializers.ModelSerializer):
     class Meta:
         model = Ices
         fields = "__all__"
-
 
 class AddFlavourSerializers(serializers.ModelSerializer):
     class Meta:
@@ -15,7 +14,9 @@ class AddFlavourSerializers(serializers.ModelSerializer):
         fields = ("flavour",)
 
 
+
 # class OrderListSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = Order
 #         fields = '__all__'
+

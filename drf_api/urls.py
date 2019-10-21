@@ -11,3 +11,4 @@ urlpatterns = [
     url(r'add-flavour/$', AddFlavourCreateAPIView.as_view(), name='add-flavour'),
 
 ]
+

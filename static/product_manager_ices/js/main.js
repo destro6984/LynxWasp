@@ -64,10 +64,7 @@ $(function () {
             break;
     }
     // end
-
-
-        // #Setting crsf token  for all ajax form django docs.#
-
+    // #Setting crsf token  for all ajax form django docs.#
 
     function getCookie(name) {
         var cookieValue = null;
@@ -102,8 +99,6 @@ $(function () {
 
         // #end
         // #
-
-
 
 
 })

@@ -35,25 +35,25 @@ class AddIce(LoginRequiredMixin,View):
         form_flavour = AddFlavourForm()
         return render(request, 'product_manager_ices/add_ices.html', context={"form_type": form_type,
                                                                               "form_flavour": form_flavour, })
-    #
-    # def post(self, request):
-    #
-    #     form_type = AddIceForm(request.POST)
-    #     form_flavour = AddFlavourForm(request.POST)
-    #     if form_type.is_valid():
-    #         form_type.save()
-    #         messages.success(request, "Type Added")
-    #         return redirect("add-ice")
-    #     if form_flavour.is_valid():
-    #         form_flavour.save()
-    #         messages.success(request, "Flavour Added")
-    #         return redirect("add-ice")
-    #     else:
-    #         form_type = AddIceForm()
-    #         form_flavour = AddFlavourForm()
-    #         messages.success(request, "Wrong Data")
-    #     return render(request, 'product_manager_ices/add_ices.html', context={"form_type": form_type,
-    #                                                                           "form_flavour": form_flavour, })
+
+    def post(self, request):
+
+        form_type = AddIceForm(request.POST)
+        form_flavour = AddFlavourForm(request.POST)
+        if form_type.is_valid():
+            form_type.save()
+            messages.success(request, "Type Added")
+            return redirect("add-ice")
+        if form_flavour.is_valid():
+            form_flavour.save()
+            messages.success(request, "Flavour Added")
+            return redirect("add-ice")
+        else:
+            form_type = AddIceForm()
+            form_flavour = AddFlavourForm()
+            messages.success(request, "Wrong Data")
+        return render(request, 'product_manager_ices/add_ices.html', context={"form_type": form_type,
+                                                                              "form_flavour": form_flavour, })
 
 
 # TODO/inprogress
