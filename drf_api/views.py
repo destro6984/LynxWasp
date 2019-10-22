@@ -1,3 +1,4 @@
+from rest_framework.exceptions import ValidationError
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveUpdateAPIView, UpdateAPIView, \
     RetrieveUpdateDestroyAPIView
 from rest_framework.mixins import UpdateModelMixin
@@ -38,6 +39,12 @@ class OrderChangeView(RetrieveUpdateDestroyAPIView):
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
+
+    def perform_update(self, serializer):
+        queryset = Order.objects.filter(worker_owner=self.request.user, status=1)
+        if queryset.exists():
+            raise ValidationError('You have active order opened, Please postpone or delete it')
+        serializer.save()
 
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
