@@ -1,5 +1,6 @@
 $(function () {
 
+
     //calculator for counting change
     var summm = $("#sumtopay").attr("value");
     $("#clientmoney").on("input", function () {
@@ -65,7 +66,6 @@ $(function () {
     // end
     // #Setting crsf token  for all ajax form django docs.#
 
-
     function getCookie(name) {
         var cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -97,8 +97,8 @@ $(function () {
         }
     });
 
-    // #end
-    // #
+// end#
+
 
 })
 ;

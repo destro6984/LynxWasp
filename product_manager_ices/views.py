@@ -72,7 +72,7 @@ class AddIce(LoginRequiredMixin,View):
 class CreateOrder(LoginRequiredMixin, View):
     """
     Main Page to service the Ice sale:
-    Chosing type,quantity,flavoures
+    Choosing type,quantity,flavoures
     SideBar Shop Cart
     Only one order can be open and being active / orders can be postpone or deleted
     """

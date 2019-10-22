@@ -7,4 +7,6 @@ admin.site.register(Ices)
 admin.site.register(Flavour)
 
 admin.site.register(OrderItem)
+
 admin.site.register(Order)
+

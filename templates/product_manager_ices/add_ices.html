@@ -20,7 +20,7 @@
         </div>
 
         <div class="col-md-6 d-inline-block bg-light border border-dark rounded align-top">
-            <form method="POST" action="{% url 'add-ice' %}">
+            <form method="POST">
                 {% csrf_token %}
                 <fildset class="form-group">
                     <legend class="border-bottom mb-4"> Add Flavour</legend>
@@ -36,6 +36,7 @@
 
     <script>
         {#adding ice flavour#}
+<<<<<<< HEAD
         {#$('#addflavour').click(function (e) {#}
         {#    e.preventDefault();#}
         {#    var flavour = $('input[name=flavour]').val();#}
@@ -84,6 +85,56 @@
         //});
         {#end#}
         {#adding ice type#}
+=======
+        $('#addflavour').click(function (e) {
+            e.preventDefault();
+            var flavour = $('input[name=flavour]').val();
+            // ajax adding flavoures
+
+            $.ajax({
+                url: "{% url 'add-flavour' %}",
+                type: 'POST',
+                data: {
+                    'flavour': flavour,
+
+                },
+                dataType: 'json',
+                success: function () {
+                    alert("added flavour")
+                },
+                error: function () {
+                    alert('error flavour')
+                }
+            });
+        });
+        {#end#}
+        {#adding ice type#}
+        $('#addtype').click(function (e) {
+            e.preventDefault();
+            var type = $('input[name=type]').val();
+            var price = $('input[name=price]').val();
+            // ajax adding ices
+
+            $.ajax({
+                url: "{% url 'create-ice' %}",
+                type: 'POST',
+                data: {
+                    'type': type,
+                    'price': price,
+
+                },
+                dataType: 'json',
+                success: function () {
+                    alert("added flavour")
+                },
+                error: function () {
+                    alert('error flavour')
+                }
+            });
+        });
+        {#end#}
+        {#adding ice type#}
+>>>>>>> features
 
     </script>
 {% endblock %}
