@@ -18,7 +18,6 @@ class AddFlavourSerializers(serializers.ModelSerializer):
 
 
 class OrderListSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Order
         fields = "__all__"
