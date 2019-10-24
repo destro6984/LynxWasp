@@ -48,7 +48,7 @@ class OrdersListAPIView(ListAPIView):
         return queryset
 
 
-# probably better do this with ModelViewSet but it yet to come
+# probably better do this with ModelViewSet but it's yet to come
 class OrderChangeView(RetrieveUpdateDestroyAPIView):
     """
     endpoint changeing order status
@@ -58,7 +58,7 @@ class OrderChangeView(RetrieveUpdateDestroyAPIView):
     serializer_class = OrderListSerializer
     lookup_field = "id"
 
-    # setting order to see only for loged user
+    # setting order to see only for request user
     def get_queryset(self):
         queryset = Order.objects.filter(worker_owner=self.request.user).order_by("-time_sell")
         return queryset
