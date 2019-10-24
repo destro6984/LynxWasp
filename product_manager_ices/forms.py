@@ -18,6 +18,9 @@ class AddFlavourForm(ModelForm):
         model=Flavour
         fields = '__all__'
 
+    def clean_type(self):
+        return self.cleaned_data['flavour'].lower()
+
 class AddOrderItem(forms.Form):
     def __init__(self, *args, **kwargs):
         super(AddOrderItem, self).__init__(*args, **kwargs)

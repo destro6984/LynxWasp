@@ -1,7 +1,7 @@
 from django.utils import timezone
 from rest_framework import serializers
 
-from product_manager_ices.models import Ices, Flavour, Order
+from product_manager_ices.models import Ices, Flavour, Order, OrderItem
 
 
 class AddIcesSerializers(serializers.ModelSerializer):
@@ -24,4 +24,16 @@ class OrderListSerializer(serializers.ModelSerializer):
         fields = "__all__"
         read_only_fields=('ices_ordered','worker_owner','time_sell')
 
+
+class OrderItemCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=OrderItem
+        fields="__all__"
+
+
+class OrderCreateSerializer(serializers.ModelSerializer):
+    ices_ordered=OrderItemCreateSerializer()
+    class Meta:
+        model= Order
+        fields=["worker_owner",'time_sell','status','ices_ordered']
 

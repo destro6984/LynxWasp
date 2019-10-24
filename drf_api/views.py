@@ -5,9 +5,10 @@ from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveUpdateAP
 from rest_framework.mixins import UpdateModelMixin
 from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
-from drf_api.serializers import AddIcesSerializers, AddFlavourSerializers, OrderListSerializer
+from drf_api.serializers import AddIcesSerializers, AddFlavourSerializers, OrderListSerializer, OrderCreateSerializer
 from product_manager_ices.models import Order
 
 
@@ -35,14 +36,14 @@ class OrdersListAPIView(ListAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = OrderListSerializer
 
-    # simple search
+    # Order-detail only for owner of order/ simple search of order
     def get_queryset(self):
         search = self.request.query_params.get('q', None)
         if search is not None:
             queryset = Order.objects.filter(Q(worker_owner__username__icontains=search) |
                                             Q(time_sell__icontains=search) |
                                             Q(ices_ordered__flavour__flavour__icontains=search) |
-                                            Q(ices_ordered__ice__type__contains=search)).order_by("-time_sell")
+                                            Q(ices_ordered__ice__type__contains=search)).order_by("-time_sell").distinct()
         else:
             queryset = Order.objects.filter(worker_owner=self.request.user).order_by("-time_sell")
         return queryset
@@ -69,3 +70,13 @@ class OrderChangeView(RetrieveUpdateDestroyAPIView):
         if queryset.count() > 1:
             raise ValidationError('You have active order opened, Please postpone or delete it')
         serializer.save()
+
+
+class OrderCrateView(APIView):
+    def post(self,request,format=None):
+        order= Order.objects.create(worker_owner=self.request.user)
+        return Response(order)
+
+
+
+
