@@ -5,7 +5,6 @@ from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveUpdateAP
 from rest_framework.mixins import UpdateModelMixin
 from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
 from drf_api.serializers import AddIcesSerializers, AddFlavourSerializers, OrderListSerializer, OrderCreateSerializer
@@ -72,11 +71,7 @@ class OrderChangeView(RetrieveUpdateDestroyAPIView):
         serializer.save()
 
 
-class OrderCrateView(APIView):
-    def post(self,request,format=None):
-        order= Order.objects.create(worker_owner=self.request.user)
-        return Response(order)
-
-
-
+class OrderCrateView(CreateAPIView):
+    serializer_class = OrderCreateSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 

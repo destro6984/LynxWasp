@@ -32,8 +32,14 @@ class OrderItemCreateSerializer(serializers.ModelSerializer):
 
 
 class OrderCreateSerializer(serializers.ModelSerializer):
-    ices_ordered=OrderItemCreateSerializer()
+    ices_ordered=OrderItemCreateSerializer(many=True)
     class Meta:
         model= Order
         fields=["worker_owner",'time_sell','status','ices_ordered']
 
+    def create(self, validated_data):
+        ices_ordered = validated_data.pop('ices_ordered')
+        order = Order.objects.create( **validated_data)
+        for ices in ices_ordered:
+            OrderItem.objects.create( **ices_ordered)
+        return order
