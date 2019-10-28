@@ -5,21 +5,19 @@ from product_manager_ices.models import Ices, Flavour, Order, OrderItem
 
 
 class AddIceForm(ModelForm):
+    type = forms.TextInput(attrs={'style': 'text-transform:lowercase'})
     class Meta:
         model = Ices
         fields = "__all__"
 
-    def clean_type(self):
-        return self.cleaned_data['type'].lower()
 
 
 class AddFlavourForm(ModelForm):
+    flavour = forms.TextInput(attrs={'style': 'text-transform:lowercase'})
     class Meta:
         model=Flavour
         fields = '__all__'
 
-    def clean_type(self):
-        return self.cleaned_data['flavour'].lower()
 
 class AddOrderItem(forms.Form):
     def __init__(self, *args, **kwargs):
