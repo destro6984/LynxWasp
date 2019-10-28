@@ -46,7 +46,6 @@ class AddIce(LoginRequiredMixin,View):
             messages.success(request, "Type Added")
             return redirect("add-ice")
         if form_flavour.is_valid():
-            form_flavour.clean_flavour()
             form_flavour.save()
             messages.success(request, "Flavour Added")
             return redirect("add-ice")

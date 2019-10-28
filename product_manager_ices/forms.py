@@ -3,7 +3,6 @@ from django.forms import ModelForm
 
 from product_manager_ices.models import Ices, Flavour, Order, OrderItem
 
-
 class AddIceForm(ModelForm):
     type = forms.TextInput(attrs={'style': 'text-transform:lowercase'})
     class Meta:
@@ -17,7 +16,6 @@ class AddFlavourForm(ModelForm):
     class Meta:
         model=Flavour
         fields = '__all__'
-
 
 class AddOrderItem(forms.Form):
     def __init__(self, *args, **kwargs):
