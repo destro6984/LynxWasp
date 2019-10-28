@@ -17,13 +17,15 @@ import django_heroku
 import cloudinary
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from local_settings import SECRET_KEY_HIDD
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'eh0#gwt1o7_ag%z+sjstw5@s=p9fxa%hz1rd^le27_pj-z(pez'
+SECRET_KEY = SECRET_KEY_HIDD
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
