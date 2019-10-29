@@ -17,7 +17,6 @@ import django_heroku
 import cloudinary
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-from local_settings import SECRET_KEY_HIDD
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
