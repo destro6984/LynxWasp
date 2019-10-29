@@ -29,7 +29,7 @@ SECRET_KEY = SECRET_KEY_HIDD
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-ALLOWED_HOSTS = ["lynxwasp.herokuapp.com"]
+ALLOWED_HOSTS = ["lynxwasp.herokuapp.com",'localhost']
 # "lynxwasp.herokuapp.com"
 # Application definition
 
