@@ -1,5 +1,6 @@
 from django.utils import timezone
 from rest_framework import serializers
+from rest_framework.fields import MultipleChoiceField
 
 from product_manager_ices.models import Ices, Flavour, Order, OrderItem
 
@@ -24,7 +25,7 @@ class OrderListSerializer(serializers.ModelSerializer):
 
 
 class OrderItemCreateSerializer(serializers.ModelSerializer):
-    flavour=AddFlavourSerializers(many=True)
+    # flavour=serializers.MultipleChoiceField(choices=[(flav.id, flav.flavour) for flav in Flavour.objects.all()])
     class Meta:
         model = OrderItem
         fields = ['ice','flavour','quantity']
@@ -32,17 +33,21 @@ class OrderItemCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         flavour = validated_data.pop('flavour')
         orderitem = OrderItem.objects.create(**validated_data)
+        orderitem.flavour.add(*flavour)
         return orderitem
 
 class OrderCreateSerializer(serializers.ModelSerializer):
     ices_ordered = OrderItemCreateSerializer(many=True)
-
     class Meta:
         model = Order
         fields = ["worker_owner", 'time_sell', 'status', 'ices_ordered']
+        depth=2
+
 
     def create(self, validated_data):
         ices_ordered = validated_data.pop('ices_ordered')
         order = Order.objects.create(**validated_data)
+        for ice in ices_ordered:
+            print(ice)
         return order
 

@@ -1,10 +1,11 @@
 from django.db.models import Q
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveUpdateAPIView, UpdateAPIView, \
-    RetrieveUpdateDestroyAPIView, get_object_or_404
+    RetrieveUpdateDestroyAPIView, get_object_or_404, ListCreateAPIView
 from rest_framework.mixins import UpdateModelMixin
 from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
 from drf_api.serializers import AddIcesSerializers, AddFlavourSerializers, OrderListSerializer, OrderCreateSerializer
@@ -71,7 +72,48 @@ class OrderChangeView(RetrieveUpdateDestroyAPIView):
         serializer.save()
 
 
-class OrderCrateView(CreateAPIView):
-    serializer_class = OrderCreateSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+class OrderCrateView(APIView):
+    # def get(self,request):
+    #     order = [order for order in Order.objects.all()]
+    #     serialized= OrderCreateSerializer(order, many=True)
+    #     return Response(serialized.data)
 
+    def post(self,request):
+
+        serialized = OrderCreateSerializer(data=request.POST)
+        if serialized.is_valid():
+            serialized.save()
+            return Response(serialized.data)
+        return Response(serialized.errors,status=400)
+
+
+
+# {
+#         "worker_owner": {
+#             "id": 1,
+#             "password": "pbkdf2_sha256$150000$Jg6mAOxOQ7d1$Wmkw21d6itrpPtwXiZDwwsyVZc8ipZD4aQ7TSO03p+8=",
+#             "last_login": "2019-10-29T22:33:53.334488+01:00",
+#             "is_superuser": true,
+#             "username": "admin",
+#             "first_name": "",
+#             "last_name": "",
+#             "is_staff": true,
+#             "is_active": true,
+#             "date_joined": "2019-10-01T22:30:10.054916+02:00",
+#             "email": "ad@s.com",
+#             "groups": [],
+#             "user_permissions": []
+#         },
+#         "time_sell": "2019-10-29T22:33:57.108770+01:00",
+#         "status": 1,
+#         "ices_ordered": [
+#             {
+#                 "ice": 5,
+#                 "flavour": [
+#                     41,
+#                     43
+#                 ],
+#                 "quantity": 1
+#             }
+#         ]
+#     }
