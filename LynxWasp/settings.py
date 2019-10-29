@@ -27,11 +27,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'eh0#gwt1o7_ag%z+sjstw5@s=p9fxa%hz1rd^le27_pj-z(pez'
 
-# SECRET_KEY = os.getenv('SECRET_KEY', 'Optional default value')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 ALLOWED_HOSTS = ["lynxwasp.herokuapp.com"]
-# "lynxwasp.herokuapp.com"
+
 # Application definition
 
 INSTALLED_APPS = [
