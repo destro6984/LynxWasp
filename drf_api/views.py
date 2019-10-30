@@ -8,8 +8,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
-from drf_api.serializers import AddIcesSerializers, AddFlavourSerializers, OrderListSerializer, OrderCreateSerializer
-from product_manager_ices.models import Order
+from drf_api.serializers import AddIcesSerializers, AddFlavourSerializers, OrderListSerializer, OrderCreateSerializer, \
+    OrderItemCreateSerializer
+from product_manager_ices.models import Order, OrderItem
 
 
 class AddIceCreateAPIView(CreateAPIView):
@@ -78,16 +79,41 @@ class OrderCrateView(APIView):
     #     serialized= OrderCreateSerializer(order, many=True)
     #     return Response(serialized.data)
 
-    def post(self,request):
+    def get(self,request):
+        order = [order for order in OrderItem.objects.all()]
+        serialized= OrderItemCreateSerializer(order, many=True)
+        return Response(serialized.data)
 
-        serialized = OrderCreateSerializer(data=request.POST)
+    def post(self,request):
+        serialized = OrderItemCreateSerializer(data=request.POST)
         if serialized.is_valid():
             serialized.save()
             return Response(serialized.data)
         return Response(serialized.errors,status=400)
+# working adding order testing
+#     def post(self,request):
+#         serialized = OrderCreateSerializer(data=request.POST)
+#         if serialized.is_valid():
+#             serialized.save(worker_owner=self.request.user)
+#             return Response(serialized.data)
+#         return Response(serialized.errors,status=400)
 
 
 
+ # {
+ #        "worker_owner": 1,
+ #        "time_sell": "2019-10-07T20:29:58.805866+02:00",
+ #        "status": 3,
+ #        "ices_ordered": [
+ #            {
+ #                "ice": 5,
+ #                "flavour": [],
+ #                "quantity": 1
+ #            }
+ #        ]
+ #    }
+
+#
 # {
 #         "worker_owner": {
 #             "id": 1,
