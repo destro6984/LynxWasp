@@ -1,14 +1,17 @@
+
 from django.db.models import Q
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveUpdateAPIView, UpdateAPIView, \
-    RetrieveUpdateDestroyAPIView, get_object_or_404
+    RetrieveUpdateDestroyAPIView, get_object_or_404, ListCreateAPIView
 from rest_framework.mixins import UpdateModelMixin
 from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
-from drf_api.serializers import AddIcesSerializers, AddFlavourSerializers, OrderListSerializer
-from product_manager_ices.models import Order
+from drf_api.serializers import AddIcesSerializers, AddFlavourSerializers, OrderListSerializer, OrderCreateSerializer, \
+    OrderItemCreateSerializer
+from product_manager_ices.models import Order, OrderItem
 
 
 class AddIceCreateAPIView(CreateAPIView):
@@ -35,20 +38,21 @@ class OrdersListAPIView(ListAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = OrderListSerializer
 
-    # simple search
+    # Order-detail only for owner of order/ simple search of order
     def get_queryset(self):
         search = self.request.query_params.get('q', None)
         if search is not None:
             queryset = Order.objects.filter(Q(worker_owner__username__icontains=search) |
                                             Q(time_sell__icontains=search) |
                                             Q(ices_ordered__flavour__flavour__icontains=search) |
-                                            Q(ices_ordered__ice__type__contains=search)).order_by("-time_sell")
+                                            Q(ices_ordered__ice__type__contains=search)).order_by(
+                "-time_sell").distinct()
         else:
             queryset = Order.objects.filter(worker_owner=self.request.user).order_by("-time_sell")
         return queryset
 
 
-# probably better do this with ModelViewSet but it's yet to come
+# probably better do this with ModelViewSet but it yet to come
 class OrderChangeView(RetrieveUpdateDestroyAPIView):
     """
     endpoint changeing order status
@@ -58,7 +62,7 @@ class OrderChangeView(RetrieveUpdateDestroyAPIView):
     serializer_class = OrderListSerializer
     lookup_field = "id"
 
-    # setting order to see only for request user
+    # setting order to see only for loged user
     def get_queryset(self):
         queryset = Order.objects.filter(worker_owner=self.request.user).order_by("-time_sell")
         return queryset
@@ -69,3 +73,34 @@ class OrderChangeView(RetrieveUpdateDestroyAPIView):
         if queryset.count() > 1:
             raise ValidationError('You have active order opened, Please postpone or delete it')
         serializer.save()
+
+
+class OrderCrateView(APIView):
+    # working adding order testing
+    def get(self, request):
+        order = [order for order in Order.objects.all()]
+        serialized = OrderCreateSerializer(order, many=True)
+        return Response(serialized.data)
+
+    def post(self, request):
+        serialized = OrderCreateSerializer(data=request.data)
+        if serialized.is_valid():
+            serialized.save(worker_owner=self.request.user)
+            return Response(serialized.data)
+        return Response(serialized.errors, status=400)
+
+# working adding orderitem
+#     def get(self,request):
+#         order = [order for order in OrderItem.objects.all()]
+#         serialized= OrderItemCreateSerializer(order, many=True)
+#         return Response(serialized.data)
+#
+#     def post(self,request):
+#         print(request.data)
+#         serialized = OrderItemCreateSerializer(data=request.data)
+#         if serialized.is_valid():
+#             serialized.save()
+#             return Response(serialized.data)
+#         return Response(serialized.errors,status=400)
+
+

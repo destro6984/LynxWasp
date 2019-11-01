@@ -30,7 +30,7 @@ from local_settings import SECRET_KEY_HIDD
 SECRET_KEY = SECRET_KEY_HIDD
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = ["lynxwasp.herokuapp.com"]
 
 # Application definition
