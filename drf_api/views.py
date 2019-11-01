@@ -74,72 +74,30 @@ class OrderChangeView(RetrieveUpdateDestroyAPIView):
 
 
 class OrderCrateView(APIView):
-    # def get(self,request):
-    #     order = [order for order in Order.objects.all()]
-    #     serialized= OrderCreateSerializer(order, many=True)
-    #     return Response(serialized.data)
-
+    # working adding order testing
     def get(self,request):
-        order = [order for order in OrderItem.objects.all()]
-        serialized= OrderItemCreateSerializer(order, many=True)
+        order = [order for order in Order.objects.all()]
+        serialized= OrderCreateSerializer(order, many=True)
         return Response(serialized.data)
 
     def post(self,request):
-        serialized = OrderItemCreateSerializer(data=request.POST)
+        serialized = OrderCreateSerializer(data=request.data)
         if serialized.is_valid():
-            serialized.save()
+            serialized.save(worker_owner=self.request.user)
             return Response(serialized.data)
         return Response(serialized.errors,status=400)
-# working adding order testing
+
+# working adding orderitem
+#     def get(self,request):
+#         order = [order for order in OrderItem.objects.all()]
+#         serialized= OrderItemCreateSerializer(order, many=True)
+#         return Response(serialized.data)
+#
 #     def post(self,request):
-#         serialized = OrderCreateSerializer(data=request.POST)
+#         print(request.data)
+#         serialized = OrderItemCreateSerializer(data=request.data)
 #         if serialized.is_valid():
-#             serialized.save(worker_owner=self.request.user)
+#             serialized.save()
 #             return Response(serialized.data)
 #         return Response(serialized.errors,status=400)
 
-
-
- # {
- #        "worker_owner": 1,
- #        "time_sell": "2019-10-07T20:29:58.805866+02:00",
- #        "status": 3,
- #        "ices_ordered": [
- #            {
- #                "ice": 5,
- #                "flavour": [],
- #                "quantity": 1
- #            }
- #        ]
- #    }
-
-#
-# {
-#         "worker_owner": {
-#             "id": 1,
-#             "password": "pbkdf2_sha256$150000$Jg6mAOxOQ7d1$Wmkw21d6itrpPtwXiZDwwsyVZc8ipZD4aQ7TSO03p+8=",
-#             "last_login": "2019-10-29T22:33:53.334488+01:00",
-#             "is_superuser": true,
-#             "username": "admin",
-#             "first_name": "",
-#             "last_name": "",
-#             "is_staff": true,
-#             "is_active": true,
-#             "date_joined": "2019-10-01T22:30:10.054916+02:00",
-#             "email": "ad@s.com",
-#             "groups": [],
-#             "user_permissions": []
-#         },
-#         "time_sell": "2019-10-29T22:33:57.108770+01:00",
-#         "status": 1,
-#         "ices_ordered": [
-#             {
-#                 "ice": 5,
-#                 "flavour": [
-#                     41,
-#                     43
-#                 ],
-#                 "quantity": 1
-#             }
-#         ]
-#     }
