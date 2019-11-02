@@ -42,7 +42,7 @@ class Order(models.Model):
         (3, 'Finished'),
     )
     worker_owner=models.ForeignKey(MyUser,on_delete=models.SET(get_sentinel_user), null=True)
-    ices_ordered = models.ManyToManyField(OrderItem)
+    ices_ordered = models.ManyToManyField(OrderItem, related_name="order_ice")
     time_sell = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=9, choices=STATUS_CHOICE,default=1)
 

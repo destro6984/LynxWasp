@@ -91,6 +91,7 @@ class CreateOrder(LoginRequiredMixin, View):
                                                                                 })
 
     def post(self, request):
+        print(request)
         add_order_form = AddOrderItem(request.POST)
         valid = add_order_form.is_valid()
         if valid:
