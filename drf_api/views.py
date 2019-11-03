@@ -85,6 +85,27 @@ class OrderCrateView(APIView):
             serialized.save(status=1,worker_owner=self.request.user)
             return Response(serialized.data)
         return Response(serialized.errors,status=400)
+
+
+
+# class OrderItemCreate(ListCreateAPIView):
+#     queryset = OrderItem.objects.all()
+#     serializer_class = OrderItemCreateSerializer
+class OrderItemCreate(APIView):
+    def get(self,request):
+        orderitem = [order for order in OrderItem.objects.all()]
+        serialized= OrderItemCreateSerializer(orderitem, many=True)
+        return Response(serialized.data)
+    def post(self,request):
+        serialized=OrderItemCreateSerializer(data=request.data)
+        activeorder=Order.objects.filter(worker_owner=request.user, status=1).first()
+        if serialized.is_valid():
+            serialized.save(order=[activeorder.id])
+            return Response(serialized.data,status=201)
+        return Response(serialized.errors, status=400)
+
+
+
     #
     # def put(self,request):
     #     serializer_orderitem =OrderItemCreateSerializer(data=request.data)

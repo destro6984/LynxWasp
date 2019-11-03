@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
-from drf_api.serializers import OrderItemCreateSerializer
-from .views import AddIceCreateAPIView, AddFlavourCreateAPIView, OrdersListAPIView, OrderChangeView, OrderCrateView
+from .views import AddIceCreateAPIView, AddFlavourCreateAPIView, OrdersListAPIView, OrderChangeView, OrderCrateView, \
+    OrderItemCreate
 
 urlpatterns = [
 
@@ -10,7 +10,7 @@ urlpatterns = [
     url(r'order-list/$', OrdersListAPIView.as_view(), name='order-list'),
     url(r'order-manage/(?P<id>(\d)+)$', OrderChangeView.as_view(), name='order-manage'),
     url(r'order-create/$', OrderCrateView.as_view(), name='order-create'),
-    url(r'orderitem-create/$', OrderItemCreateSerializer.as_view(), name='orderitem-create'),
+    url(r'orderitem-create/$', OrderItemCreate.as_view(), name='orderitem-create'),
 
 
 ]
