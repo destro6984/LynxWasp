@@ -91,7 +91,7 @@ class CreateOrder(LoginRequiredMixin, View):
                                                                                 })
 
     def post(self, request):
-        print(request)
+
         add_order_form = AddOrderItem(request.POST)
         valid = add_order_form.is_valid()
         if valid:
@@ -103,14 +103,15 @@ class CreateOrder(LoginRequiredMixin, View):
             # Order exists - add order_items-ices to cart not-exists- create order and add order_items-ices
             if Order.objects.filter(worker_owner=request.user, status=1).exists():
                 orde = Order.objects.get(worker_owner=request.user, status=1)
-                orde.ices_ordered.add(ice_in_order)
-                # price_of_ice(request)todo
-                orde.save()
+                ice_in_order.order.add(orde.id)
+                ice_in_order.save()
             else:
                 orde = Order.objects.create(worker_owner=request.user, status=1)
-                orde.ices_ordered.add(ice_in_order)
+                # orde.ices_ordered.add(ice_in_order)
                 # price_of_ice(request) todo
-                orde.save()
+                ice_in_order.order.add(orde.id)
+                ice_in_order.save()
+                # orde.save()
             messages.success(request, "OrderItem Added to cart")
             return redirect("create-order")
         else:

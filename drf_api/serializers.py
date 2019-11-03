@@ -33,17 +33,17 @@ class OrderListSerializer(serializers.ModelSerializer):
 
 
 class OrderCreateSerializer(serializers.ModelSerializer):
-    ices_ordered = serializers.PrimaryKeyRelatedField(many=True,required=False,queryset=OrderItem.objects.all())
+    # ices_ordered = serializers.PrimaryKeyRelatedField(many=True,required=False,queryset=OrderItem.objects.all())
     # ices_ordered = OrderItemCreateSerializer(many=True,required=False)
     class Meta:
         model = Order
-        fields = ['id',"worker_owner", 'time_sell', 'status', 'ices_ordered']
+        fields = ['id',"worker_owner", 'time_sell', 'status','parentorder']
 
 
     def create(self, validated_data):
-        ices_ordered = validated_data.pop('ices_ordered')
+        # ices_ordered = validated_data.pop('ices_ordered')
         order = Order.objects.create(**validated_data)
-        order.ices_ordered.set(*ices_ordered)
+        # order.ices_ordered.set(*ices_ordered)
         order.save()
         return order
 
@@ -53,16 +53,16 @@ class OrderItemCreateSerializer(serializers.ModelSerializer):
     # flavour=AddFlavourSerializers(many=True)
     # ice=serializers.ChoiceField(choices=[(typeice.id, typeice.type) for typeice in Ices.objects.all()])
     # ice=AddIcesSerializers()
-    order_ice=OrderCreateSerializer(read_only=True)
+    # order_ice=OrderCreateSerializer(read_only=True)
 
     class Meta:
         model = OrderItem
-        fields = ["id",'quantity','ice','ice_id','flavour',"order_ice"]
+        fields = ["id",'quantity','ice','ice_id','flavour',"order"]
 
     def create(self, validated_data):
         flavour = validated_data.pop('flavour')
-        order_ice = validated_data.pop('order_ice')
-        orderitem = OrderItem.objects.create(order_ice=order_ice["id"],**validated_data)
+        # order_ice = validated_data.pop('order_ice')
+        orderitem = OrderItem.objects.create(**validated_data)
         orderitem.flavour.add(*flavour)
         return orderitem
 

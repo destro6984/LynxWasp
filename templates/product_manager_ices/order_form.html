@@ -96,7 +96,25 @@
 
                         <div class="order_list my-1 p-0">
                             <ul class="list-unstyled list-group">
-                                {% for ices in order_in_cart.ices_ordered.all %}
+                                {% for ices in order_in_cart.parentorder.all %}
+{#                                    <form action="{% url 'delete_oi' id=ices.id %}" method="post">#}
+{#                                        {% csrf_token %}#}
+{#                                        <div class="d-inline-block col-md-12 p-0 align-text-center">#}
+{#                                            <li class="list-group-item list-group-item-info px-0 py-1">#}
+{##}
+{#                                                <span class="text-truncate d-inline-block col-md-9 p-0">{{ ices.ice.type }} {{ ices.quantity }}#}
+{#                                                    {% for ices_flavour in ices.flavour.all %}#}
+{#                                                        {{ ices_flavour }} {% endfor %}</span>#}
+{##}
+{#                                                <button class="d-inline-block col-md-2 bg-info border-1 rounded p-0 px-auto align-text-bottom"#}
+{#                                                        type="submit"#}
+{#                                                        value="{{ ices.id }}"#}
+{#                                                        name="oi_to_delete"><i class="fas fa-trash"></i></button>#}
+{#                                            </li>#}
+{##}
+{#                                        </div>#}
+{##}
+{#                                    </form>#}
                                     <form action="{% url 'delete_oi' id=ices.id %}" method="post">
                                         {% csrf_token %}
                                         <div class="d-inline-block col-md-12 p-0 align-text-center">
