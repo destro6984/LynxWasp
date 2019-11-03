@@ -55,7 +55,7 @@ class OrderItemCreateSerializer(serializers.ModelSerializer):
     # flavour=AddFlavourSerializers(many=True)
     # ice=serializers.ChoiceField(choices=[(typeice.id, typeice.type) for typeice in Ices.objects.all()])
     # ice=AddIcesSerializers()
-    order=serializers.PrimaryKeyRelatedField(many=True,required=False,queryset=Order.objects.all())
+    order=serializers.PrimaryKeyRelatedField(many=True,required=True,queryset=Order.objects.all())
 
     class Meta:
         model = OrderItem
@@ -63,11 +63,9 @@ class OrderItemCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         flavour = validated_data.pop('flavour')
-        orderids = validated_data.pop('order')
 
-        # print(orderids)
-        # get_create return (object,true/flase)
-        orderitem,created = OrderItem.objects.get_or_create(**validated_data)
+        orderids = validated_data.pop('order')
+        orderitem = OrderItem.objects.create(**validated_data)
         orderitem.flavour.add(*flavour)
         orderitem.order.add(*orderids)
         orderitem.save()

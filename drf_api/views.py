@@ -53,7 +53,7 @@ class OrdersListAPIView(ListAPIView):
 # probably better do this with ModelViewSet but it yet to come
 class OrderChangeView(RetrieveUpdateDestroyAPIView):
     """
-    endpoint changeing order status
+    endpoint changing order status
     endpoint for detail of order
     """
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -65,7 +65,7 @@ class OrderChangeView(RetrieveUpdateDestroyAPIView):
         queryset = Order.objects.filter(worker_owner=self.request.user).order_by("-time_sell")
         return queryset
 
-    # limitation for only one order open
+    # limitation for only one order open, to prevent from changing the order
     def perform_update(self, serializer):
         queryset = Order.objects.filter(worker_owner=self.request.user, status=1)
         if queryset.count() > 1:
@@ -74,7 +74,10 @@ class OrderChangeView(RetrieveUpdateDestroyAPIView):
 
 
 class OrderCrateView(APIView):
-    # working adding order testing
+    """
+    endpoint: adding order
+
+    """
     def get(self,request):
         order = [order for order in Order.objects.all()]
         serialized= OrderCreateSerializer(order, many=True)
@@ -88,45 +91,29 @@ class OrderCrateView(APIView):
 
 
 
-# class OrderItemCreate(ListCreateAPIView):
-#     queryset = OrderItem.objects.all()
-#     serializer_class = OrderItemCreateSerializer
+
 class OrderItemCreate(APIView):
+    """
+    endpoint: adding orderitem(ice)
+
+    """
     def get(self,request):
         orderitem = [order for order in OrderItem.objects.all()]
         serialized= OrderItemCreateSerializer(orderitem, many=True)
         return Response(serialized.data)
     def post(self,request):
         serialized=OrderItemCreateSerializer(data=request.data)
-        activeorder=Order.objects.filter(worker_owner=request.user, status=1).first()
+        # limitation for Thai ice to only 3 flavoures(poor option considering the id TODO )
+        if (len(serialized.initial_data["flavour"]) > 3) and ((serialized.initial_data['ice'])== 1) :
+            raise ValidationError('Thai ice can be made only from 3 flavoures')
+        activeorder = Order.objects.filter(worker_owner=request.user, status=1).first()
+        # limitation for open order first ,then add ice-products
+        if not activeorder:
+            raise ValidationError('No opened order ,please creat one to add products')
         if serialized.is_valid():
+            # setting id of order to which adding orderitem-ice, todo: consider different realtions m2m ??
             serialized.save(order=[activeorder.id])
             return Response(serialized.data,status=201)
         return Response(serialized.errors, status=400)
 
-
-
-    #
-    # def put(self,request):
-    #     serializer_orderitem =OrderItemCreateSerializer(data=request.data)
-    #     print(serializer_orderitem)
-    #     if serializer_orderitem.is_valid():
-    #         serializer_orderitem.save()
-    #         return Response(serializer_orderitem.data)
-    #     return Response(serializer_orderitem.errors, status=400)
-
-
-# working adding orderitem
-#     def get(self,request):
-#         order = [order for order in OrderItem.objects.all()]
-#         serialized= OrderItemCreateSerializer(order, many=True)
-#         return Response(serialized.data)
-
-#     def post(self,request):
-#         print(request.data)
-#         serialized = OrderItemCreateSerializer(data=request.data)
-#         if serialized.is_valid():
-#             serialized.save()
-#             return Response(serialized.data)
-#         return Response(serialized.errors,status=400)
 
