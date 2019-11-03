@@ -53,8 +53,7 @@ class OrderItemCreateSerializer(serializers.ModelSerializer):
     # flavour=AddFlavourSerializers(many=True)
     # ice=serializers.ChoiceField(choices=[(typeice.id, typeice.type) for typeice in Ices.objects.all()])
     # ice=AddIcesSerializers()
-    order_ice=OrderCreateSerializer(read_only=True)
-
+    # order_ice= OrderCreateSerializer()
     class Meta:
         model = OrderItem
         fields = ["id",'quantity','ice','ice_id','flavour',"order_ice"]
@@ -62,8 +61,11 @@ class OrderItemCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         flavour = validated_data.pop('flavour')
         order_ice = validated_data.pop('order_ice')
-        orderitem = OrderItem.objects.create(order_ice=order_ice["id"],**validated_data)
+        # print(order_ice)
+        orderitem = OrderItem.objects.get_or_create(**validated_data)
         orderitem.flavour.add(*flavour)
+        # orderitem.order_ice.add(*order_ice[0])
+        # orderitem.order_ice.add(*order_ice)
         return orderitem
 
 
