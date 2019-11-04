@@ -12,7 +12,6 @@ class AddIceForm(ModelForm):
     }
 
 
-
 class AddFlavourForm(ModelForm):
     class Meta:
         model=Flavour
@@ -33,5 +32,3 @@ class AddOrderItem(forms.Form):
     ice = forms.ChoiceField(widget=forms.RadioSelect)
     flavour = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple)
     quantity= forms.IntegerField(min_value=1,initial=1)
-
-

@@ -1,7 +1,7 @@
 from django.db.models import Q
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveUpdateAPIView, UpdateAPIView, \
-    RetrieveUpdateDestroyAPIView, get_object_or_404, ListCreateAPIView
+    RetrieveUpdateDestroyAPIView, get_object_or_404, ListCreateAPIView, DestroyAPIView
 from rest_framework.mixins import UpdateModelMixin
 from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
@@ -11,6 +11,11 @@ from rest_framework.viewsets import ModelViewSet
 from drf_api.serializers import AddIcesSerializers, AddFlavourSerializers, OrderListSerializer, OrderCreateSerializer, \
     OrderItemCreateSerializer
 from product_manager_ices.models import Order, OrderItem
+
+
+
+# Authors comment:
+# probably it is better to use modelviewsetes, but lets keep some kind of learning path and assume it is yet to come
 
 
 class AddIceCreateAPIView(CreateAPIView):
@@ -25,16 +30,14 @@ class AddFlavourCreateAPIView(CreateAPIView):
     """
     endpoint for adding flvaoures
     """
-    permission_classes = [IsAuthenticatedOrReadOnly]
-    serializer_class = AddFlavourSerializers
 
+    serializer_class = AddFlavourSerializers
 
 class OrdersListAPIView(ListAPIView):
     """
     endpoint list of orders
     search
     """
-    permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = OrderListSerializer
 
     # Order-detail only for owner of order/ simple search of order
@@ -56,7 +59,6 @@ class OrderChangeView(RetrieveUpdateDestroyAPIView):
     endpoint changing order status
     endpoint for detail of order
     """
-    permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = OrderListSerializer
     lookup_field = "id"
 
@@ -84,6 +86,10 @@ class OrderCrateView(APIView):
         return Response(serialized.data)
     def post(self,request):
         serialized = OrderCreateSerializer(data=request.data)
+        open_order=Order.objects.filter(worker_owner=request.user,status=1)
+        # limitation if there is opened order
+        if open_order:
+            raise ValidationError('You have already open order,please close it to open anotherone')
         if serialized.is_valid():
             serialized.save(status=1,worker_owner=self.request.user)
             return Response(serialized.data)
@@ -107,13 +113,20 @@ class OrderItemCreate(APIView):
         if (len(serialized.initial_data["flavour"]) > 3) and ((serialized.initial_data['ice'])== 1) :
             raise ValidationError('Thai ice can be made only from 3 flavoures')
         activeorder = Order.objects.filter(worker_owner=request.user, status=1).first()
-        # limitation for open order first ,then add ice-products
+        # limitation for open order first ,then add orderitem(ice)
         if not activeorder:
-            raise ValidationError('No opened order ,please creat one to add products')
+            raise ValidationError('No opened order ,please create one to add orderitems(ices)')
         if serialized.is_valid():
             # setting id of order to which adding orderitem-ice, todo: consider different realtions m2m ??
-            serialized.save(order=[activeorder.id])
+            serialized.save(orderitems=[activeorder.id])
             return Response(serialized.data,status=201)
         return Response(serialized.errors, status=400)
 
 
+
+class DeleteOrderitem(DestroyAPIView):
+    """
+    endpoint: deleting form the cart
+    """
+    queryset = OrderItem.objects.all()
+    serializer_class = OrderItemCreateSerializer

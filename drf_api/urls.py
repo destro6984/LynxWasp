@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
 from .views import AddIceCreateAPIView, AddFlavourCreateAPIView, OrdersListAPIView, OrderChangeView, OrderCrateView, \
-    OrderItemCreate
+    OrderItemCreate, DeleteOrderitem
 
 urlpatterns = [
 
@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'order-manage/(?P<id>(\d)+)$', OrderChangeView.as_view(), name='order-manage'),
     url(r'order-create/$', OrderCrateView.as_view(), name='order-create'),
     url(r'orderitem-create/$', OrderItemCreate.as_view(), name='orderitem-create'),
+    url(r'orderitem-delete/(?P<pk>(\d)+)', DeleteOrderitem.as_view(), name='orderitem-delete'),
 
 
 ]
