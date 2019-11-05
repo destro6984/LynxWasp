@@ -1,4 +1,5 @@
 from django.db.models import Q
+from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveUpdateAPIView, UpdateAPIView, \
     RetrieveUpdateDestroyAPIView, get_object_or_404, ListCreateAPIView, DestroyAPIView
@@ -78,18 +79,17 @@ class OrderChangeView(RetrieveUpdateDestroyAPIView):
 class OrderCrateView(APIView):
     """
     endpoint: adding order
-
     """
     def get(self,request):
-        order = [order for order in Order.objects.all()]
-        serialized= OrderCreateSerializer(order, many=True)
+        order = Order.objects.filter(worker_owner=request.user,status=1)
+        serialized= OrderCreateSerializer(order)
         return Response(serialized.data)
     def post(self,request):
         serialized = OrderCreateSerializer(data=request.data)
         open_order=Order.objects.filter(worker_owner=request.user,status=1)
         # limitation if there is opened order
         if open_order:
-            raise ValidationError('You have already open order,please close it to open anotherone')
+            raise ValidationError('You have already open order,please close it to open new one')
         if serialized.is_valid():
             serialized.save(status=1,worker_owner=self.request.user)
             return Response(serialized.data)
@@ -97,36 +97,37 @@ class OrderCrateView(APIView):
 
 
 
-
-class OrderItemCreate(APIView):
+class OrderItemCreate(CreateAPIView):
     """
     endpoint: adding orderitem(ice)
 
     """
-    def get(self,request):
-        orderitem = [order for order in OrderItem.objects.all()]
-        serialized= OrderItemCreateSerializer(orderitem, many=True)
-        return Response(serialized.data)
-    def post(self,request):
-        serialized=OrderItemCreateSerializer(data=request.data)
-        # limitation for Thai ice to only 3 flavoures(poor option considering the id TODO )
-        if (len(serialized.initial_data["flavour"]) > 3) and ((serialized.initial_data['ice'])== 1) :
-            raise ValidationError('Thai ice can be made only from 3 flavoures')
-        activeorder = Order.objects.filter(worker_owner=request.user, status=1).first()
+    serializer_class = OrderItemCreateSerializer
+    queryset = OrderItem.objects.all()
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+
         # limitation for open order first ,then add orderitem(ice)
+        activeorder = Order.objects.filter(worker_owner=request.user, status=1).first()
         if not activeorder:
             raise ValidationError('No opened order ,please create one to add orderitems(ices)')
-        if serialized.is_valid():
-            # setting id of order to which adding orderitem-ice, todo: consider different realtions m2m ??
-            serialized.save(orderitems=[activeorder.id])
-            return Response(serialized.data,status=201)
-        return Response(serialized.errors, status=400)
+
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_create(self, serializer):
+        # setting id of order to which adding orderitem-ice, todo: consider different realtions m2m ??
+        activeorder = Order.objects.filter(worker_owner=self.request.user, status=1).first()
+        serializer.save(order=[activeorder.id])
 
 
 
 class DeleteOrderitem(DestroyAPIView):
     """
-    endpoint: deleting form the cart
+    endpoint: deleting from the cart
     """
     queryset = OrderItem.objects.all()
     serializer_class = OrderItemCreateSerializer

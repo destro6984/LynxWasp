@@ -32,7 +32,7 @@ class Order(models.Model):
     status = models.CharField(max_length=9, choices=STATUS_CHOICE,default=1)
 
     def __str__(self):
-        return f"Order content:{'self.ices_ordered.all()'} {self.time_sell} {self.status}"
+        return f"Order content:{'self.ices_ordered.all()'} {self.time_sell} status: {self.status}"
 
 
     def get_total(self):
@@ -54,6 +54,7 @@ class OrderItem(models.Model):
         return self.quantity * self.ice.price
 
     def get_final_price(self):
+        # todo
         # if self.item.discount_price:
         #     return self.get_total_discount_item_price()
         return self.get_total_ice_price()

@@ -8,12 +8,12 @@ from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, DeleteView, DetailView
+from django.views.generic import ListView, DeleteView, DetailView
 from django.views.generic.base import View
 
 from product_manager_ices.forms import AddIceForm, AddFlavourForm, AddOrderItem
 from product_manager_ices.models import Ices, Order, OrderItem
-from users_app.models import MyUser
+
 
 
 class Homepage(View):
@@ -35,7 +35,6 @@ class AddIce(LoginRequiredMixin, View):
         form_flavour = AddFlavourForm()
         return render(request, 'product_manager_ices/add_ices.html', context={"form_type": form_type,
                                                                               "form_flavour": form_flavour, })
-
     def post(self, request):
 
         form_type = AddIceForm(request.POST)
@@ -55,17 +54,6 @@ class AddIce(LoginRequiredMixin, View):
             messages.success(request, "Wrong Data")
         return render(request, 'product_manager_ices/add_ices.html', context={"form_type": form_type,
                                                                               "form_flavour": form_flavour, })
-
-
-# TODO/inprogress
-# def price_of_ice(request):
-#     order=Order.objects.get(worker_owner=request.user, status=1)
-#     if len(request.POST.getlist('flavour')) == 1:
-#         order.ices_ordered
-#     elif len(request.POST.getlist('flavour')) == 2:
-#         order.ices_ordered.ice.price=15
-#     elif len(request.POST.getlist('flavour')) ==3:
-#         order.ices_ordered.ice.price=16
 
 
 class CreateOrder(LoginRequiredMixin, View):
@@ -88,21 +76,24 @@ class CreateOrder(LoginRequiredMixin, View):
                                                                                 "order_in_cart": order_in_cart,
                                                                                 "sumarize": sumarize,
                                                                                 })
-
     def post(self, request):
         add_order_form = AddOrderItem(request.POST)
-        valid = add_order_form.is_valid()
-        if valid:
+
+        if add_order_form.is_valid():
             ice = add_order_form.cleaned_data.get('ice')
             quantity = add_order_form.cleaned_data.get('quantity')
-            # create order_items-ices
+
+            # Create order_items-ices
             ice_in_order = OrderItem.objects.create(ice_id=ice, quantity=quantity)
-            ice_in_order.flavour.set(request.POST.getlist('flavour'))  # 1 of thai  Flavouers:czekolada
-            # Order exists - add order_items-ices to cart
-            if Order.objects.filter(worker_owner=request.user, status=1).exists():
-                orde = Order.objects.get(worker_owner=request.user, status=1)
-                ice_in_order.order.add(orde.id)
-                ice_in_order.save()
+
+            # Adding flavoure to orderitem(ice)
+            ice_in_order.flavour.set(request.POST.getlist('flavour'))
+
+            # Order add order_items-ices to cart
+            order = Order.objects.get(worker_owner=request.user, status=1)
+            ice_in_order.order.add(order.id)
+
+            ice_in_order.save()
             messages.success(request, "OrderItem Added to cart")
             return redirect("create-order")
         else:
@@ -193,7 +184,7 @@ class OrderDelete(LoginRequiredMixin, DeleteView):
 class ListOfOrders(LoginRequiredMixin, ListView):
     """
     List of finished orders
-    Search of orders,
+    Search of orders by USER/TIMESELL/FLAVOUR/TYPEOFICE
     Only the same user can return the order to active
     """
     model = Order
