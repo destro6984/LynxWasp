@@ -70,7 +70,14 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 7,
 
+    # DEFAULT PERMISSION
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
+
 }
+
+
 
 # crsf token form cookies
 
@@ -101,7 +108,7 @@ WSGI_APPLICATION = 'LynxWasp.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'lynxwasp.db'),
+        'NAME': os.path.join(BASE_DIR, 'structure2.db'),
         # 'NAME': '/home/destro6984/LynxWasp/db.sqlite3',
     }
 }

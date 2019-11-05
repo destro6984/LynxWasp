@@ -12,7 +12,6 @@ class AddIceForm(ModelForm):
     }
 
 
-
 class AddFlavourForm(ModelForm):
     class Meta:
         model=Flavour
@@ -24,14 +23,12 @@ class AddFlavourForm(ModelForm):
 class AddOrderItem(forms.Form):
     def __init__(self, *args, **kwargs):
         super(AddOrderItem, self).__init__(*args, **kwargs)
-        # this is to do not restart server to show the added flavour automatically
+        # this is to do not restart server to show the added flavour automatically(dynamic add)
         self.fields['flavour'].choices = [(flav.id, flav.flavour) for flav in Flavour.objects.all()]
-        # this is to do not restart server to show the added product automatically
+        # this is to do not restart server to show the added product automatically (dynamic add)
         self.fields['ice'].choices = [(typeice.id, typeice.type) for typeice in Ices.objects.all()]
 
     # type_ice = [(type_ice.id, Ices.objects.filter(id=type_ice.id)) for type_ice in Ices.objects.all()]
     ice = forms.ChoiceField(widget=forms.RadioSelect)
     flavour = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple)
     quantity= forms.IntegerField(min_value=1,initial=1)
-
-
