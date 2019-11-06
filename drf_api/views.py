@@ -81,7 +81,12 @@ class OrderCrateView(APIView):
     endpoint: adding order
     """
     def get(self,request):
-        order = Order.objects.get(worker_owner=request.user,status=1)
+        # validation if open order
+        try:
+            order = Order.objects.get(worker_owner=request.user,status=1)
+        except:
+            raise ValidationError('No open order')
+
         serialized= OrderCreateSerializer(order)
         return Response(serialized.data)
     def post(self,request):
