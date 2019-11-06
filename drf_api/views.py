@@ -75,6 +75,13 @@ class OrderChangeView(RetrieveUpdateDestroyAPIView):
             raise ValidationError('You have active order opened, Please postpone or delete it')
         serializer.save()
 
+    def perform_destroy(self, instance):
+        # Validation onyl owner of order can delete the order
+        if instance.worker_owner == self.request.user:
+            instance.delete()
+        else:
+            raise ValidationError('Only owner can delete the order')
+
 
 class OrderCrateView(APIView):
     """
@@ -135,3 +142,5 @@ class DeleteOrderitem(DestroyAPIView):
     """
     queryset = OrderItem.objects.all()
     serializer_class = OrderItemCreateSerializer
+
+
