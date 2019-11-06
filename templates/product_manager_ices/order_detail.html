@@ -15,7 +15,8 @@
             <div class="card-body p-2">
                 <h5 class="card-title">Products in order:</h5>
                 <ul class="list-unstyled">
-                    {% for product in object.ices_ordered.all %}
+{#                {{ object.orderitem }}#}
+                    {% for product in object.orderitem.all %}
                         <li>{{ product }}</li>
 
                     {% empty %}

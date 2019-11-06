@@ -32,7 +32,7 @@ class Order(models.Model):
     status = models.CharField(max_length=9, choices=STATUS_CHOICE,default=1)
 
     def __str__(self):
-        return f"Order content:{'self.ices_ordered.all()'} {self.time_sell} status: {self.status}"
+        return f"User:{self.worker_owner} selltime: {self.time_sell} status: {self.status}"
 
 
     def get_total(self):
@@ -48,7 +48,7 @@ class OrderItem(models.Model):
     quantity = models.IntegerField(default=1)
     order=models.ManyToManyField(Order,related_name="orderitem")
     def __str__(self):
-        return f"{self.quantity} of {self.ice.type} {self.ice.price}zł Flavouers:{'/'.join([str(flav) for flav in self.flavour.all()])} order{self.order.all()}"
+        return f"{self.quantity} of {self.ice.type} {self.ice.price}zł Flavouers:{'/'.join([str(flav) for flav in self.flavour.all()])}"
 
     def get_total_ice_price(self):
         return self.quantity * self.ice.price
