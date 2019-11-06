@@ -17,21 +17,19 @@ import django_heroku
 import cloudinary
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from local_settings import SECRET_KEY_HIDD
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
-from local_settings import SECRET_KEY_HIDD
-
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = SECRET_KEY_HIDD
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = ["lynxwasp.herokuapp.com"]
+ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -72,7 +70,14 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 7,
 
+    # DEFAULT PERMISSION
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
+
 }
+
+
 
 # crsf token form cookies
 
@@ -103,7 +108,7 @@ WSGI_APPLICATION = 'LynxWasp.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'lynxwasp.db'),
+        'NAME': os.path.join(BASE_DIR, 'structure2.db'),
         # 'NAME': '/home/destro6984/LynxWasp/db.sqlite3',
     }
 }

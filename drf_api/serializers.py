@@ -1,5 +1,6 @@
 from django.utils import timezone
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 from rest_framework.fields import MultipleChoiceField
 
 from product_manager_ices.models import Ices, Flavour, Order, OrderItem
@@ -19,7 +20,6 @@ class AddFlavourSerializers(serializers.ModelSerializer):
 
 
 
-
 class OrderListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
@@ -27,32 +27,37 @@ class OrderListSerializer(serializers.ModelSerializer):
         read_only_fields = ('ices_ordered', 'worker_owner', 'time_sell')
 
 
+
+class OrderCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = ['id',"worker_owner", 'time_sell', 'status','orderitem']
+
+    def create(self, validated_data):
+        orderitems = validated_data.pop('orderitem')
+        order = Order.objects.create(**validated_data)
+        order.orderitem.add(*orderitems)
+        order.save()
+        return order
+
+
 class OrderItemCreateSerializer(serializers.ModelSerializer):
-    # flavour=serializers.MultipleChoiceField(choices=[(flav.id, flav.flavour) for flav in Flavour.objects.all()])
-    # flavour=AddFlavourSerializers(many=True)
-    # ice=serializers.ChoiceField(choices=[(typeice.id, typeice.type) for typeice in Ices.objects.all()])
-    # ice=AddIcesSerializers()
+    order=serializers.PrimaryKeyRelatedField(many=True,required=True,queryset=Order.objects.all())
 
     class Meta:
         model = OrderItem
-        fields = ["id",'quantity','ice','ice_id','flavour']
+        fields = ["id",'quantity','ice','ice_id','flavour',"order"]
 
     def create(self, validated_data):
         flavour = validated_data.pop('flavour')
+        orderids = validated_data.pop('order')
         orderitem = OrderItem.objects.create(**validated_data)
+
+        # limitation for Thai ice to only 3 flavoures
+        if (len([*flavour]) > 3) and (orderitem.ice.type== "thai"):
+            raise ValidationError('Thai ice can be made only from 3 flavoures')
+
         orderitem.flavour.add(*flavour)
-
+        orderitem.order.add(*orderids)
+        orderitem.save()
         return orderitem
-
-class OrderCreateSerializer(serializers.ModelSerializer):
-    # ices_ordered = OrderItemCreateSerializer(many=True,required=False)
-    class Meta:
-        model = Order
-        fields = ["worker_owner", 'time_sell', 'status', 'ices_ordered']
-
-    def create(self, validated_data):
-        ices_ordered = validated_data.pop('ices_ordered')
-        order = Order.objects.create(**validated_data)
-        order.ices_ordered.add(*ices_ordered)
-        return order
-

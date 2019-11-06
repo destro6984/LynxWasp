@@ -1,8 +1,8 @@
-
 from django.db.models import Q
+from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveUpdateAPIView, UpdateAPIView, \
-    RetrieveUpdateDestroyAPIView, get_object_or_404, ListCreateAPIView
+    RetrieveUpdateDestroyAPIView, get_object_or_404, ListCreateAPIView, DestroyAPIView
 from rest_framework.mixins import UpdateModelMixin
 from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
@@ -12,6 +12,11 @@ from rest_framework.viewsets import ModelViewSet
 from drf_api.serializers import AddIcesSerializers, AddFlavourSerializers, OrderListSerializer, OrderCreateSerializer, \
     OrderItemCreateSerializer
 from product_manager_ices.models import Order, OrderItem
+
+
+
+# Authors comment:
+# probably it is better to use modelviewsetes, but lets keep some kind of learning path and assume it is yet to come
 
 
 class AddIceCreateAPIView(CreateAPIView):
@@ -26,16 +31,14 @@ class AddFlavourCreateAPIView(CreateAPIView):
     """
     endpoint for adding flvaoures
     """
-    permission_classes = [IsAuthenticatedOrReadOnly]
-    serializer_class = AddFlavourSerializers
 
+    serializer_class = AddFlavourSerializers
 
 class OrdersListAPIView(ListAPIView):
     """
     endpoint list of orders
     search
     """
-    permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = OrderListSerializer
 
     # Order-detail only for owner of order/ simple search of order
@@ -45,8 +48,7 @@ class OrdersListAPIView(ListAPIView):
             queryset = Order.objects.filter(Q(worker_owner__username__icontains=search) |
                                             Q(time_sell__icontains=search) |
                                             Q(ices_ordered__flavour__flavour__icontains=search) |
-                                            Q(ices_ordered__ice__type__contains=search)).order_by(
-                "-time_sell").distinct()
+                                            Q(ices_ordered__ice__type__contains=search)).order_by("-time_sell").distinct()
         else:
             queryset = Order.objects.filter(worker_owner=self.request.user).order_by("-time_sell")
         return queryset
@@ -55,10 +57,9 @@ class OrdersListAPIView(ListAPIView):
 # probably better do this with ModelViewSet but it yet to come
 class OrderChangeView(RetrieveUpdateDestroyAPIView):
     """
-    endpoint changeing order status
+    endpoint changing order status
     endpoint for detail of order
     """
-    permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = OrderListSerializer
     lookup_field = "id"
 
@@ -67,7 +68,7 @@ class OrderChangeView(RetrieveUpdateDestroyAPIView):
         queryset = Order.objects.filter(worker_owner=self.request.user).order_by("-time_sell")
         return queryset
 
-    # limitation for only one order open
+    # limitation for only one order open, to prevent from changing the order
     def perform_update(self, serializer):
         queryset = Order.objects.filter(worker_owner=self.request.user, status=1)
         if queryset.count() > 1:
@@ -76,31 +77,56 @@ class OrderChangeView(RetrieveUpdateDestroyAPIView):
 
 
 class OrderCrateView(APIView):
-    # working adding order testing
-    def get(self, request):
-        order = [order for order in Order.objects.all()]
-        serialized = OrderCreateSerializer(order, many=True)
+    """
+    endpoint: adding order
+    """
+    def get(self,request):
+        order = Order.objects.filter(worker_owner=request.user,status=1)
+        serialized= OrderCreateSerializer(order)
         return Response(serialized.data)
-
-    def post(self, request):
+    def post(self,request):
         serialized = OrderCreateSerializer(data=request.data)
+        open_order=Order.objects.filter(worker_owner=request.user,status=1)
+        # limitation if there is opened order
+        if open_order:
+            raise ValidationError('You have already open order,please close it to open new one')
         if serialized.is_valid():
-            serialized.save(worker_owner=self.request.user)
+            serialized.save(status=1,worker_owner=self.request.user)
             return Response(serialized.data)
-        return Response(serialized.errors, status=400)
-
-# working adding orderitem
-#     def get(self,request):
-#         order = [order for order in OrderItem.objects.all()]
-#         serialized= OrderItemCreateSerializer(order, many=True)
-#         return Response(serialized.data)
-#
-#     def post(self,request):
-#         print(request.data)
-#         serialized = OrderItemCreateSerializer(data=request.data)
-#         if serialized.is_valid():
-#             serialized.save()
-#             return Response(serialized.data)
-#         return Response(serialized.errors,status=400)
+        return Response(serialized.errors,status=400)
 
 
+
+class OrderItemCreate(CreateAPIView):
+    """
+    endpoint: adding orderitem(ice)
+    """
+    serializer_class = OrderItemCreateSerializer
+    queryset = OrderItem.objects.all()
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+
+        # limitation for open order first ,then add orderitem(ice)
+        activeorder = Order.objects.filter(worker_owner=request.user, status=1).first()
+        if not activeorder:
+            raise ValidationError('No opened order ,please create one to add orderitems(ices)')
+
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_create(self, serializer):
+        # setting id of order to which adding orderitem-ice, todo: consider different realtions m2m ??
+        activeorder = Order.objects.filter(worker_owner=self.request.user, status=1).first()
+        serializer.save(order=[activeorder.id])
+
+
+
+class DeleteOrderitem(DestroyAPIView):
+    """
+    endpoint: deleting from the cart
+    """
+    queryset = OrderItem.objects.all()
+    serializer_class = OrderItemCreateSerializer

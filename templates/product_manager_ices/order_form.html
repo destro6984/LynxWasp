@@ -7,6 +7,7 @@
         <article>
             <div class="row">
                 <div class="col-8 pl-0 pr-1">
+
                     <form class="p-0 m-0" method="post">{% csrf_token %}
                         <!--form to add orderitem-ice -->
                         <div class="border border-primary rounded col-md-7 d-inline-block p-0"
@@ -22,7 +23,6 @@
                                     {% endfor %}
                                 </div>
                             </div>
-
                         </div>
                         <!--form to add quantity-->
                         <div class=" d-inline-block col-md-4 p-0 pl-4 pt-md-4 text-center align-top"
@@ -52,12 +52,31 @@
                                 <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
                             {% endfor %}
                         </div>
+
                         <!--button to add to cart-->
-                        <div class="addtocart text-center col-md-12">
-                            <input class="btn btn-success btn-lg" type="submit" value="Add to cart">
-                        </div>
-                    </form>
+                        {% if order_in_cart %}
+                            <div class="addtocart text-center col-md-12">
+                                <input class="btn btn-success btn-lg" type="submit" value="Add to cart">
+                            </div>
+                            </form>
+
+
+                        {% else %}
+                            <div class="addtocart text-center col-md-12 d-none">
+                                <input class="btn btn-success btn-lg" type="submit" value="Add to cart">
+                            </div>
+                            </form>
+                            {#                            open order if doesnt exist#}
+                            <form action="{% url 'open-order' %}" method="post">{% csrf_token %}
+                                <div class="text-center col-md-12">
+                                    <input class="btn btn-warning btn-lg" type="submit" value="Open Order">
+                                </div>
+                            </form>
+
+                        {% endif %}
+
                 </div>
+
                 <!-- CART -->
                 <div class="col-md-4 p-0" id="cart">
                     {% if order_in_cart %}
@@ -73,17 +92,21 @@
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right text-center py-0 rounded">
                                         <!-- postpone or delete order-->
+                                        <div id="url-order" style="display:none;">{% if order_in_cart %}
+                                            {% url 'order-manage' id=order_in_cart.id %}{% endif %} </div>
+                                        <form class="dropdown-item p-0 border bg-danger rounded" method="POST"
+                                              action="{% url 'delete_order' pk=order_in_cart.id %}">
+                                            {% csrf_token %}
+                                            <input class="border-0 bg-transparent col-12 py-3 text-white text-uppercase"
+                                                   type="submit" value="Delete" id="deleteorder">
+                                        </form>
+                                        <form class="dropdown-item p-0 border bg-primary rounded" method="POST"
+                                              action="{% url 'postpone_order' id=order_in_cart.id %}">
+                                            {% csrf_token %}
+                                            <input class="border-0 bg-transparent col-12 py-3 text-white text-uppercase"
+                                                   type="submit" value="Postpone" id="postponeorder">
+                                        </form>
 
-											<form class="dropdown-item p-0 border bg-danger rounded" method="POST"
-												  action="{% url 'delete_order' pk=order_in_cart.id %}">
-												{% csrf_token %}
-												<input class="border-0 bg-transparent col-12 py-3 text-white text-uppercase" type="submit" value="Delete">
-											</form>
-											<form class="dropdown-item p-0 border bg-primary rounded" method="POST"
-												  action="{% url 'postpone_order' id=order_in_cart.id %}">
-												{% csrf_token %}
-												<input class="border-0 bg-transparent col-12 py-3 text-white text-uppercase" type="submit" value="Postpone">
-											</form>
 
                                     </div>
                                 </div>
@@ -93,7 +116,25 @@
 
                         <div class="order_list my-1 p-0">
                             <ul class="list-unstyled list-group">
-                                {% for ices in order_in_cart.ices_ordered.all %}
+                                {% for ices in order_in_cart.orderitem.all %}
+                                    {#                                    <form action="{% url 'delete_oi' id=ices.id %}" method="post">#}
+                                    {#                                        {% csrf_token %}#}
+                                    {#                                        <div class="d-inline-block col-md-12 p-0 align-text-center">#}
+                                    {#                                            <li class="list-group-item list-group-item-info px-0 py-1">#}
+                                    {##}
+                                    {#                                                <span class="text-truncate d-inline-block col-md-9 p-0">{{ ices.ice.type }} {{ ices.quantity }}#}
+                                    {#                                                    {% for ices_flavour in ices.flavour.all %}#}
+                                    {#                                                        {{ ices_flavour }} {% endfor %}</span>#}
+                                    {##}
+                                    {#                                                <button class="d-inline-block col-md-2 bg-info border-1 rounded p-0 px-auto align-text-bottom"#}
+                                    {#                                                        type="submit"#}
+                                    {#                                                        value="{{ ices.id }}"#}
+                                    {#                                                        name="oi_to_delete"><i class="fas fa-trash"></i></button>#}
+                                    {#                                            </li>#}
+                                    {##}
+                                    {#                                        </div>#}
+                                    {##}
+                                    {#                                    </form>#}
                                     <form action="{% url 'delete_oi' id=ices.id %}" method="post">
                                         {% csrf_token %}
                                         <div class="d-inline-block col-md-12 p-0 align-text-center">
@@ -149,7 +190,7 @@
         {% if order_in_cart %}
             <article>
 
-                <!-- Modal -->
+                <!-- Modal with order sum up-->
                 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
                      aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -170,21 +211,22 @@
                                                 <thead>
                                                 <tr class="table-head-names">
                                                     <th scope="col">Nr</th>
-                                                    <th scope="col" >Amount</th>
+                                                    <th scope="col">Amount</th>
                                                     <th scope="col">Type</th>
-                                                    <th scope="col" >Flavoures</th>
+                                                    <th scope="col">Flavoures</th>
                                                     <th scope="col">Price</th>
                                                 </tr>
                                                 </thead>
 
                                                 <tbody>
                                                 {% for ices in order_in_cart.ices_ordered.all %}
-                                                    <tr >
-                                                        <th scope="row" class="text-center" >{{ forloop.counter }}</th>
+                                                    <tr>
+                                                        <th scope="row" class="text-center">{{ forloop.counter }}</th>
                                                         <td>{{ ices.quantity }}</td>
                                                         <td>{{ ices.ice.type }}</td>
-                                                        <td id="flavoure-cell" >{% for ices_flavour in ices.flavour.all %}
-                                                            ({{ ices_flavour }}), {% endfor %}
+                                                        <td id="flavoure-cell">
+                                                            {% for ices_flavour in ices.flavour.all %}
+                                                                ({{ ices_flavour }}), {% endfor %}
                                                         </td>
                                                         <td>{{ ices.get_total_ice_price }}</td>
                                                     </tr>
@@ -246,6 +288,49 @@
 
 
     </section>
+    {#    <script>#}
+    {#        $('#postponeorder').click(function (e) {#}
+    {#            e.preventDefault();#}
+    {#            var url_order= $('#url-order').text();#}
+    {#            // ajax change status /POSTPONE#}
+    {#            $.ajax({#}
+    {#                url: url_order,#}
+    {#                type: 'PATCH',#}
+    {#                data: {#}
+    {#                    'status': 2,#}
+    {#                },#}
+    {##}
+    {#                dataType: 'json',#}
+    {#                success: function () {#}
+    {#                    alert("changed");#}
+    {#                },#}
+    {#                error: function () {#}
+    {#                    alert('error sts')#}
+    {#                }#}
+    {#            });#}
+    {#        });#}
+    {#    </script>#}
+    <script>
+        $('#deleteorder').click(function (e) {
+            e.preventDefault();
+            var url_order = $('#url-order').text();
+            // ajax change status /POSTPONE
+            $.ajax({
+                url: url_order,
+                type: 'DELETE',
+                data: {},
+
+                contentType: 'application/json',
+                dataType: 'text',
+                success: function () {
+                    alert("deleted");
+                },
+                error: function () {
+                    alert('error delete')
+                }
+            });
+        });
+    </script>
 
 {% endblock content %}
 
