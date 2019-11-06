@@ -81,7 +81,7 @@ class OrderCrateView(APIView):
     endpoint: adding order
     """
     def get(self,request):
-        order = Order.objects.filter(worker_owner=request.user,status=1)
+        order = Order.objects.get(worker_owner=request.user,status=1)
         serialized= OrderCreateSerializer(order)
         return Response(serialized.data)
     def post(self,request):
