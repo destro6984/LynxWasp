@@ -219,7 +219,7 @@
                                                 </thead>
 
                                                 <tbody>
-                                                {% for ices in order_in_cart.ices_ordered.all %}
+                                                {% for ices in order_in_cart.orderitem.all %}
                                                     <tr>
                                                         <th scope="row" class="text-center">{{ forloop.counter }}</th>
                                                         <td>{{ ices.quantity }}</td>

@@ -40,22 +40,27 @@ class OrderCreateSerializer(serializers.ModelSerializer):
 
 
 class OrderItemCreateSerializer(serializers.ModelSerializer):
-    order = serializers.PrimaryKeyRelatedField(many=True, required=True, queryset=Order.objects.all())
+    order = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = OrderItem
         fields = ["id", 'quantity', 'ice', 'ice_id', 'flavour', "order"]
 
+
     def create(self, validated_data):
         flavour = validated_data.pop('flavour')
-        orderids = validated_data.pop('order')
+        order_ids = validated_data.pop('order')
         orderitem = OrderItem.objects.create(**validated_data)
 
-        # limitation for Thai ice to only 3 flavoures
+        # validation for Thai ice to only 3 flavoures
         if (len([*flavour]) > 3) and (orderitem.ice.type == "thai"):
             raise ValidationError('Thai ice can be made only from 3 flavoures')
 
+        # validation for scoope ice, quantity == number of flavoures(scoope)
+        if orderitem.ice.type == "scoope":
+            orderitem.quantity=len([*flavour])
+
         orderitem.flavour.add(*flavour)
-        orderitem.order.add(*orderids)
+        orderitem.order.add(*order_ids)
         orderitem.save()
         return orderitem
