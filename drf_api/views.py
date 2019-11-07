@@ -133,7 +133,7 @@ class OrderItemCreate(CreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def perform_create(self, serializer):
-        # setting id of order to which adding orderitem-ice, todo: consider different realtions m2m ??
+        # setting id of order to which adding orderitem-ice, todo: consider different realtions: forignkey ??
         activeorder = Order.objects.filter(worker_owner=self.request.user, status=1).first()
         serializer.save(order=[activeorder.id])
 
