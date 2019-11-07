@@ -99,7 +99,8 @@ class CreateOrder(LoginRequiredMixin, View):
         else:
             add_order_form = AddOrderItem()
             messages.info(request, "Wrong Data")
-        return render(request, 'product_manager_ices/order_form.html', context={"add_order_form": add_order_form})
+            return redirect("create-order")
+
 
 
 @login_required

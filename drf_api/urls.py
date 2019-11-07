@@ -12,6 +12,4 @@ urlpatterns = [
     url(r'order-create/$', OrderCrateView.as_view(), name='order-create'),
     url(r'orderitem-create/$', OrderItemCreate.as_view(), name='orderitem-create'),
     url(r'orderitem-delete/(?P<pk>(\d)+)', DeleteOrderitem.as_view(), name='orderitem-delete'),
-
-
 ]

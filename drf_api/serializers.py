@@ -13,25 +13,23 @@ class AddIcesSerializers(serializers.ModelSerializer):
 
 
 class AddFlavourSerializers(serializers.ModelSerializer):
-
     class Meta:
         model = Flavour
-        fields = ("flavour",)
-
+        fields = ["flavour"]
 
 
 class OrderListSerializer(serializers.ModelSerializer):
+    orderitem=serializers.PrimaryKeyRelatedField(many=True,read_only=True)
     class Meta:
         model = Order
         fields = "__all__"
-        read_only_fields = ('ices_ordered', 'worker_owner', 'time_sell')
-
+        read_only_fields = ('worker_owner', 'time_sell', 'orderitem')
 
 
 class OrderCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = ['id',"worker_owner", 'time_sell', 'status','orderitem']
+        fields = ['id', "worker_owner", 'time_sell', 'status', 'orderitem']
 
     def create(self, validated_data):
         orderitems = validated_data.pop('orderitem')
@@ -42,11 +40,11 @@ class OrderCreateSerializer(serializers.ModelSerializer):
 
 
 class OrderItemCreateSerializer(serializers.ModelSerializer):
-    order=serializers.PrimaryKeyRelatedField(many=True,required=True,queryset=Order.objects.all())
+    order = serializers.PrimaryKeyRelatedField(many=True, required=True, queryset=Order.objects.all())
 
     class Meta:
         model = OrderItem
-        fields = ["id",'quantity','ice','ice_id','flavour',"order"]
+        fields = ["id", 'quantity', 'ice', 'ice_id', 'flavour', "order"]
 
     def create(self, validated_data):
         flavour = validated_data.pop('flavour')
@@ -54,7 +52,7 @@ class OrderItemCreateSerializer(serializers.ModelSerializer):
         orderitem = OrderItem.objects.create(**validated_data)
 
         # limitation for Thai ice to only 3 flavoures
-        if (len([*flavour]) > 3) and (orderitem.ice.type== "thai"):
+        if (len([*flavour]) > 3) and (orderitem.ice.type == "thai"):
             raise ValidationError('Thai ice can be made only from 3 flavoures')
 
         orderitem.flavour.add(*flavour)
