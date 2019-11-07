@@ -38,6 +38,7 @@ class OrdersListAPIView(ListAPIView):
     """
     endpoint list of orders
     search
+    status-choices=1-Started/2-postponed/3-finished
     """
     serializer_class = OrderListSerializer
 
@@ -68,12 +69,21 @@ class OrderChangeView(RetrieveUpdateDestroyAPIView):
         queryset = Order.objects.filter(worker_owner=self.request.user).order_by("-time_sell")
         return queryset
 
-    # limitation for only one order open, to prevent from changing the order
+    # limitation for only one order open, to prevent form having two opend_order
     def perform_update(self, serializer):
-        queryset = Order.objects.filter(worker_owner=self.request.user, status=1)
-        if queryset.count() > 1:
+        change_sts_to_started= serializer.validated_data['status']
+        open_order = Order.objects.filter(worker_owner=self.request.user, status=1)
+        if change_sts_to_started==1 and open_order:
             raise ValidationError('You have active order opened, Please postpone or delete it')
         serializer.save()
+
+
+    def perform_destroy(self, instance):
+        # Validation only owner of order can delete the order
+        if instance.worker_owner == self.request.user:
+            instance.delete()
+        else:
+            raise ValidationError('Only owner can delete the order')
 
 
 class OrderCrateView(APIView):
@@ -81,7 +91,12 @@ class OrderCrateView(APIView):
     endpoint: adding order
     """
     def get(self,request):
-        order = Order.objects.get(worker_owner=request.user,status=1)
+        # validation if open order
+        try:
+            order = Order.objects.get(worker_owner=request.user,status=1)
+        except:
+            raise ValidationError('No open order')
+
         serialized= OrderCreateSerializer(order)
         return Response(serialized.data)
     def post(self,request):
@@ -96,10 +111,10 @@ class OrderCrateView(APIView):
         return Response(serialized.errors,status=400)
 
 
-
 class OrderItemCreate(CreateAPIView):
     """
     endpoint: adding orderitem(ice)
+
     """
     serializer_class = OrderItemCreateSerializer
     queryset = OrderItem.objects.all()
@@ -130,3 +145,4 @@ class DeleteOrderitem(DestroyAPIView):
     """
     queryset = OrderItem.objects.all()
     serializer_class = OrderItemCreateSerializer
+
