@@ -11,11 +11,45 @@ class AddIcesSerializers(serializers.ModelSerializer):
         model = Ices
         fields = "__all__"
 
+    def validate_type(self, value):
+        """
+        Check the duplicate
+        """
+        if Ices.objects.filter(type=value.lower()) :
+            raise serializers.ValidationError("There already exist such type")
+        return value
+
+
+    def to_representation(self, instance):
+        """
+        Convert `type` to lowercase.
+        """
+        ret = super().to_representation(instance)
+        ret['type'] = ret['type'].lower()
+        return ret
+
 
 class AddFlavourSerializers(serializers.ModelSerializer):
     class Meta:
         model = Flavour
         fields = ["flavour"]
+
+    def validate_flavour(self, value):
+        """
+        Check the duplicate
+        """
+        if Flavour.objects.filter(flavour=value.lower()) :
+            raise serializers.ValidationError("There already exist such flavour")
+        return value
+
+
+    def to_representation(self, instance):
+        """
+        Convert `flavour` to lowercase.
+        """
+        ret = super().to_representation(instance)
+        ret['flavour'] = ret['flavour'].lower()
+        return ret
 
 
 class OrderListSerializer(serializers.ModelSerializer):

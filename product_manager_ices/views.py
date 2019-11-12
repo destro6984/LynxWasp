@@ -197,8 +197,8 @@ class ListOfOrders(LoginRequiredMixin, ListView):
         if query:
             queryset = Order.objects.filter(Q(worker_owner__username__icontains=query) |
                                             Q(time_sell__icontains=query) |
-                                            Q(ices_ordered__flavour__flavour__icontains=query) |
-                                            Q(ices_ordered__ice__type__contains=query)).order_by(
+                                            Q(orderitem__flavour__flavour__icontains=query) |
+                                            Q(orderitem__ice__type__contains=query)).order_by(
                 "-time_sell").distinct()
         else:
             queryset = Order.objects.filter(worker_owner=self.request.user).order_by("-time_sell")
