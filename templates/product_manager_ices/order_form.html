@@ -310,29 +310,29 @@
     {#            });#}
     {#        });#}
     {#    </script>#}
-    <script>
-        $('#deleteorder').click(function (e) {
-            e.preventDefault();
-            var url_order = $('#url-order').text();
-            // ajax change status /POSTPONE
-            $.ajax({
-                url: url_order,
-                type: 'DELETE',
-                data: {},
-
-                contentType: 'application/json',
-                dataType: 'text',
-                success: function () {
-                    alert("deleted");
-                },
-                error: function () {
-                    alert('error delete')
-                }
-            });
-        });
-
-
-    </script>
+{#    <script>#}
+{#        $('#deleteorder').click(function (e) {#}
+{#            e.preventDefault();#}
+{#            var url_order = $('#url-order').text();#}
+{#            // ajax change status /POSTPONE#}
+{#            $.ajax({#}
+{#                url: url_order,#}
+{#                type: 'DELETE',#}
+{#                data: {},#}
+{##}
+{#                contentType: 'application/json',#}
+{#                dataType: 'text',#}
+{#                success: function () {#}
+{#                    alert("deleted");#}
+{#                },#}
+{#                error: function () {#}
+{#                    alert('error delete')#}
+{#                }#}
+{#            });#}
+{#        });#}
+{##}
+{##}
+{#    </script>#}
 
 {% endblock content %}
 
