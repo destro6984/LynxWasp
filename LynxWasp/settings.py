@@ -16,11 +16,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # key in lynxven/bin/activate
-SECRET_KEY = os.environ['SECRET_KEY_ENV']
+SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://lynxwasp.herokuapp.com/']
 
 # Application definition
 
