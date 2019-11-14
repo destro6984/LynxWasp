@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 
 from django.contrib.auth import views as auth_views
+from django.urls import include
 
 from .views import Registration, DeleteUser
 from . import views
@@ -29,6 +30,8 @@ urlpatterns = [
     url(r"^profile/$", views.profile_user, name='profile'),
     url(r"^delete/(?P<pk>\d*$)", DeleteUser.as_view(), name='delete'),
     url(r"^update/(?P<pk>\d$)", views.profile_user, name='update'),
+    # DRF API auth
+    url(r'^rest-auth/', include('rest_auth.urls')),
 
 
 

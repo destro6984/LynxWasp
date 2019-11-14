@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'cloudinary',
     'users_app.apps.UsersConfig',
     'rest_framework',
+    'rest_framework.authtoken',
+    'rest_auth',
 ]
 
 MIDDLEWARE = [
@@ -76,8 +78,6 @@ REST_FRAMEWORK = {
     ]
 
 }
-
-
 
 # crsf token form cookies
 
