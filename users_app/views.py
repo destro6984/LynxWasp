@@ -64,6 +64,7 @@ class DeleteUser(LoginRequiredMixin,DeleteView):
     """
     model = User
     success_url = reverse_lazy("homepage")
+    template_name = 'users_app/user_confirm_delete.html'
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
         success_url = self.get_success_url()

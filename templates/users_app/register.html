@@ -2,8 +2,8 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <div class="container bg-light">
-        <div class="content-section">
+    <article class="bg-light rounded p-1">
+        <section>
             <form method="POST">
                 {% csrf_token %}
                 <fildset class="form-group">
@@ -19,9 +19,10 @@
                     Already have and account?<a class="'ml-2" href="{% url 'login' %}">Sign In</a>
                 </small>
             </div>
-        </div>
+        </section>
+    </article>
 
-    </div>
+
 
 {% endblock %}
 {% block footer %}

@@ -1,12 +1,9 @@
 from cloudinary.models import CloudinaryField
 from django.contrib.auth.models import AbstractUser, User
 from django.db import models
-from django.conf import settings
-from PIL import Image
 
-#
-# class MyUser(AbstractUser):
-#     email = models.EmailField(unique=True)
+
+
 
 
 class ProfileUser(models.Model):
