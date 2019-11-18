@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -8,7 +9,7 @@ from django.views import View
 from django.views.generic import DeleteView
 
 from .forms import UserRegistryForm, UpdateProfileUser, UpdateUser
-from .models import MyUser, ProfileUser
+from .models import ProfileUser
 
 
 class Registration(View):
@@ -61,7 +62,7 @@ class DeleteUser(LoginRequiredMixin,DeleteView):
     delete of user
     USER can be deleted onyl by him self
     """
-    model = MyUser
+    model = User
     success_url = reverse_lazy("homepage")
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()

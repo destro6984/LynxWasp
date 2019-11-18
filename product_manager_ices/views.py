@@ -98,7 +98,7 @@ class CreateOrder(LoginRequiredMixin, View):
             return redirect("create-order")
         else:
             add_order_form = AddOrderItem()
-            messages.info(request, "Wrong Data")
+            messages.info(request, "OrdetItem must be made of type and flavoure")
             return redirect("create-order")
 
 

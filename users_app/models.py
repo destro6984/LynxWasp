@@ -1,16 +1,16 @@
 from cloudinary.models import CloudinaryField
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, User
 from django.db import models
 from django.conf import settings
 from PIL import Image
 
-
-class MyUser(AbstractUser):
-    email = models.EmailField(unique=True)
+#
+# class MyUser(AbstractUser):
+#     email = models.EmailField(unique=True)
 
 
 class ProfileUser(models.Model):
-    user = models.OneToOneField(MyUser, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     # image = models.ImageField(upload_to="profiles", default="default.jpg") local solution
     image_from_cl = CloudinaryField('image')
     location = models.CharField(max_length=30, blank=True)

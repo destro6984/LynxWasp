@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.db import models
-from users_app.models import MyUser
+
 
 
 class Flavour(models.Model):
@@ -27,7 +27,7 @@ class Order(models.Model):
         (2, 'Waiting'),
         (3, 'Finished'),
     )
-    worker_owner=models.ForeignKey(MyUser,on_delete=models.SET(get_sentinel_user), null=True)
+    worker_owner=models.ForeignKey(User,on_delete=models.SET(get_sentinel_user), null=True)
     time_sell = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=9, choices=STATUS_CHOICE,default=1)
 
