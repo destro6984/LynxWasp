@@ -47,6 +47,13 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'rest_auth.registration',
+
+
+
 ]
 
 MIDDLEWARE = [
@@ -109,7 +116,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'structure2.db'),
-        # 'NAME': '/home/destro6984/LynxWasp/db.sqlite3',
+
     }
 }
 

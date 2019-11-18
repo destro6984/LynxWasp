@@ -18,21 +18,18 @@ from django.conf.urls import url
 from django.contrib.auth import views as auth_views
 from django.urls import include
 
+from users_app.views import ProfileUserUpdate
 from .views import Registration, DeleteUser
 from . import views
-
 
 urlpatterns = [
 
     url(r"^login/$", auth_views.LoginView.as_view(template_name="users_app/login.html"), name='login'),
     url(r"^logout/$", auth_views.LogoutView.as_view(template_name="users_app/logout.html"), name='logout'),
     url(r"^register/$", Registration.as_view(), name='register'),
-    url(r"^profile/$", views.profile_user, name='profile'),
+    url(r"^profile/$", ProfileUserUpdate.as_view(), name='profile'),
     url(r"^delete/(?P<pk>\d*$)", DeleteUser.as_view(), name='delete'),
-    url(r"^update/(?P<pk>\d$)", views.profile_user, name='update'),
-    # DRF API auth
-    url(r'^rest-auth/', include('rest_auth.urls')),
-
+    url(r"^update/(?P<pk>\d$)", ProfileUserUpdate.as_view(), name='update'),
 
 
 ]

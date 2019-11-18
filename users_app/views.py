@@ -33,12 +33,18 @@ class Registration(View):
         return render(request, 'users_app/register.html', context={'form': form})
 
 
-@login_required
-def profile_user(request):
+
+
+class ProfileUserUpdate(LoginRequiredMixin,View):
     """
-    Update of user profile
+       Update of user profile
     """
-    if request.method == "POST":
+    def get(self,request):
+        user_update_form = UpdateUser(instance=request.user)
+        profile_user_update_form = UpdateProfileUser(instance=request.user.profileuser)
+        return render(request, 'users_app/profile.html', context={"user_update_form": user_update_form,
+                                                                  "profile_user_update_form": profile_user_update_form})
+    def post(self,request):
         user_update_form = UpdateUser(request.POST, instance=request.user)
         profile_user_update_form = UpdateProfileUser(request.POST, request.FILES, instance=request.user.profileuser)
         if user_update_form.is_valid() and profile_user_update_form.is_valid():
@@ -50,10 +56,8 @@ def profile_user(request):
             user_update_form = UpdateUser(instance=request.user)
             profile_user_update_form = UpdateProfileUser(instance=request.user.profileuser)
             messages.success(request, "Wrong Data")
-    else:
-        user_update_form = UpdateUser(instance=request.user)
-        profile_user_update_form = UpdateProfileUser(instance=request.user.profileuser)
-    return render(request, 'users_app/profile.html', context={"user_update_form": user_update_form,
+
+        return render(request, 'users_app/profile.html', context={"user_update_form": user_update_form,
                                                           "profile_user_update_form": profile_user_update_form})
 
 

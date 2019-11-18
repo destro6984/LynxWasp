@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from rest_framework import status, serializers
@@ -11,7 +12,7 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
 from drf_api.serializers import AddIcesSerializers, AddFlavourSerializers, OrderListSerializer, OrderCreateSerializer, \
-    OrderItemCreateSerializer
+    OrderItemCreateSerializer, UserSerializer
 from product_manager_ices.models import Order, OrderItem
 
 
@@ -160,3 +161,6 @@ class DeleteOrderitem(RetrieveDestroyAPIView):
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
+class UserListView(ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
