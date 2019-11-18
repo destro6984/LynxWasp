@@ -19,7 +19,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['https://lynxwasp.herokuapp.com/']
 
@@ -167,3 +167,9 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 # django heroku local
 django_heroku.settings(locals())
 
+
+
+# When you include the django.contrib.sites to your INSTALLED_APPS and run the command "python manage.py migrate"
+# the app automatically creates a object into "django_site" table (with domain name and display name equals to "example.com".
+# There is no need to create it by yourself.
+SITE_ID = 1
