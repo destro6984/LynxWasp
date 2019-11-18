@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 
-from product_manager_ices.models import Ices, Flavour, Order, OrderItem
+from product_manager_ices.models import Ices, Flavour
 
 class AddIceForm(ModelForm):
     class Meta:

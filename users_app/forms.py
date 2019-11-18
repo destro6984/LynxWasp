@@ -5,14 +5,14 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.utils import timezone
 
-from .models import MyUser, ProfileUser
+from .models import ProfileUser
 
 Years= [x for x in range(1940,2021)]
 
 
 class UserRegistryForm(UserCreationForm):
     class Meta:
-        model = MyUser
+        model = User
         fields = ["username", "password1", "password2", "email", "first_name", "last_name"]
 
 
@@ -26,5 +26,5 @@ class UpdateProfileUser(ModelForm):
 
 class UpdateUser(ModelForm):
     class Meta:
-        model = MyUser
+        model = User
         fields=["last_name","first_name","email"]

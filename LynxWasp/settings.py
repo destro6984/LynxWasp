@@ -37,6 +37,15 @@ INSTALLED_APPS = [
     'cloudinary',
     'users_app.apps.UsersConfig',
     'rest_framework',
+    'rest_framework.authtoken',
+    'rest_auth',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'rest_auth.registration',
+
+
+
 ]
 
 MIDDLEWARE = [
@@ -69,8 +78,6 @@ REST_FRAMEWORK = {
 
 }
 
-
-
 # crsf token form cookies
 
 CSRF_USE_SESSIONS = False
@@ -101,7 +108,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'structure2.db'),
-        # 'NAME': '/home/destro6984/LynxWasp/db.sqlite3',
+
     }
 }
 
@@ -160,4 +167,3 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 # django heroku local
 django_heroku.settings(locals())
 
-AUTH_USER_MODEL = "users_app.MyUser"

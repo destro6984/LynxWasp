@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -8,7 +9,7 @@ from django.views import View
 from django.views.generic import DeleteView
 
 from .forms import UserRegistryForm, UpdateProfileUser, UpdateUser
-from .models import MyUser, ProfileUser
+from .models import ProfileUser
 
 
 class Registration(View):
@@ -32,12 +33,18 @@ class Registration(View):
         return render(request, 'users_app/register.html', context={'form': form})
 
 
-@login_required
-def profile_user(request):
+
+
+class ProfileUserUpdate(LoginRequiredMixin,View):
     """
-    Update of user profile
+       Update of user profile
     """
-    if request.method == "POST":
+    def get(self,request):
+        user_update_form = UpdateUser(instance=request.user)
+        profile_user_update_form = UpdateProfileUser(instance=request.user.profileuser)
+        return render(request, 'users_app/profile.html', context={"user_update_form": user_update_form,
+                                                                  "profile_user_update_form": profile_user_update_form})
+    def post(self,request):
         user_update_form = UpdateUser(request.POST, instance=request.user)
         profile_user_update_form = UpdateProfileUser(request.POST, request.FILES, instance=request.user.profileuser)
         if user_update_form.is_valid() and profile_user_update_form.is_valid():
@@ -49,10 +56,8 @@ def profile_user(request):
             user_update_form = UpdateUser(instance=request.user)
             profile_user_update_form = UpdateProfileUser(instance=request.user.profileuser)
             messages.success(request, "Wrong Data")
-    else:
-        user_update_form = UpdateUser(instance=request.user)
-        profile_user_update_form = UpdateProfileUser(instance=request.user.profileuser)
-    return render(request, 'users_app/profile.html', context={"user_update_form": user_update_form,
+
+        return render(request, 'users_app/profile.html', context={"user_update_form": user_update_form,
                                                           "profile_user_update_form": profile_user_update_form})
 
 
@@ -61,8 +66,9 @@ class DeleteUser(LoginRequiredMixin,DeleteView):
     delete of user
     USER can be deleted onyl by him self
     """
-    model = MyUser
+    model = User
     success_url = reverse_lazy("homepage")
+    template_name = 'users_app/user_confirm_delete.html'
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
         success_url = self.get_success_url()

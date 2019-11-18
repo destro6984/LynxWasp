@@ -2,13 +2,13 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
-        <div class="container">
+        <article class="text-center bg-light rounded">
             <form method="post">{% csrf_token %}
                 <p>Are you sure you want to delete YOUR ACCOUNT?</p>
-                <input type="submit" value="Confirm">
+                <input class="btn btn-danger" type="submit" value="Confirm">
                 <a class="btn btn-secondary" href="{% url 'profile' %}">Back</a>
             </form>
-        </div>
+        </article>
 
 {% endblock content %}
 

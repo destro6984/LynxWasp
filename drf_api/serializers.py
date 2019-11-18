@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.utils import timezone
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
@@ -98,3 +99,10 @@ class OrderItemCreateSerializer(serializers.ModelSerializer):
         orderitem.order.add(*order_ids)
         orderitem.save()
         return orderitem
+
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields =('email', 'username', )
