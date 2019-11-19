@@ -15,9 +15,8 @@ This program is a web based Application developed in Python/Django as a simple P
 Credentials for testing:
 - username: tester1
 - pass testing1234  
+If you will try this project for your own check please be pleased with the provided fixtures
   
 *Program is one of my first adventures of programming with Python/Django and it is still in progress so please bear it in mind.*  
-*Things to do/in progress
-- ajax the forms
-- improve search specific for day/ month /year*  
+
 **Contact: tmwzaip@gmail.com**.  
