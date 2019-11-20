@@ -2,7 +2,7 @@ from django.conf.urls import url
 from django.urls import include
 
 from .views import AddIceCreateAPIView, AddFlavourCreateAPIView, OrdersListAPIView, OrderChangeView, OrderCrateView, \
-    OrderItemCreate, DeleteOrderitem, UserListView
+    OrderItemCreate, DeleteOrderitem, UserListView, UserProfileUpdate
 
 urlpatterns = [
 
@@ -18,4 +18,5 @@ urlpatterns = [
     url(r'user-list/$', UserListView.as_view(), name='users-list'),
     url(r'rest-auth/', include('rest_auth.urls')),
     url(r'rest-auth/registration/', include('rest_auth.registration.urls')),
+    url(r'user-profile', UserProfileUpdate.as_view(),name='user-profile'),
 ]

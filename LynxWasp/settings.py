@@ -78,6 +78,10 @@ REST_FRAMEWORK = {
     ]
 
 }
+# https://django-rest-auth.readthedocs.io/en/latest/faq.html
+# REST_AUTH_SERIALIZERS = {
+#     'USER_DETAILS_SERIALIZER': 'demo.serializers.UserSerializer'
+# }
 
 # crsf token form cookies
 

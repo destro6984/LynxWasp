@@ -15,9 +15,9 @@ from drf_api.serializers import AddIcesSerializers, AddFlavourSerializers, Order
     OrderItemCreateSerializer, UserSerializer
 from product_manager_ices.models import Order, OrderItem
 
-
 # Authors comment:
 # probably it is better to use modelviewsetes, but lets keep some kind of learning path and assume it is yet to come
+from users_app.models import ProfileUser
 
 
 class AddIceCreateAPIView(CreateAPIView):
@@ -149,7 +149,7 @@ class DeleteOrderitem(RetrieveDestroyAPIView):
     serializer_class = OrderItemCreateSerializer
 
     def get_queryset(self):
-        queryset=OrderItem.objects.filter(order__status=1,order__worker_owner=self.request.user)
+        queryset = OrderItem.objects.filter(order__status=1, order__worker_owner=self.request.user)
         return queryset
 
     # user can delete only order-items(ices) from current open order
@@ -166,3 +166,14 @@ class UserListView(ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+# class UserProfileUpdate(APIView):
+#     def get(self,request):
+#         user_profile=ProfileUser.objects.get(user=request.user.id)
+#         serilizer=ProfileUserSerializer(user_profile)
+#         return Response(serilizer.data)
+#
+class UserProfileUpdate(RetrieveUpdateAPIView):
+    serializer_class = UserSerializer
+
+    def get_object(self):
+        return User.objects.get(id=self.request.user.id)

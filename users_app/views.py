@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import DeleteView
+from django.views.generic import DeleteView, UpdateView
 
 from .forms import UserRegistryForm, UpdateProfileUser, UpdateUser
 from .models import ProfileUser
@@ -42,8 +42,10 @@ class ProfileUserUpdate(LoginRequiredMixin,View):
     def get(self,request):
         user_update_form = UpdateUser(instance=request.user)
         profile_user_update_form = UpdateProfileUser(instance=request.user.profileuser)
+
         return render(request, 'users_app/profile.html', context={"user_update_form": user_update_form,
-                                                                  "profile_user_update_form": profile_user_update_form})
+                                                                  "profile_user_update_form": profile_user_update_form,
+                                                                  })
     def post(self,request):
         user_update_form = UpdateUser(request.POST, instance=request.user)
         profile_user_update_form = UpdateProfileUser(request.POST, request.FILES, instance=request.user.profileuser)
@@ -59,6 +61,8 @@ class ProfileUserUpdate(LoginRequiredMixin,View):
 
         return render(request, 'users_app/profile.html', context={"user_update_form": user_update_form,
                                                           "profile_user_update_form": profile_user_update_form})
+
+
 
 
 class DeleteUser(LoginRequiredMixin,DeleteView):
