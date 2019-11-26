@@ -1,7 +1,8 @@
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import User
+
 from django.db import models
 
+from users_app.models import User
 
 
 class Flavour(models.Model):

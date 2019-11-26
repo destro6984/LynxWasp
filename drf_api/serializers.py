@@ -1,3 +1,7 @@
+import urllib
+from urllib.request import urlopen
+
+from cloudinary.forms import CloudinaryFileField
 from cloudinary.models import CloudinaryField
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -122,6 +126,7 @@ class UserSerializer(UserDetailsSerializer):
     image_from_cl=serializers.ImageField(source='profileuser.image_from_cl')
 
 
+
     class Meta(UserDetailsSerializer.Meta):
         fields = ('last_name','first_name','location','email','birth_date','image_from_cl')
 
@@ -142,9 +147,5 @@ class UserSerializer(UserDetailsSerializer):
         profile.save()
         return instance
 
-# class ProfileUserSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model= ProfileUser
-#         fields= "__all__"
 
 

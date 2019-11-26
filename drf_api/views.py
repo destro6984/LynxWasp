@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from rest_framework import status, serializers
@@ -17,7 +17,7 @@ from product_manager_ices.models import Order, OrderItem
 
 # Authors comment:
 # probably it is better to use modelviewsetes, but lets keep some kind of learning path and assume it is yet to come
-from users_app.models import ProfileUser
+from users_app.models import ProfileUser, User
 
 
 class AddIceCreateAPIView(CreateAPIView):
@@ -160,6 +160,8 @@ class DeleteOrderitem(RetrieveDestroyAPIView):
             raise ValidationError('For this user there is no open current order and no orderitem')
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
+
+
 
 
 class UserListView(ListAPIView):

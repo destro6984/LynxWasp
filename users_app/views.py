@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.contrib.auth.models import User
+
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -9,7 +9,7 @@ from django.views import View
 from django.views.generic import DeleteView, UpdateView
 
 from .forms import UserRegistryForm, UpdateProfileUser, UpdateUser
-from .models import ProfileUser
+from .models import ProfileUser, User
 
 
 class Registration(View):

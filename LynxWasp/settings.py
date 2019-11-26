@@ -8,6 +8,7 @@ import cloudinary
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 # localsolution
 # f local_settings import SECRET_KEY_HIDD
+from django.utils import timezone
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -112,7 +113,7 @@ WSGI_APPLICATION = 'LynxWasp.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'structure2.db'),
+        'NAME': os.path.join(BASE_DIR, 'structure222.db'),
 
     }
 }
@@ -178,3 +179,7 @@ django_heroku.settings(locals())
 # the app automatically creates a object into "django_site" table (with domain name and display name equals to "example.com".
 # There is no need to create it by yourself.
 SITE_ID = 1
+
+AUTH_USER_MODEL = 'users_app.User'
+
+
