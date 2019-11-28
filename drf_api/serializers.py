@@ -110,20 +110,17 @@ class OrderItemCreateSerializer(serializers.ModelSerializer):
 
 
 
-# class UserSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = User
-#         fields =('email', 'username', )
 
 
 
+# https://django-rest-auth.readthedocs.io/en/latest/faq.html
 
 class UserSerializer(UserDetailsSerializer):
 
     location = serializers.CharField(allow_blank=True,source="profileuser.location")
-    birth_date = serializers.DateField(format="%Y-%m-%d", input_formats=['%Y-%m-%d', 'iso-8601'],source="profileuser.birth_date")
+    birth_date = serializers.DateField(format="%Y-%m-%d", input_formats=['%Y-%m-%d', 'iso-8601'],source="profileuser.birth_date",)
     email = serializers.EmailField(allow_blank=False)
-    image_from_cl=serializers.ImageField(source='profileuser.image_from_cl')
+    image_from_cl=serializers.ImageField(source='profileuser.image_from_cl',required=False)
 
 
 

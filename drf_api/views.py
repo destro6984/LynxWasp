@@ -6,6 +6,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveUpdateAPIView, UpdateAPIView, \
     RetrieveUpdateDestroyAPIView, get_object_or_404, ListCreateAPIView, DestroyAPIView, RetrieveDestroyAPIView
 from rest_framework.mixins import UpdateModelMixin
+from rest_framework.parsers import JSONParser, MultiPartParser
 from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -163,19 +164,24 @@ class DeleteOrderitem(RetrieveDestroyAPIView):
 
 
 
-
+# USER API / most of the work is done b y rest-auth
 class UserListView(ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-# class UserProfileUpdate(APIView):
-#     def get(self,request):
-#         user_profile=ProfileUser.objects.get(user=request.user.id)
-#         serilizer=ProfileUserSerializer(user_profile)
-#         return Response(serilizer.data)
-#
+
+
+# still todo : when patch and put are not working separately
+
 class UserProfileUpdate(RetrieveUpdateAPIView):
     serializer_class = UserSerializer
 
+
     def get_object(self):
         return User.objects.get(id=self.request.user.id)
+
+
+
+
+
+
