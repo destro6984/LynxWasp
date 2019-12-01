@@ -122,8 +122,6 @@ class UserSerializer(UserDetailsSerializer):
     email = serializers.EmailField(allow_blank=False)
     image_from_cl=serializers.ImageField(source='profileuser.image_from_cl',required=False)
 
-
-
     class Meta(UserDetailsSerializer.Meta):
         fields = ('last_name','first_name','location','email','birth_date','image_from_cl')
 
@@ -142,6 +140,7 @@ class UserSerializer(UserDetailsSerializer):
         profile.birth_date = birth_date
         profile.image_from_cl=image_from_cl
         profile.save()
+        instance.save()
         return instance
 
 
