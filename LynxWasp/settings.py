@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['https://lynxwasp.herokuapp.com/']
 
@@ -113,7 +113,7 @@ WSGI_APPLICATION = 'LynxWasp.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'structure222.db'),
+        'NAME': os.path.join(BASE_DIR, 'structure2.db'),
 
     }
 }
