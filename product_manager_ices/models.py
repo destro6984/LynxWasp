@@ -6,7 +6,7 @@ from users_app.models import User
 
 
 class Flavour(models.Model):
-    flavour = models.CharField(max_length=45)
+    flavour = models.CharField(max_length=45,unique=True)
     def __str__(self):
         return f"{self.flavour}"
 

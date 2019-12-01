@@ -72,7 +72,7 @@
                             {#                            open order if doesnt exist#}
                             <form action="{% url 'open-order' %}" method="post">{% csrf_token %}
                                 <div class="text-center col-md-12">
-                                    <input class="btn btn-warning btn-lg" type="submit" value="Open Order">
+                                    <input class="btn btn-warning btn-lg" type="submit" value="Open Order" id='orderopen'>
                                 </div>
                             </form>
 
