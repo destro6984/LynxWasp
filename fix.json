@@ -1,0 +1,244 @@
+[
+  {
+    "model": "product_manager_ices.flavour",
+    "pk": 1,
+    "fields": {
+      "flavour": "strawbery"
+    }
+  },
+  {
+    "model": "product_manager_ices.flavour",
+    "pk": 2,
+    "fields": {
+      "flavour": "cream"
+    }
+  },
+  {
+    "model": "product_manager_ices.flavour",
+    "pk": 3,
+    "fields": {
+      "flavour": "rafaello"
+    }
+  },
+  {
+    "model": "product_manager_ices.flavour",
+    "pk": 4,
+    "fields": {
+      "flavour": "banana"
+    }
+  },
+  {
+    "model": "product_manager_ices.flavour",
+    "pk": 5,
+    "fields": {
+      "flavour": "raspberry"
+    }
+  },
+  {
+    "model": "product_manager_ices.flavour",
+    "pk": 6,
+    "fields": {
+      "flavour": "coconut"
+    }
+  },
+  {
+    "model": "product_manager_ices.flavour",
+    "pk": 7,
+    "fields": {
+      "flavour": "M&Ms"
+    }
+  },
+  {
+    "model": "product_manager_ices.ices",
+    "pk": 2,
+    "fields": {
+      "type": "thai",
+      "price": "15.00"
+    }
+  },
+  {
+    "model": "product_manager_ices.ices",
+    "pk": 3,
+    "fields": {
+      "type": "scoope",
+      "price": "5.00"
+    }
+  },
+  {
+    "model": "product_manager_ices.orderitem",
+    "pk": 2,
+    "fields": {
+      "ice": 2,
+      "quantity": 1,
+      "flavour": [
+        2,
+        3,
+        4
+      ],
+      "order": [
+        2
+      ]
+    }
+  },
+  {
+    "model": "product_manager_ices.orderitem",
+    "pk": 3,
+    "fields": {
+      "ice": 3,
+      "quantity": 3,
+      "flavour": [
+        3,
+        4,
+        5
+      ],
+      "order": [
+        1
+      ]
+    }
+  },
+  {
+    "model": "product_manager_ices.orderitem",
+    "pk": 4,
+    "fields": {
+      "ice": 3,
+      "quantity": 3,
+      "flavour": [
+        3,
+        4,
+        5
+      ],
+      "order": [
+        4
+      ]
+    }
+  },
+  {
+    "model": "product_manager_ices.orderitem",
+    "pk": 5,
+    "fields": {
+      "ice": 3,
+      "quantity": 4,
+      "flavour": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "order": [
+        5
+      ]
+    }
+  },
+  {
+    "model": "product_manager_ices.orderitem",
+    "pk": 6,
+    "fields": {
+      "ice": 2,
+      "quantity": 1,
+      "flavour": [
+        2,
+        3,
+        4
+      ],
+      "order": [
+        5
+      ]
+    }
+  },
+  {
+    "model": "product_manager_ices.orderitem",
+    "pk": 7,
+    "fields": {
+      "ice": 2,
+      "quantity": 1,
+      "flavour": [
+        1,
+        7
+      ],
+      "order": [
+        5
+      ]
+    }
+  },
+  {
+    "model": "users_app.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$150000$8Z1WVY1f5hiY$UN+D97iQWvltvgBq6bDKnyysChB0DQjpnISh9oMNZ+0=",
+      "last_login": "2023-07-14T13:21:37.462Z",
+      "is_superuser": false,
+      "username": "tester1",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2023-07-14T13:18:28.686Z",
+      "first_name": "Tom",
+      "last_name": "Marvollo",
+      "email": "tester1@wp.pl",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users_app.profileuser",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "image_from_cl": "image/upload/v1565630684/non_existing_id.png",
+      "location": "",
+      "birth_date": null
+    }
+  },
+  {
+    "model": "sites.site",
+    "pk": 1,
+    "fields": {
+      "domain": "example.com",
+      "name": "example.com"
+    }
+  },
+  {
+    "model": "product_manager_ices.order",
+    "pk": 1,
+    "fields": {
+      "worker_owner": 1,
+      "time_sell": "2023-07-14T13:18:51.372Z",
+      "status": "3"
+    }
+  },
+  {
+    "model": "product_manager_ices.order",
+    "pk": 2,
+    "fields": {
+      "worker_owner": 1,
+      "time_sell": "2023-07-14T13:23:30.670Z",
+      "status": "3"
+    }
+  },
+  {
+    "model": "product_manager_ices.order",
+    "pk": 3,
+    "fields": {
+      "worker_owner": 1,
+      "time_sell": "2023-07-14T13:26:31.919Z",
+      "status": "3"
+    }
+  },
+  {
+    "model": "product_manager_ices.order",
+    "pk": 4,
+    "fields": {
+      "worker_owner": 1,
+      "time_sell": "2023-07-14T13:26:39.558Z",
+      "status": "3"
+    }
+  },
+  {
+    "model": "product_manager_ices.order",
+    "pk": 5,
+    "fields": {
+      "worker_owner": 1,
+      "time_sell": "2023-07-14T13:27:01.778Z",
+      "status": "3"
+    }
+  }
+]

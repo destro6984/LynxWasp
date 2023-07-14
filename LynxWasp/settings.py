@@ -1,28 +1,25 @@
 
 import os
-import django_heroku
 
 # https://devcenter.heroku.com/articles/cloudinary
 import cloudinary
+import environ
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-# localsolution
-# f local_settings import SECRET_KEY_HIDD
-from django.utils import timezone
+
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
-# SECURITY WARNING: keep the secret key used in production secret!
-# key in lynxven/bin/activate
-SECRET_KEY = os.environ['SECRET_KEY']
+SECRET_KEY = env('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = ['https://lynxwasp.herokuapp.com/']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -170,8 +167,6 @@ MEDIA_URL = "/media/"
 # close session at close page
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
-# django heroku local
-django_heroku.settings(locals())
 
 
 
