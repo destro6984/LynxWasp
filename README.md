@@ -11,7 +11,7 @@ This program is a web based Application developed in Python/Django as a simple P
 - managing the sale system
 - overview of all made orders
 
-**You can check demo here: http://lynxwasp.herokuapp.com/**.  
+**You can check demo here: [http://lynxwasp.herokuapp.com/](https://ice-cream-shop-eszj.onrender.com)**.  
 Credentials for testing:
 - username: tester1
 - pass testing1234  
