@@ -1,6 +1,6 @@
 ### Point of Sale System
-This program is a web based Application developed in Python/Django as a simple POS system. The software is dedicated as a service for small specific friendly company selling icecs(LYNX&WASP). 
-#### To understand the features of this program please read bellow:
+This program is a web based Application developed in Python/Django as a simple POS system.
+#### To understand the buissnes requirments of this program please read bellow:
 - There are mainly 2 types of ices
 - Each type can have different flavoures (thai type can mix only 3 flavoures)
 ##### Price list:
@@ -11,7 +11,7 @@ This program is a web based Application developed in Python/Django as a simple P
 - managing the sale system
 - overview of all made orders
 
-**You can check demo here: [http://lynxwasp.herokuapp.com/](https://ice-cream-shop-eszj.onrender.com)**.  
+**You can check demo here: [https://ice-cream-shop-eszj.onrender.com/](https://ice-cream-shop-eszj.onrender.com)**.  
 Credentials for testing:
 - username: tester1
 - pass testing1234  
