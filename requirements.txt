@@ -1,3 +1,4 @@
+asgiref==3.7.2
 bootstrap4==0.1.0
 Brotli==1.0.9
 certifi==2019.6.16
@@ -7,7 +8,7 @@ cloudinary==1.17.0
 defusedxml==0.6.0
 distlib==0.3.6
 dj-database-url==0.5.0
-Django==2.2.3
+Django==4.2.3
 django-allauth==0.40.0
 django-crispy-forms==1.7.2
 django-environ==0.10.0
@@ -25,6 +26,7 @@ nodeenv==1.8.0
 oauthlib==3.1.0
 Pillow==6.1.0
 platformdirs==3.8.1
+pre-commit==3.3.3
 psycopg2==2.8.3
 python-dateutil==2.8.0
 python3-openid==3.1.0
@@ -33,8 +35,9 @@ PyYAML==6.0
 requests==2.22.0
 requests-oauthlib==1.3.0
 six==1.12.0
-sqlparse==0.3.0
+sqlparse==0.4.4
 text-unidecode==1.2
+typing_extensions==4.7.1
 urllib3==1.25.3
 virtualenv==20.23.1
 whitenoise==4.1.3

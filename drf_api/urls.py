@@ -1,22 +1,30 @@
-from django.conf.urls import url
-from django.urls import include
+from django.urls import include, path
 
-from .views import AddIceCreateAPIView, AddFlavourCreateAPIView, OrdersListAPIView, OrderChangeView, OrderCrateView, \
-    OrderItemCreate, DeleteOrderitem, UserListView, UserProfileUpdate
+from .views import (
+    AddFlavourCreateAPIView,
+    AddIceCreateAPIView,
+    DeleteOrderitem,
+    OrderChangeView,
+    OrderCrateView,
+    OrderItemCreate,
+    OrdersListAPIView,
+    UserListView,
+    UserProfileUpdate,
+)
 
 urlpatterns = [
-
-    url(r'create-ice/$', AddIceCreateAPIView.as_view(), name='create-ice'),
-    url(r'add-flavour/$', AddFlavourCreateAPIView.as_view(), name='add-flavour'),
-    url(r'order-list/$', OrdersListAPIView.as_view(), name='order-list'),
-    url(r'order-manage/(?P<id>(\d)+)$', OrderChangeView.as_view(), name='order-manage'),
-    url(r'order-create/$', OrderCrateView.as_view(), name='order-create'),
-    url(r'orderitem-create/$', OrderItemCreate.as_view(), name='orderitem-create'),
-    url(r'orderitem-delete/(?P<pk>(\d)+)$', DeleteOrderitem.as_view(), name='orderitem-delete'),
-
+    path("create-ice/", AddIceCreateAPIView.as_view(), name="create-ice"),
+    path("add-flavour/", AddFlavourCreateAPIView.as_view(), name="add-flavour"),
+    path("order-list/", OrdersListAPIView.as_view(), name="order-list"),
+    path("order-manage/<int:id>", OrderChangeView.as_view(), name="order-manage"),
+    path("order-create/", OrderCrateView.as_view(), name="order-create"),
+    path("orderitem-create/", OrderItemCreate.as_view(), name="orderitem-create"),
+    path(
+        "orderitem-delete/<int:pk>", DeleteOrderitem.as_view(), name="orderitem-delete"
+    ),
     # DRF API auth-users
-    url(r'user-list/$', UserListView.as_view(), name='users-list'),
-    url(r'rest-auth/', include('rest_auth.urls')),
-    url(r'rest-auth/registration/', include('rest_auth.registration.urls')),
-    url(r'^user-profile$', UserProfileUpdate.as_view(),name='user-profile'),
+    path("user-list/", UserListView.as_view(), name="users-list"),
+    path("dj-rest-auth/", include("dj_rest_auth.urls")),
+    path("dj-rest-auth/registration/", include("dj_rest_auth.registration.urls")),
+    path("user-profile", UserProfileUpdate.as_view(), name="user-profile"),
 ]
