@@ -1,7 +1,7 @@
 import os
 
 # https://devcenter.heroku.com/articles/cloudinary
-import cloudinary
+import cloudinary  # noqa
 import environ
 
 env = environ.Env(
@@ -17,7 +17,11 @@ SECRET_KEY = env("SECRET_KEY")
 
 DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = []
+
+RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 # Application definition
 
@@ -29,6 +33,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "crispy_forms",
+    "crispy_bootstrap4",
     "product_manager_ices.apps.ProductManagerIcesConfig",
     "cloudinary",
     "users_app.apps.UsersConfig",
