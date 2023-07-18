@@ -1,7 +1,7 @@
 import os
 
 # https://devcenter.heroku.com/articles/cloudinary
-import cloudinary
+import cloudinary  # noqa
 import environ
 
 env = environ.Env(
@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "crispy_forms",
+    "crispy_bootstrap4",
     "product_manager_ices.apps.ProductManagerIcesConfig",
     "cloudinary",
     "users_app.apps.UsersConfig",
