@@ -101,12 +101,7 @@ WSGI_APPLICATION = "LynxWasp.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "structure2.db"),
-    }
-}
+DATABASES = {"default": env.db()}
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -161,9 +156,6 @@ MEDIA_URL = "/media/"
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 
-# When you include the django.contrib.sites to your INSTALLED_APPS and run the command "python manage.py migrate"
-# the app automatically creates a object into "django_site" table (with domain name and display name equals to "example.com".
-# There is no need to create it by yourself.
 SITE_ID = 1
 
 AUTH_USER_MODEL = "users_app.User"
