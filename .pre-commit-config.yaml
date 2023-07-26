@@ -24,9 +24,9 @@ repos:
     hooks:
       - id: flake8
         exclude: "migrations|settings|urls"
-
-  - repo: https://github.com/Riverside-Healthcare/djLint
-    rev: v1.19.16
-    hooks:
-      - id: djlint-django
         args: [--config=pyproject.toml]
+  - repo: https://github.com/Riverside-Healthcare/djLint
+    rev: v1.32.0
+    hooks:
+      - id: djlint-reformat-django
+      - id: djlint-django

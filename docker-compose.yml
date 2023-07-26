@@ -1,5 +1,7 @@
+version: "3.8"
 services:
   django_app:
+    container_name: web_app
     build: .
     env_file:
       - ./.env
@@ -7,7 +9,7 @@ services:
       python manage.py makemigrations
       && python manage.py migrate
       && python manage.py loaddata fix.json
-      && gunicorn --bind 0.0.0.0:8000 LynxWasp.wsgi"
+      && gunicorn --workers=2 --bind 0.0.0.0:8000 LynxWasp.wsgi"
     volumes:
       - .:/usr/src/app
     ports:
@@ -15,6 +17,7 @@ services:
     depends_on:
       - web_db
   web_db:
+    container_name: db_app
     image: postgres:15-alpine
     env_file:
       - ./.env

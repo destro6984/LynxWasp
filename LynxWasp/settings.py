@@ -14,8 +14,7 @@ SECRET_KEY = env("SECRET_KEY")
 
 DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = ["*"]
-
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 # Application definition
 
 INSTALLED_APPS = [
@@ -25,13 +24,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "crispy_forms",
-    "crispy_bootstrap4",
     "product_manager_ices.apps.ProductManagerIcesConfig",
-    "cloudinary",
     "users_app.apps.UsersConfig",
-    "rest_framework",
-    "rest_framework.authtoken",
     # dj rest_auth
     "dj_rest_auth",
     "django.contrib.sites",
@@ -39,11 +33,19 @@ INSTALLED_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "dj_rest_auth.registration",
+    # other 3td
+    "corsheaders",
+    "rest_framework",
+    "rest_framework.authtoken",
+    "cloudinary",
+    "crispy_forms",
+    "crispy_bootstrap4",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -156,3 +158,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SITE_ID = 1
 
 AUTH_USER_MODEL = "users_app.User"
+
+# CORS
+
+CORS_ALLOWED_ORIGINS = env.list("ALLOWED_HOSTS_CORS")

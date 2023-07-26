@@ -112,7 +112,6 @@ class CreateOrder(LoginRequiredMixin, View):
             messages.success(request, "OrderItem Added to cart")
             return redirect("create-order")
         else:
-            add_order_form = AddOrderItem()
             messages.info(request, "OrdetItem must be made of type and flavoure")
             return redirect("create-order")
 
