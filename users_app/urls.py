@@ -19,5 +19,4 @@ urlpatterns = [
     path("register/", Registration.as_view(), name="register"),
     path("profile/", ProfileUserUpdate.as_view(), name="profile"),
     path("delete/<int:pk>", DeleteUser.as_view(), name="delete"),
-    path("update/<int:pk>", ProfileUserUpdate.as_view(), name="update"),
 ]
