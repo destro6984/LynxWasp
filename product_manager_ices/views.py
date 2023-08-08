@@ -12,16 +12,12 @@ from product_manager_ices.forms import AddFlavourForm, AddIceForm, AddOrderItem
 from product_manager_ices.models import Order, OrderItem
 
 
-class Homepage(View):
-    """
-    Welcome Page
-    """
-
+class HomepageView(View):
     def get(self, request):
         return render(request, "homepage.html")
 
 
-class AddIce(LoginRequiredMixin, View):
+class IceView(LoginRequiredMixin, View):
     """
     Class to add products by type and flavoures,
     Two separate forms given
@@ -65,7 +61,7 @@ class AddIce(LoginRequiredMixin, View):
         )
 
 
-class CreateOrder(LoginRequiredMixin, View):
+class CreateOrderItemView(LoginRequiredMixin, View):
     """
     Main Page to service the Ice sale:
     Choosing type,quantity,flavoures
@@ -76,17 +72,17 @@ class CreateOrder(LoginRequiredMixin, View):
     def get(self, request):
         add_order_form = AddOrderItem()
         try:
-            order_in_cart = Order.objects.get(worker_owner=request.user, status=1)
-            sumarize = order_in_cart.get_total()
+            opened_order = Order.objects.get(worker_owner=request.user, status=1)
+            sumarize = opened_order.get_total()
         except ObjectDoesNotExist:
-            order_in_cart = None
+            opened_order = None
             sumarize = None
         return render(
             request,
             "product_manager_ices/order_form.html",
             context={
                 "add_order_form": add_order_form,
-                "order_in_cart": order_in_cart,
+                "opened_order": opened_order,
                 "sumarize": sumarize,
             },
         )
@@ -136,7 +132,7 @@ def open_order(request):
 @login_required
 def delete_orderitem(request, id=None):
     """
-    Deleting orderitems in current order CART
+    Deleting order-item in current order CART
     """
     if request.method == "POST":
         order_to_delete = OrderItem.objects.get(id=id)
@@ -175,7 +171,7 @@ def postpone_order(request, id):
 
 
 @login_required
-def return_order(request, id=None):
+def reactivate_order(request, id=None):
     """
     Change status of order form postpone to started
     List-of-orders button> return order to active
@@ -194,7 +190,7 @@ def return_order(request, id=None):
         return redirect("create-order")
 
 
-class OrderDelete(LoginRequiredMixin, DeleteView):
+class OrderDeleteView(LoginRequiredMixin, DeleteView):
     """
     Deleting whole current order in CART
     """
@@ -203,7 +199,7 @@ class OrderDelete(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy("create-order")
 
 
-class ListOfOrders(LoginRequiredMixin, ListView):
+class OrderListView(LoginRequiredMixin, ListView):
     """
     List of finished orders
     Search of orders by USER/TIMESELL/FLAVOUR/TYPEOFICE
@@ -234,7 +230,7 @@ class ListOfOrders(LoginRequiredMixin, ListView):
         return queryset
 
 
-class OrderDetail(UserPassesTestMixin, LoginRequiredMixin, DetailView):
+class OrderDetailView(UserPassesTestMixin, LoginRequiredMixin, DetailView):
     """
     Detail of every order
     Only owner of order can see the details.

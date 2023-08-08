@@ -8,8 +8,8 @@
             <div class="row">
                 <div class="col-8 pl-0 pr-1">
                     {#                if products(ice) exists#}
-
-                    <form class="p-0 m-0" method="post">{% csrf_token %}
+                    <form class="p-0 m-0" method="post">
+                        {% csrf_token %}
                         <!--form to add orderitem-ice -->
                         <div class="border border-primary rounded col-md-7 d-inline-block p-0"
                              id="form-to-add-type-ice">
@@ -28,19 +28,19 @@
                         <!--form to add quantity-->
                         <div class=" d-inline-block col-md-4 p-0 pl-4 pt-md-4 text-center align-top"
                              id="form-to-quantity">
-
                             <label class="d-none" for="{{ add_order_form.quantity.id_for_label }}">Quantity</label>
                             <div class="add-odd-button d-inline-block bg-info text-center rounded border-dark border minus">
                                 <span class=" add-odd-button">-</span>
                             </div>
-                            <div class="d-inline-block text-center" style="width: 25%"><input type="number"
-                                                                                              class="count"
-                                                                                              name="{{ add_order_form.quantity.html_name }}"
-                                                                                              value="{{ add_order_form.quantity.value }}"
-                                                                                              min="{{ add_order_form.quantity.initial }}"
-                                                                                              required
-                                                                                              id="{{ add_order_form.quantity.id_for_label }}"
-                                                                                              onKeyDown="return false">
+                            <div class="d-inline-block text-center" style="width: 25%">
+                                <input type="number"
+                                       class="count"
+                                       name="{{ add_order_form.quantity.html_name }}"
+                                       value="{{ add_order_form.quantity.value }}"
+                                       min="{{ add_order_form.quantity.initial }}"
+                                       required
+                                       id="{{ add_order_form.quantity.id_for_label }}"
+                                       onKeyDown="return false">
                             </div>
                             <div class="add-odd-button d-inline-block bg-info text-center rounded border-dark border plus">
                                 <span class=" add-odd-button">+</span>
@@ -53,148 +53,147 @@
                                 <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
                             {% endfor %}
                         </div>
-
-
                         <!--button to add to cart-->
-                        {% if order_in_cart %}
+                        {% if opened_order %}
                             <div class="addtocart text-center col-md-12">
                                 <input class="btn btn-success btn-lg" type="submit" value="Add to cart">
                             </div>
-                            </form>
-
-
-                        {% else %}
-                            {#                            display button none#}
-                            <div class="addtocart text-center col-md-12 d-none">
-                                <input class="btn btn-success btn-lg" type="submit" value="Add to cart">
-                            </div>
-                            </form>
-                            {#                            open order if doesnt exist#}
-                            <form action="{% url 'open-order' %}" method="post">{% csrf_token %}
-                                <div class="text-center col-md-12">
-                                    <input class="btn btn-warning btn-lg" type="submit" value="Open Order">
-                                </div>
-                            </form>
-
-                        {% endif %}
-
-                </div>
-
-                <!-- CART -->
-                <div class="col-md-4 p-0" id="cart">
-                    {% if order_in_cart %}
-                        <div class="insideofcart border border-primary rounded d-inline-block bg-light col-md-12 pb-1 p-0">
+                        </form>
+                    {% else %}
+                        {#                            display button none#}
+                        <div class="addtocart text-center col-md-12 d-none">
+                            <input class="btn btn-success btn-lg" type="submit" value="Add to cart">
+                        </div>
+                    </form>
+                    {#                            open order if doesnt exist#}
+                    <form action="{% url 'open-order' %}" method="post">
+                        {% csrf_token %}
+                        <div class="text-center col-md-12">
+                            <input class="btn btn-warning btn-lg" type="submit" value="Open Order">
+                        </div>
+                    </form>
+                {% endif %}
+            </div>
+            <!-- CART -->
+            <div class="col-md-4 p-0" id="cart">
+                {% if opened_order %}
+                    <div class="insideofcart border border-primary rounded d-inline-block bg-light col-md-12 pb-1 p-0">
                         {#                        tittle and dropdwon menu to delete order or pospone#}
                         <div>
                             <div class="h2 text-center bg-warning text-uppercase d-inline-block col-md-12 p-0 align-center">
                                 cart
                                 <div class="btn-group float-right m-1">
-                                    <button type="button" class="btn btn-info rounded "
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <button type="button"
+                                            class="btn btn-info rounded "
+                                            data-toggle="dropdown"
+                                            aria-haspopup="true"
+                                            aria-expanded="false">
                                         <i class="fas fa-chevron-down"></i>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right text-center py-0 rounded">
                                         <!-- postpone or delete order-->
-                                        <div id="url-order" style="display:none;">{% if order_in_cart %}
-                                            {% url 'order-manage' id=order_in_cart.id %}{% endif %} </div>
-                                        <form class="dropdown-item p-0 border bg-danger rounded" method="POST"
-                                              action="{% url 'delete_order' pk=order_in_cart.id %}">
+                                        <div id="url-order" style="display:none;">
+                                            {% if opened_order %}
+                                                {% url 'order-manage' id=opened_order.id %}
+                                            {% endif %}
+                                        </div>
+                                        <form class="dropdown-item p-0 border bg-danger rounded"
+                                              method="POST"
+                                              action="{% url 'delete_order' pk=opened_order.id %}">
                                             {% csrf_token %}
                                             <input class="border-0 bg-transparent col-12 py-3 text-white text-uppercase"
-                                                   type="submit" value="Delete" id="deleteorder">
+                                                   type="submit"
+                                                   value="Delete"
+                                                   id="deleteorder">
                                         </form>
-                                        <form class="dropdown-item p-0 border bg-primary rounded" method="POST"
-                                              action="{% url 'postpone_order' id=order_in_cart.id %}">
+                                        <form class="dropdown-item p-0 border bg-primary rounded"
+                                              method="POST"
+                                              action="{% url 'postpone_order' id=opened_order.id %}">
                                             {% csrf_token %}
                                             <input class="border-0 bg-transparent col-12 py-3 text-white text-uppercase"
-                                                   type="submit" value="Postpone" id="postponeorder">
+                                                   type="submit"
+                                                   value="Postpone"
+                                                   id="postponeorder">
                                         </form>
-
-
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-
                         <div class="order_list my-1 p-0">
                             <ul class="list-unstyled list-group">
-                                {% for ices in order_in_cart.orderitem.all %}
-
+                                {% for ices in opened_order.orderitem.all %}
                                     <form action="{% url 'delete_oi' id=ices.id %}" method="post">
                                         {% csrf_token %}
                                         <div class="d-inline-block col-md-12 p-0 align-text-center">
                                             <li class="list-group-item list-group-item-info px-0 py-1">
-
                                                 <span class="text-truncate d-inline-block col-md-9 p-0">{{ ices.ice.type }} {{ ices.quantity }}
-                                                    {% for ices_flavour in ices.flavour.all %}
-                                                        {{ ices_flavour }} {% endfor %}</span>
-
+                                                    {% for ices_flavour in ices.flavour.all %}{{ ices_flavour }}{% endfor %}
+                                                </span>
                                                 <button class="d-inline-block col-md-2 bg-info border-1 rounded p-0 px-auto align-text-bottom"
                                                         type="submit"
                                                         value="{{ ices.id }}"
-                                                        name="oi_to_delete"><i class="fas fa-trash"></i></button>
+                                                        name="oi_to_delete">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
                                             </li>
-
                                         </div>
-
                                     </form>
                                 {% endfor %}
-
                                 <div class="col-12 px-0 my-2 bg-warning">
                                     <span class="d-inline-block col-md-6 text-uppercase">Total:</span>
-                                    <span class="d-inline-block text-truncate col-md-5 align-bottom text-right">{% if sumarize %}
-                                        {{ sumarize }}zł{% else %} 0zł {% endif %}</span>
+                                    <span class="d-inline-block text-truncate col-md-5 align-bottom text-right">
+                                        {% if sumarize %}
+                                            {{ sumarize }}zł
+                                        {% else %}
+                                            0zł
+                                        {% endif %}
+                                    </span>
                                 </div>
                             </ul>
                         </div>
-
-
                         <!-- Button trigger modal -->
                         <div class=" col-md-12 text-center  mt-5 ">
-                            <button id="paybutton" type="button" class="btn btn-primary btn-lg col-md-6"
+                            <button id="paybutton"
+                                    type="button"
+                                    class="btn btn-primary btn-lg col-md-6"
                                     data-toggle="modal"
-                                    data-target="#exampleModalCenter">
-                                PAY
-                            </button>
+                                    data-target="#exampleModalCenter">PAY</button>
                         </div>
-
                     {% else %}
                         <div class="text-center border border-dark rounded">
                             <h1>Cart</h1>
                             <h3>No product in the cart</h3>
                         </div>
-
                     {% endif %}
-
-                    </div>
-
                 </div>
             </div>
-        </article>
-
-        {% if order_in_cart %}
-            <article>
-
-                <!-- Modal with order sum up-->
-                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
-                     aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title" id="exampleModalCenterTitle">Order Cart</h4>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body mb-0 p-1">
-                                <form method="post" action="{% url 'change_to_finish' id=order_in_cart.id %}">
-                                    {% csrf_token %}
-                                    <div id="div_id_content" class="form-group mb-0">
-                                        <div class=" table-responsive border rounded border-primary mb-2">
-                                            <table class="table table-info m-0">
-                                                <thead>
+        </div>
+    </article>
+    {% if opened_order %}
+        <article>
+            <!-- Modal with order sum up-->
+            <div class="modal fade"
+                 id="exampleModalCenter"
+                 tabindex="-1"
+                 role="dialog"
+                 aria-labelledby="exampleModalCenterTitle"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="exampleModalCenterTitle">Order Cart</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body mb-0 p-1">
+                            <form method="post"
+                                  action="{% url 'change_to_finish' id=opened_order.id %}">
+                                {% csrf_token %}
+                                <div id="div_id_content" class="form-group mb-0">
+                                    <div class=" table-responsive border rounded border-primary mb-2">
+                                        <table class="table table-info m-0">
+                                            <thead>
                                                 <tr class="table-head-names">
                                                     <th scope="col">Nr</th>
                                                     <th scope="col">Amount</th>
@@ -202,17 +201,15 @@
                                                     <th scope="col">Flavoures</th>
                                                     <th scope="col">Price</th>
                                                 </tr>
-                                                </thead>
-
-                                                <tbody>
-                                                {% for ices in order_in_cart.orderitem.all %}
+                                            </thead>
+                                            <tbody>
+                                                {% for ices in opened_order.orderitem.all %}
                                                     <tr>
                                                         <th scope="row" class="text-center">{{ forloop.counter }}</th>
                                                         <td>{{ ices.quantity }}</td>
                                                         <td>{{ ices.ice.type }}</td>
                                                         <td id="flavoure-cell">
-                                                            {% for ices_flavour in ices.flavour.all %}
-                                                                ({{ ices_flavour }}), {% endfor %}
+                                                            {% for ices_flavour in ices.flavour.all %}({{ ices_flavour }}),{% endfor %}
                                                         </td>
                                                         <td>{{ ices.get_total_ice_price }}</td>
                                                     </tr>
@@ -221,81 +218,69 @@
                                                     <th scope="row">Total:</th>
                                                     <td colspan="4" class="text-right">{{ sumarize }}zł</td>
                                                 </tr>
-                                                </tbody>
-                                            </table>
-
-                                        </div>
-                                        <!-- Callculator for counting change  -->
-                                        <div>
-                                            <div class="text-center">
-                                                <button class="btn btn-primary pb-1" type="button"
-                                                        data-toggle="collapse" data-target="#collapseExample"
-                                                        aria-expanded="false" aria-controls="collapseExample">
-                                                    CALCULATOR
-                                                </button>
-                                            </div>
-                                            <div class="collapse" id="collapseExample">
-                                                <div id="sumtopay" value="{{ sumarize }}" class="card card-body p-2">
-
-                                                    <div class="col-12 text-center">
-                                                        <label for="clientmoney">Money:</label>
-                                                        <input type="number" id="clientmoney" placeholder="Give Amount">
-                                                    </div>
-
-
-                                                    <div class="col-12 text-center">
-                                                        <label class="">Change:</label>
-                                                        <output id="clientchange"></output>
-                                                    </div>
-
-                                                </div>
-
-                                            </div>
-
-
-                                            <div class="text-center mt-2">
-                                                <input class="btn btn-outline-success mx-auto btn-lg"
-                                                       id="finish-order-btn"
-                                                       type="submit"
-                                                       value="Finish">
-                                            </div>
-                                        </div>
-
+                                            </tbody>
+                                        </table>
                                     </div>
-                                </form>
-                            </div>
-
+                                    <!-- Callculator for counting change  -->
+                                    <div>
+                                        <div class="text-center">
+                                            <button class="btn btn-primary pb-1"
+                                                    type="button"
+                                                    data-toggle="collapse"
+                                                    data-target="#collapseExample"
+                                                    aria-expanded="false"
+                                                    aria-controls="collapseExample">CALCULATOR</button>
+                                        </div>
+                                        <div class="collapse" id="collapseExample">
+                                            <div id="sumtopay" value="{{ sumarize }}" class="card card-body p-2">
+                                                <div class="col-12 text-center">
+                                                    <label for="clientmoney">Money:</label>
+                                                    <input type="number" id="clientmoney" placeholder="Give Amount">
+                                                </div>
+                                                <div class="col-12 text-center">
+                                                    <label class="">Change:</label>
+                                                    <output id="clientchange"></output>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-center mt-2">
+                                            <input class="btn btn-outline-success mx-auto btn-lg"
+                                                   id="finish-order-btn"
+                                                   type="submit"
+                                                   value="Finish">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
-            </article>
-
-        {% endif %}
-
-
-    </section>
-    {#    <script>#}
-    {#        $('#postponeorder').click(function (e) {#}
-    {#            e.preventDefault();#}
-    {#            var url_order= $('#url-order').text();#}
-    {#            // ajax change status /POSTPONE#}
-    {#            $.ajax({#}
-    {#                url: url_order,#}
-    {#                type: 'PATCH',#}
-    {#                data: {#}
-    {#                    'status': 2,#}
-    {#                },#}
-    {##}
-    {#                dataType: 'json',#}
-    {#                success: function () {#}
-    {#                    alert("changed");#}
-    {#                },#}
-    {#                error: function () {#}
-    {#                    alert('error sts')#}
-    {#                }#}
-    {#            });#}
-    {#        });#}
-    {#    </script>#}
+            </div>
+        </article>
+    {% endif %}
+</section>
+{#    <script>#}
+{#        $('#postponeorder').click(function (e) {#}
+{#            e.preventDefault();#}
+{#            var url_order= $('#url-order').text();#}
+{#            // ajax change status /POSTPONE#}
+{#            $.ajax({#}
+{#                url: url_order,#}
+{#                type: 'PATCH',#}
+{#                data: {#}
+{#                    'status': 2,#}
+{#                },#}
+{##}
+{#                dataType: 'json',#}
+{#                success: function () {#}
+{#                    alert("changed");#}
+{#                },#}
+{#                error: function () {#}
+{#                    alert('error sts')#}
+{#                }#}
+{#            });#}
+{#        });#}
+{#    </script>#}
 {#    <script>#}
 {#        $('#deleteorder').click(function (e) {#}
 {#            e.preventDefault();#}
@@ -319,7 +304,4 @@
 {##}
 {##}
 {#    </script>#}
-
 {% endblock content %}
-
-
