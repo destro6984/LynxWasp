@@ -18,7 +18,7 @@ class Homepage(View):
     """
 
     def get(self, request):
-        return render(request, "Homepage.html")
+        return render(request, "homepage.html")
 
 
 class AddIce(LoginRequiredMixin, View):
