@@ -1,8 +1,9 @@
 [tool.isort]
-profile = "django"
+profile = "black"
 combine_as_imports = true
 include_trailing_comma = true
 line_length = 120
+
 [flake8]
 max-line-length = 120
 
@@ -10,4 +11,8 @@ max-line-length = 120
 all = true
 expand-stars = true
 exclude= "(.eggs|.git|.mypy_cache|__pycache__|__init__.py)"
+
+[tool.djlint]
+profile="django"
+ignore="H021"
 

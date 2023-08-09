@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
+from django.http import HttpRequest, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import DeleteView, DetailView, ListView
@@ -12,16 +13,12 @@ from product_manager_ices.forms import AddFlavourForm, AddIceForm, AddOrderItem
 from product_manager_ices.models import Order, OrderItem
 
 
-class Homepage(View):
-    """
-    Welcome Page
-    """
-
+class HomepageView(View):
     def get(self, request):
         return render(request, "homepage.html")
 
 
-class AddIce(LoginRequiredMixin, View):
+class IceView(LoginRequiredMixin, View):
     """
     Class to add products by type and flavoures,
     Two separate forms given
@@ -65,7 +62,7 @@ class AddIce(LoginRequiredMixin, View):
         )
 
 
-class CreateOrder(LoginRequiredMixin, View):
+class CreateOrderItemView(LoginRequiredMixin, View):
     """
     Main Page to service the Ice sale:
     Choosing type,quantity,flavoures
@@ -76,17 +73,17 @@ class CreateOrder(LoginRequiredMixin, View):
     def get(self, request):
         add_order_form = AddOrderItem()
         try:
-            order_in_cart = Order.objects.get(worker_owner=request.user, status=1)
-            sumarize = order_in_cart.get_total()
+            opened_order = Order.objects.get(worker_owner=request.user, status=1)
+            sumarize = opened_order.get_total()
         except ObjectDoesNotExist:
-            order_in_cart = None
+            opened_order = None
             sumarize = None
         return render(
             request,
             "product_manager_ices/order_form.html",
             context={
                 "add_order_form": add_order_form,
-                "order_in_cart": order_in_cart,
+                "opened_order": opened_order,
                 "sumarize": sumarize,
             },
         )
@@ -110,14 +107,14 @@ class CreateOrder(LoginRequiredMixin, View):
 
             ice_in_order.save()
             messages.success(request, "OrderItem Added to cart")
-            return redirect("create-order")
+            return redirect("create-order-item")
         else:
             messages.info(request, "OrdetItem must be made of type and flavoure")
-            return redirect("create-order")
+            return redirect("create-order-item")
 
 
 @login_required
-def open_order(request):
+def open_order(request: HttpRequest) -> HttpResponseRedirect:
     """
     OPEN NEW ORDER , one user can have only one order opened
     """
@@ -127,55 +124,57 @@ def open_order(request):
         ).exists()
         if not order_opened:
             Order.objects.create(worker_owner=request.user, status=1)
-            return redirect("create-order")
+            return redirect("create-order-item")
         else:
             messages.info(request, "You have opened order")
-            return redirect("create-order")
+            return redirect("create-order-item")
 
 
 @login_required
-def delete_orderitem(request, id=None):
+def delete_orderitem(request: HttpRequest, pk: int) -> HttpResponseRedirect:
     """
-    Deleting orderitems in current order CART
+    Deleting order-item in current order CART
     """
     if request.method == "POST":
-        order_to_delete = OrderItem.objects.get(id=id)
+        order_to_delete = OrderItem.objects.get(id=pk)
         order_to_delete.delete()
-    return redirect("create-order")
+    return redirect("create-order-item")
 
 
 @login_required
-def change_status_order_for_finish(request, id=None):
+def change_status_order_for_finish(
+    request: HttpRequest, pk: int
+) -> HttpResponseRedirect:
     """
     Change status of order to finished
     Boostrap Modal > buttons PAY>Finish
     """
     if request.method == "POST":
         order_to_change_status = Order.objects.get(
-            id=id, worker_owner=request.user, status=1
+            id=pk, worker_owner=request.user, status=1
         )
         order_to_change_status.status = 3
         order_to_change_status.save()
-    return redirect("create-order")
+    return redirect("create-order-item")
 
 
 @login_required
-def postpone_order(request, id):
+def postpone_order(request: HttpRequest, pk: int) -> HttpResponseRedirect:
     """
     Postpone current order in CART
     button> POSTPONE
     """
     if request.method == "POST":
         order_to_change_status = Order.objects.get(
-            id=id, worker_owner=request.user, status="1"
+            id=pk, worker_owner=request.user, status="1"
         )
         order_to_change_status.status = 2
         order_to_change_status.save()
-    return redirect("create-order")
+    return redirect("create-order-item")
 
 
 @login_required
-def return_order(request, id=None):
+def reactivate_order(request: HttpRequest, pk: int) -> HttpResponseRedirect:
     """
     Change status of order form postpone to started
     List-of-orders button> return order to active
@@ -186,24 +185,24 @@ def return_order(request, id=None):
         messages.info(
             request, "You have active order opened, Please postpone or delete it"
         )
-        return redirect("create-order")
+        return redirect("create-order-item")
     else:
-        order_to_change_status = Order.objects.get(worker_owner=request.user, id=id)
+        order_to_change_status = Order.objects.get(worker_owner=request.user, id=pk)
         order_to_change_status.status = 1
         order_to_change_status.save()
-        return redirect("create-order")
+        return redirect("create-order-item")
 
 
-class OrderDelete(LoginRequiredMixin, DeleteView):
+class OrderDeleteView(LoginRequiredMixin, DeleteView):
     """
     Deleting whole current order in CART
     """
 
     model = Order
-    success_url = reverse_lazy("create-order")
+    success_url = reverse_lazy("create-order-item")
 
 
-class ListOfOrders(LoginRequiredMixin, ListView):
+class OrderListView(LoginRequiredMixin, ListView):
     """
     List of finished orders
     Search of orders by USER/TIMESELL/FLAVOUR/TYPEOFICE
@@ -234,7 +233,7 @@ class ListOfOrders(LoginRequiredMixin, ListView):
         return queryset
 
 
-class OrderDetail(UserPassesTestMixin, LoginRequiredMixin, DetailView):
+class OrderDetailView(UserPassesTestMixin, LoginRequiredMixin, DetailView):
     """
     Detail of every order
     Only owner of order can see the details.

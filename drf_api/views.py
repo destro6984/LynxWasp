@@ -72,7 +72,6 @@ class OrdersListAPIView(ListAPIView):
         return queryset
 
 
-# probably better do this with ModelViewSet but it yet to come
 class OrderChangeView(RetrieveUpdateDestroyAPIView):
     """
     endpoint changing order status
