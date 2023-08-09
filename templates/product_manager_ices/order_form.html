@@ -58,14 +58,14 @@
                             <div class="addtocart text-center col-md-12">
                                 <input class="btn btn-success btn-lg" type="submit" value="Add to cart">
                             </div>
-                        </form>
-                    {% else %}
-                        {#                            display button none#}
-                        <div class="addtocart text-center col-md-12 d-none">
-                            <input class="btn btn-success btn-lg" type="submit" value="Add to cart">
-                        </div>
+                        {% else %}
+                            {#                            display button none#}
+                            <div class="addtocart text-center col-md-12 d-none">
+                                <input class="btn btn-success btn-lg" type="submit" value="Add to cart">
+                            </div>
+                        {% endif %}
                     </form>
-                    {#                            open order if doesnt exist#}
+                    {# open order if doesnt exist #}
                     <form action="{% url 'open-order' %}" method="post">
                         {% csrf_token %}
                         <div class="text-center col-md-12">
@@ -98,8 +98,8 @@
                                             {% endif %}
                                         </div>
                                         <form class="dropdown-item p-0 border bg-danger rounded"
-                                              method="POST"
-                                              action="{% url 'delete_order' pk=opened_order.id %}">
+                                              method="post"
+                                              action="{% url 'delete-order' pk=opened_order.id %}">
                                             {% csrf_token %}
                                             <input class="border-0 bg-transparent col-12 py-3 text-white text-uppercase"
                                                    type="submit"
@@ -107,8 +107,8 @@
                                                    id="deleteorder">
                                         </form>
                                         <form class="dropdown-item p-0 border bg-primary rounded"
-                                              method="POST"
-                                              action="{% url 'postpone_order' id=opened_order.id %}">
+                                              method="post"
+                                              action="{% url 'postpone-order' pk=opened_order.id %}">
                                             {% csrf_token %}
                                             <input class="border-0 bg-transparent col-12 py-3 text-white text-uppercase"
                                                    type="submit"
@@ -122,7 +122,7 @@
                         <div class="order_list my-1 p-0">
                             <ul class="list-unstyled list-group">
                                 {% for ices in opened_order.orderitem.all %}
-                                    <form action="{% url 'delete_oi' id=ices.id %}" method="post">
+                                    <form action="{% url 'delete-order-item' pk=ices.id %}" method="post">
                                         {% csrf_token %}
                                         <div class="d-inline-block col-md-12 p-0 align-text-center">
                                             <li class="list-group-item list-group-item-info px-0 py-1">
@@ -183,12 +183,11 @@
                         <div class="modal-header">
                             <h4 class="modal-title" id="exampleModalCenterTitle">Order Cart</h4>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                                <span aria-hidden="true">&#215</span>
                             </button>
                         </div>
                         <div class="modal-body mb-0 p-1">
-                            <form method="post"
-                                  action="{% url 'change_to_finish' id=opened_order.id %}">
+                            <form method="post" action="{% url 'finish-order' pk=opened_order.id %}">
                                 {% csrf_token %}
                                 <div id="div_id_content" class="form-group mb-0">
                                     <div class=" table-responsive border rounded border-primary mb-2">
@@ -238,7 +237,7 @@
                                                     <input type="number" id="clientmoney" placeholder="Give Amount">
                                                 </div>
                                                 <div class="col-12 text-center">
-                                                    <label class="">Change:</label>
+                                                    <label>Change:</label>
                                                     <output id="clientchange"></output>
                                                 </div>
                                             </div>

@@ -20,5 +20,7 @@ services:
   web_db:
     container_name: db_app
     image: postgres:15-alpine
+    ports:
+      - 5432:5432
     env_file:
       - ./.env
