@@ -54,7 +54,10 @@ class OrderItem(models.Model):
     order = models.ManyToManyField(Order, related_name="orderitem")
 
     def __str__(self):
-        return f"{self.quantity} of {self.ice.type} {self.ice.price}zł Flavouers:{'/'.join([str(flav) for flav in self.flavour.all()])}"
+        return (
+            f"{self.quantity} of {self.ice.type} {self.ice.price}zł "
+            f"Flavours:{'/'.join([str(flav) for flav in self.flavour.all()])}"
+        )
 
     def get_total_ice_price(self):
         return self.quantity * self.ice.price

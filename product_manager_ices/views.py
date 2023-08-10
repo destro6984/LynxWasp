@@ -51,7 +51,7 @@ class IceView(LoginRequiredMixin, View):
         else:
             form_type = AddIceForm()
             form_flavour = AddFlavourForm()
-            messages.success(request, "Wrong Data")
+            messages.error(request, "Wrong Data")
         return render(
             request,
             "product_manager_ices/add_ices.html",
@@ -65,26 +65,26 @@ class IceView(LoginRequiredMixin, View):
 class CreateOrderItemView(LoginRequiredMixin, View):
     """
     Main Page to service the Ice sale:
-    Choosing type,quantity,flavoures
+    Choosing type,quantity,flavours
     SideBar Shop Cart
-    Only one order can be open and being active / orders can be postpone or deleted
+    Only one order can be open and being active / orders can be postponed or deleted
     """
 
     def get(self, request):
         add_order_form = AddOrderItem()
         try:
             opened_order = Order.objects.get(worker_owner=request.user, status=1)
-            sumarize = opened_order.get_total()
+            summarize = opened_order.get_total()
         except ObjectDoesNotExist:
             opened_order = None
-            sumarize = None
+            summarize = None
         return render(
             request,
             "product_manager_ices/order_form.html",
             context={
                 "add_order_form": add_order_form,
                 "opened_order": opened_order,
-                "sumarize": sumarize,
+                "summarize": summarize,
             },
         )
 
@@ -96,7 +96,7 @@ class CreateOrderItemView(LoginRequiredMixin, View):
             quantity = add_order_form.cleaned_data.get("quantity")
 
             # Create order_items-ices
-            ice_in_order = OrderItem.objects.create(ice_id=ice, quantity=quantity)
+            ice_in_order = OrderItem.objects.create(ice_id=ice.id, quantity=quantity)
 
             # Adding flavoure to order-item(ice)
             ice_in_order.flavour.set(request.POST.getlist("flavour"))
