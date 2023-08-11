@@ -41,10 +41,16 @@
                     {% include "upper_navbar.html" %}
                 {% endblock navbar %}
                 <!--django messages--->
-                <div class="text-center">
+                <div class="text-center mt-1">
                     {% if messages %}
                         {% for message in messages %}
-                            <div class="alert alert-{{ message.tags }} p-1 mb-1 col-md-3 offset-md-5 ">{{ message }}</div>
+                            {% if message.tags == 'error' %}
+                                <div class="alert alert-danger p-1 mb-1 col-md-3 offset-md-5">{{ message }}</div>
+                            {% elif message.tags == 'success' %}
+                                <div class="alert alert-success p-1 mb-1 col-md-3 offset-md-5">{{ message }}</div>
+                            {% else %}
+                                <div class="alert alert-info p-1 mb-1 col-md-3 offset-md-5">{{ message }}</div>
+                            {% endif %}
                         {% endfor %}
                     {% endif %}
                 </div>

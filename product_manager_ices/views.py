@@ -109,7 +109,8 @@ class CreateOrderItemView(LoginRequiredMixin, View):
             messages.success(request, "OrderItem Added to cart")
             return redirect("create-order-item")
         else:
-            messages.info(request, "OrdetItem must be made of type and flavoure")
+            for error in add_order_form.errors:
+                messages.error(request, f"{add_order_form.errors[error].as_text()}")
             return redirect("create-order-item")
 
 
@@ -205,7 +206,7 @@ class OrderDeleteView(LoginRequiredMixin, DeleteView):
 class OrderListView(LoginRequiredMixin, ListView):
     """
     List of finished orders
-    Search of orders by USER/TIMESELL/FLAVOUR/TYPEOFICE
+    Search of orders by USER/SELL-TIME/FLAVOUR/TYPE-OF-ICE
     Only the same user can return the order to active
     """
 

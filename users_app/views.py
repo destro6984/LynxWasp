@@ -12,7 +12,7 @@ from .models import User
 
 class Registration(View):
     """
-    Registation View, extended default User and RegistrationForm
+    Registration View, extended default User and RegistrationForm
     Profile of user created in signals.py
     """
 
@@ -83,7 +83,7 @@ class ProfileUserUpdate(LoginRequiredMixin, View):
 class DeleteUser(LoginRequiredMixin, DeleteView):
     """
     delete of user
-    USER can be deleted onyl by him self
+    USER can be deleted only by him self
     """
 
     model = User
