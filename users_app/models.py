@@ -12,7 +12,6 @@ class User(AbstractUser):
 
 class ProfileUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    # image = models.ImageField(upload_to="profiles", default="default.jpg") local solution
 
     # CLOUDINARY DOCS :https://cloudinary.com/documentation/image_transformation_reference
     image_from_cl = CloudinaryField(
@@ -26,15 +25,7 @@ class ProfileUser(models.Model):
     birth_date = models.DateField(null=True, blank=True)
 
     def __str__(self):
-        return f" {self.user.username} Profile, First_name: {self.user.first_name}, Last_name: {self.user.last_name}, Location: {self.location}, Birth Date: {self.birth_date}"
-
-
-# local solution
-# def save(self,**kwargs):
-#     super().save()
-#
-#     img = Image.open(self.image.path)
-#     if img.height > 200 or img.width > 200:
-#         output_size = (200, 200)
-#         img.thumbnail(output_size)
-#         img.save(self.image.path)
+        return (
+            f" {self.user.username} Profile, First_name: {self.user.first_name}, Last_name: {self.user.last_name},"
+            f" Location: {self.location}, Birth Date: {self.birth_date}"
+        )

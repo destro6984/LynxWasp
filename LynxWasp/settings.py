@@ -15,6 +15,7 @@ SECRET_KEY = env("SECRET_KEY")
 DEBUG = env("DEBUG")
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -56,7 +57,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "LynxWasp.urls"
 
-# Rest framwork validations
+# Rest framework validations
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
@@ -161,6 +162,8 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SITE_ID = 1
 
 AUTH_USER_MODEL = "users_app.User"
+
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 # CORS
 

@@ -61,14 +61,14 @@ class ProfileUserUpdate(LoginRequiredMixin, View):
         if user_update_form.is_valid() and profile_user_update_form.is_valid():
             user_update_form.save()
             profile_user_update_form.save()
-            messages.success(request, "Edited")
+            messages.success(request, "Edited", fail_silently=True)
             return redirect("profile")
         else:
             user_update_form = UpdateUser(instance=request.user)
             profile_user_update_form = UpdateProfileUser(
                 instance=request.user.profileuser
             )
-            messages.success(request, "Wrong Data")
+            messages.error(request, "Wrong Data", fail_silently=True)
 
         return render(
             request,
