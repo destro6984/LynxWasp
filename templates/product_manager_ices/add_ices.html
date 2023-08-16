@@ -1,39 +1,40 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-
     <article class="text-center mt-1">
-
         <div class="col-md-5 d-inline-block bg-light border border-dark rounded">
             {% if request.user.is_superuser %}
                 <form method="post" action="{% url 'add-ice' %}">
-                    <legend class="border-bottom mb-4"> Add Type and Price</legend>
+                    <legend class="border-bottom mb-4">Add Type and Price</legend>
                     {% csrf_token %}
                     {{ form_type|crispy }}
                     <div class="form-group text-center">
-                        <button class="btn btn-outline-info" type="submit" id="addtype"> Add Type</button>
+                        <button class="btn btn-outline-info"
+                                type="submit"
+                                name="addtype"
+                                id="addtype">Add Type</button>
                     </div>
                 </form>
             {% else %}
                 <h3>Log in as admin to add new ices</h3>
             {% endif %}
         </div>
-
         <div class="col-md-6 d-inline-block bg-light border border-dark rounded align-top">
-            <form method="POST">
+            <form method="post" action="{% url 'add-ice' %}">
                 {% csrf_token %}
                 <fildset class="form-group">
-                    <legend class="border-bottom mb-4"> Add Flavour</legend>
-                    {{ form_flavour|crispy }}
+                <legend class="border-bottom mb-4">Add Flavour</legend>
+                {{ form_flavour|crispy }}
                 </fildset>
                 <div class="form-group text-center">
-                    <button class="btn btn-outline-info" type="submit" id="addflavour"> Add Flavour</button>
+                    <button class="btn btn-outline-info"
+                            type="submit"
+                            name="addflavour"
+                            id="addflavour">Add Flavour</button>
                 </div>
             </form>
         </div>
     </article>
-
-
     <script>
         {#adding ice flavour#}
 
@@ -88,4 +89,4 @@
 
 
     </script>
-{% endblock %}
+{% endblock content %}

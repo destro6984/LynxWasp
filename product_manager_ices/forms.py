@@ -49,5 +49,5 @@ class AddOrderItem(forms.Form):
         cleaned_data = super().clean()
         ice_type = cleaned_data.get("ice")
         flavours = cleaned_data.get("flavour", "")
-        if ice_type.type == "thai" and len(flavours) > 3:
+        if (ice_type and ice_type.type == "thai") and len(flavours) > 2:
             raise ValidationError("Thai Ice cannot be mixed with more than 3 flavours")
