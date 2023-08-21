@@ -36,9 +36,7 @@ class Order(models.Model):
     status = models.CharField(max_length=9, choices=STATUS_CHOICE, default=1)
 
     def __str__(self):
-        return (
-            f"User:{self.worker_owner} selltime: {self.time_sell} status: {self.status}"
-        )
+        return f"User:{self.worker_owner} sell-time: {self.time_sell} status: {self.status}"
 
     def get_total(self):
         total = 0
