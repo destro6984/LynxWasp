@@ -3,7 +3,7 @@ from django.test import RequestFactory, TestCase
 from django.urls import reverse
 
 from product_manager_ices.forms import AddFlavourForm, AddIceForm, AddOrderItem
-from product_manager_ices.models import Flavour, Ices, Order
+from product_manager_ices.models import Flavour, Ices, Order, OrderItem
 from users_app.models import User
 
 
@@ -31,6 +31,7 @@ class IceCreamTestData(TestCase):
         cls.chocolate = Flavour.objects.create(flavour="chocolate")
         cls.cream = Flavour.objects.create(flavour="cream")
         cls.strawberry = Flavour.objects.create(flavour="strawberry")
+        cls.blueberry = Flavour.objects.create(flavour="blueberry")
 
     def setUp(self):
         self.factory = RequestFactory()
@@ -124,20 +125,67 @@ class OrderItemViewTest(IceCreamTestData):
             Order.objects.filter(worker_owner=self.test_user, status=1).count(), 1
         )
 
-    def test_create_order_item_view_add(self):
+    def test_create_order_item_view_add_scoope(self):
         self.client.force_login(self.test_user),
-        self.client.post(reverse("open-order"))
+        Order.objects.create(worker_owner=self.test_user, status=1)
 
         order_item_data = {
-            "ice": self.scoope_ice,
+            "ice": self.scoope_ice.id,
             "quantity": 1,
-            "flavour": [self.chocolate, self.cream, self.strawberry],
+            "flavour": [self.chocolate.id],
         }
         response = self.client.post(
             reverse("create-order-item"), data=order_item_data, follow=True
         )
         self.assertEqual(len(self.test_user.order_set.all()), 1)
-        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Added to cart")
+
+    def test_create_order_item_view_add_scoope_more_flavour_than_quantity(self):
+        self.client.force_login(self.test_user),
+        Order.objects.create(worker_owner=self.test_user, status=1)
+
+        order_item_data = {
+            "ice": self.scoope_ice.id,
+            "quantity": 1,
+            "flavour": [self.chocolate.id, self.strawberry.id],
+        }
+        response = self.client.post(
+            reverse("create-order-item"), data=order_item_data, follow=True
+        )
+        self.assertContains(response, "Only One flavour per scoope")
+
+    def test_create_order_item_view_add_more_than_three_thai(self):
+        self.client.force_login(self.test_user),
+        Order.objects.create(worker_owner=self.test_user, status=1)
+
+        order_item_data = {
+            "ice": self.thai_ice.id,
+            "quantity": 1,
+            "flavour": [
+                self.chocolate.id,
+                self.cream.id,
+                self.strawberry.id,
+                self.blueberry.id,
+            ],
+        }
+        response = self.client.post(
+            reverse("create-order-item"), data=order_item_data, follow=True
+        )
+        self.assertEqual(len(self.test_user.order_set.all()), 1)
+        self.assertContains(
+            response, "Thai Ice cannot be mixed with more than 3 flavours"
+        )
+
+    def test_delete_order_item_view(self):
+        self.client.force_login(self.test_user),
+        opened_order = Order.objects.create(worker_owner=self.test_user, status=1)
+
+        order_item = OrderItem.objects.create(ice=self.scoope_ice, quantity=1)
+        order_item.flavour.set([self.chocolate])
+        order_item.order.set([opened_order])
+
+        self.client.post(reverse("delete-order-item", kwargs={"pk": order_item.id}))
+        self.assertFalse(len(OrderItem.objects.all()))
 
 
 class OrderTest(IceCreamTestData):
@@ -153,3 +201,12 @@ class OrderTest(IceCreamTestData):
         response = self.client.post(reverse("open-order"))  # noqa
         response2 = self.client.post(reverse("open-order"), follow=True)
         self.assertContains(response2, "You have already opened order")
+
+    def test_postpone_order(self):
+        self.client.force_login(self.test_user)
+        opened_order = Order.objects.create(worker_owner=self.test_user, status=1)
+        self.client.post(reverse("postpone-order", kwargs={"pk": opened_order.id}))
+
+        self.assertNotEqual(len(Order.objects.all()), 0)
+        self.assertEqual(Order.objects.filter(worker_owner=self.test_user).count(), 1)
+        self.assertNotEqual(Order.objects.get(worker_owner=self.test_user, status=2), 1)

@@ -101,7 +101,7 @@ class CreateOrderItemView(LoginRequiredMixin, View):
             ice_in_order.order.add(order.id)
 
             ice_in_order.save()
-            messages.success(request, "OrderItem Added to cart")
+            messages.success(request, "Added to cart")
             return redirect("create-order-item")
         else:
             for error in add_order_form.errors:
