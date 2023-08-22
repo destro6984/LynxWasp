@@ -7,9 +7,7 @@
         <section>
             <div class="row bg-light">
                 <div class="media col">
-
                     <div>{% cloudinary user.profileuser.image_from_cl %}</div>
-
                     <div class="media-body">
                         <h2 class="account-heading">{{ user.username }}</h2>
                         <p class="text-secondary">{{ user.email }}</p>
@@ -17,24 +15,23 @@
                         <p class="text-secondary">{{ user.profileuser.location }}</p>
                         <p class="text-secondary">{{ user.profileuser.birth_date }}</p>
                     </div>
-                    <div>
+                    <div class="m-1">
                         <a class="btn btn-secondary" href="{% url 'delete' pk=user.pk %}">Delete Account</a>
                     </div>
                 </div>
             </div>
-            <form method="POST" enctype="multipart/form-data">
+            <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <fildset class="form-group">
-                    <legend class="border-bottom mb-4"> Your Profile</legend>
-                    {{ user_update_form|crispy }}
-                    {{ profile_user_update_form|crispy }}
+                <legend class="border-bottom mb-4">Your Profile</legend>
+                {{ user_update_form|crispy }}
+                {{ profile_user_update_form|crispy }}
                 </fildset>
                 <div class="form-group text-center">
-                    <button class="btn btn-outline-info" type="submit"> Edit</button>
+                    <button class="btn btn-outline-info" type="submit">Edit</button>
                 </div>
             </form>
-
         </section>
     </article>
     {{ form_dual }}
-{% endblock %}
+{% endblock content %}

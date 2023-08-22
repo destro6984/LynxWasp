@@ -189,6 +189,12 @@ class OrderItemViewTest(IceCreamTestData):
 
 
 class OrderTest(IceCreamTestData):
+    def test_list_order(self):
+        self.client.force_login(self.test_user)
+        Order.objects.create(worker_owner=self.test_user, status=1)
+        response = self.client.get(reverse("list-order"), follow=True)
+        self.assertEqual(response.status_code, 200)
+
     def test_open_order(self):
         self.client.force_login(self.test_user)
         self.client.post(reverse("open-order"), follow=True)
@@ -206,7 +212,24 @@ class OrderTest(IceCreamTestData):
         self.client.force_login(self.test_user)
         opened_order = Order.objects.create(worker_owner=self.test_user, status=1)
         self.client.post(reverse("postpone-order", kwargs={"pk": opened_order.id}))
-
+        opened_order.refresh_from_db()
         self.assertNotEqual(len(Order.objects.all()), 0)
         self.assertEqual(Order.objects.filter(worker_owner=self.test_user).count(), 1)
-        self.assertNotEqual(Order.objects.get(worker_owner=self.test_user, status=2), 1)
+        self.assertNotEqual(opened_order.status, 1)
+
+    def test_reactivate_order(self):
+        self.client.force_login(self.test_user)
+        opened_order = Order.objects.create(worker_owner=self.test_user, status=3)
+        self.client.post(
+            reverse("reactivate-order", kwargs={"pk": opened_order.id}), follow=True
+        )
+        opened_order.refresh_from_db()
+        self.assertNotEqual(opened_order.status, 3)
+
+    def test_delete_order(self):
+        self.client.force_login(self.test_user)
+        opened_order = Order.objects.create(worker_owner=self.test_user, status=1)
+        self.client.post(reverse("delete-order", kwargs={"pk": opened_order.id}))
+
+        self.assertNotEqual(len(Order.objects.all()), 1)
+        self.assertEqual(Order.objects.filter(worker_owner=self.test_user).count(), 0)

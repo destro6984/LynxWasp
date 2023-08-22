@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.contrib.auth import get_user_model
 from django.db import models
 
@@ -58,7 +60,7 @@ class OrderItem(models.Model):
         )
 
     def get_total_ice_price(self):
-        return self.quantity * self.ice.price
+        return Decimal(self.quantity) * self.ice.price
 
     def get_final_price(self):
         # todo

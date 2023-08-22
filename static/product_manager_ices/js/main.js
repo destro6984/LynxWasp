@@ -1,9 +1,9 @@
 $(function () {
   //calculator for counting change
-  var summm = $("#sumtopay").attr("value");
+  var sumToPay = $("#sumtopay").attr("value");
   $("#clientmoney").on("input", function () {
-    var forclient = summm - $("#clientmoney").val();
-    $("#clientchange").text(forclient + "zł");
+    var forClient = sumToPay - $("#clientmoney").val();
+    $("#clientchange").text(forClient + "zł");
   });
   // /end
 

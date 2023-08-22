@@ -215,7 +215,8 @@ class OrderListView(LoginRequiredMixin, ListView):
         query = self.request.GET.get("q")
         if query:
             queryset = (
-                Order.objects.filter(
+                Order.objects.filter(worker_owner=self.request.user)
+                .filter(
                     Q(worker_owner__username__icontains=query)
                     | Q(time_sell__icontains=query)
                     | Q(orderitem__flavour__flavour__icontains=query)

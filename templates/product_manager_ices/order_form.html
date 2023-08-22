@@ -125,181 +125,181 @@
                                             {% csrf_token %}
                                             <div class="d-inline-block col-md-12 p-0 align-text-center">
                                                 <li class="list-group-item list-group-item-info px-0 py-1">
-                                                    <span class="text-truncate d-inline-block col-md-9 p-0">{{ ices.ice.type }} {{ ices.quantity }}
-                                                        {% for ices_flavour in ices.flavour.all %}{{ ices_flavour }}{% endfor %}
-                                                    </span>
-                                                    <button class="d-inline-block col-md-2 bg-info border-1 rounded p-0 px-auto align-text-bottom"
-                                                            type="submit"
-                                                            value="{{ ices.id }}"
-                                                            name="oi_to_delete">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </li>
-                                            </div>
-                                        </form>
-                                    {% endfor %}
-                                    <div class="col-12 px-0 my-2 bg-warning">
-                                        <span class="d-inline-block col-md-6 text-uppercase">Total:</span>
-                                        <span class="d-inline-block text-truncate col-md-5 align-bottom text-right">
-                                            {% if sumarize %}
-                                                {{ sumarize }}zł
-                                            {% else %}
-                                                0zł
-                                            {% endif %}
-                                        </span>
+                                                    <span class="text-truncate d-inline-block col-md-9 p-0"><span class="pl-1 text-uppercase">{{ ices.ice.type }}</span> {{ ices.quantity }}
+                                                    {% for ices_flavour in ices.flavour.all %}{{ ices_flavour }},{% endfor %}
+                                                </span>
+                                                <button class="d-inline-block col-md-2 bg-info border-1 rounded p-0 px-auto align-text-bottom"
+                                                        type="submit"
+                                                        value="{{ ices.id }}"
+                                                        name="oi_to_delete">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </li>
+                                        </div>
+                                    </form>
+                                {% endfor %}
+                                <div class="col-12 px-0 my-2 bg-warning">
+                                    <span class="d-inline-block col-md-6 text-uppercase">Total:</span>
+                                    <span class="d-inline-block text-truncate col-md-5 align-bottom text-right">
+                                        {% if summarize %}
+                                            {{ summarize }}zł
+                                        {% else %}
+                                            0zł
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </ul>
+                        </div>
+                        <!-- Button trigger modal -->
+                        <div class=" col-md-12 text-center  mt-5 ">
+                            <button id="paybutton"
+                                    type="button"
+                                    class="btn btn-primary btn-lg col-md-6"
+                                    data-toggle="modal"
+                                    data-target="#exampleModalCenter">PAY</button>
+                        </div>
+                    {% else %}
+                        <div class="text-center border border-dark rounded">
+                            <h1>Cart</h1>
+                            <h3>No product in the cart</h3>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </article>
+    {% if opened_order %}
+        <article>
+            <!-- Modal with order sum up-->
+            <div class="modal fade"
+                 id="exampleModalCenter"
+                 tabindex="-1"
+                 role="dialog"
+                 aria-labelledby="exampleModalCenterTitle"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="exampleModalCenterTitle">Order Cart</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&#215</span>
+                            </button>
+                        </div>
+                        <div class="modal-body mb-0 p-1">
+                            <form method="post" action="{% url 'finish-order' pk=opened_order.id %}">
+                                {% csrf_token %}
+                                <div id="div_id_content" class="form-group mb-0">
+                                    <div class=" table-responsive border rounded border-primary mb-2">
+                                        <table class="table table-info m-0">
+                                            <thead>
+                                                <tr class="table-head-names">
+                                                    <th scope="col">Nr</th>
+                                                    <th scope="col">Amount</th>
+                                                    <th scope="col">Type</th>
+                                                    <th scope="col">Flavours</th>
+                                                    <th scope="col">Price</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for ices in opened_order.orderitem.all %}
+                                                    <tr>
+                                                        <th scope="row" class="text-center">{{ forloop.counter }}</th>
+                                                        <td>{{ ices.quantity }}</td>
+                                                        <td class="text-uppercase">{{ ices.ice.type }}</td>
+                                                        <td id="flavour-cell">
+                                                            {% for ices_flavour in ices.flavour.all %}({{ ices_flavour }}),{% endfor %}
+                                                        </td>
+                                                        <td>{{ ices.get_total_ice_price }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                                <tr>
+                                                    <th scope="row">Total:</th>
+                                                    <td colspan="4" class="text-right">{{ summarize }}zł</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
-                                </ul>
-                            </div>
-                            <!-- Button trigger modal -->
-                            <div class=" col-md-12 text-center  mt-5 ">
-                                <button id="paybutton"
-                                        type="button"
-                                        class="btn btn-primary btn-lg col-md-6"
-                                        data-toggle="modal"
-                                        data-target="#exampleModalCenter">PAY</button>
-                            </div>
-                        {% else %}
-                            <div class="text-center border border-dark rounded">
-                                <h1>Cart</h1>
-                                <h3>No product in the cart</h3>
-                            </div>
-                        {% endif %}
+                                    <!-- Callculator for counting change  -->
+                                    <div>
+                                        <div class="text-center">
+                                            <button class="btn btn-primary pb-1"
+                                                    type="button"
+                                                    data-toggle="collapse"
+                                                    data-target="#collapseExample"
+                                                    aria-expanded="false"
+                                                    aria-controls="collapseExample">CALCULATOR</button>
+                                        </div>
+                                        <div class="collapse" id="collapseExample">
+                                            <div id="sumtopay" value="{{ summarize }}" class="card card-body p-2">
+                                                <div class="col-12 text-center">
+                                                    <label for="clientmoney">Money:</label>
+                                                    <input type="number" id="clientmoney" placeholder="Give Amount">
+                                                </div>
+                                                <div class="col-12 text-center">
+                                                    <label>Change:</label>
+                                                    <output id="clientchange"></output>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-center mt-2">
+                                            <input class="btn btn-outline-success mx-auto btn-lg"
+                                                   id="finish-order-btn"
+                                                   type="submit"
+                                                   value="Finish">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </article>
-        {% if opened_order %}
-            <article>
-                <!-- Modal with order sum up-->
-                <div class="modal fade"
-                     id="exampleModalCenter"
-                     tabindex="-1"
-                     role="dialog"
-                     aria-labelledby="exampleModalCenterTitle"
-                     aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title" id="exampleModalCenterTitle">Order Cart</h4>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&#215</span>
-                                </button>
-                            </div>
-                            <div class="modal-body mb-0 p-1">
-                                <form method="post" action="{% url 'finish-order' pk=opened_order.id %}">
-                                    {% csrf_token %}
-                                    <div id="div_id_content" class="form-group mb-0">
-                                        <div class=" table-responsive border rounded border-primary mb-2">
-                                            <table class="table table-info m-0">
-                                                <thead>
-                                                    <tr class="table-head-names">
-                                                        <th scope="col">Nr</th>
-                                                        <th scope="col">Amount</th>
-                                                        <th scope="col">Type</th>
-                                                        <th scope="col">Flavoures</th>
-                                                        <th scope="col">Price</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {% for ices in opened_order.orderitem.all %}
-                                                        <tr>
-                                                            <th scope="row" class="text-center">{{ forloop.counter }}</th>
-                                                            <td>{{ ices.quantity }}</td>
-                                                            <td>{{ ices.ice.type }}</td>
-                                                            <td id="flavoure-cell">
-                                                                {% for ices_flavour in ices.flavour.all %}({{ ices_flavour }}),{% endfor %}
-                                                            </td>
-                                                            <td>{{ ices.get_total_ice_price }}</td>
-                                                        </tr>
-                                                    {% endfor %}
-                                                    <tr>
-                                                        <th scope="row">Total:</th>
-                                                        <td colspan="4" class="text-right">{{ sumarize }}zł</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <!-- Callculator for counting change  -->
-                                        <div>
-                                            <div class="text-center">
-                                                <button class="btn btn-primary pb-1"
-                                                        type="button"
-                                                        data-toggle="collapse"
-                                                        data-target="#collapseExample"
-                                                        aria-expanded="false"
-                                                        aria-controls="collapseExample">CALCULATOR</button>
-                                            </div>
-                                            <div class="collapse" id="collapseExample">
-                                                <div id="sumtopay" value="{{ sumarize }}" class="card card-body p-2">
-                                                    <div class="col-12 text-center">
-                                                        <label for="clientmoney">Money:</label>
-                                                        <input type="number" id="clientmoney" placeholder="Give Amount">
-                                                    </div>
-                                                    <div class="col-12 text-center">
-                                                        <label>Change:</label>
-                                                        <output id="clientchange"></output>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="text-center mt-2">
-                                                <input class="btn btn-outline-success mx-auto btn-lg"
-                                                       id="finish-order-btn"
-                                                       type="submit"
-                                                       value="Finish">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        {% endif %}
-    </section>
-    {#    <script>#}
-    {#        $('#postponeorder').click(function (e) {#}
-    {#            e.preventDefault();#}
-    {#            var url_order= $('#url-order').text();#}
-    {#            // ajax change status /POSTPONE#}
-    {#            $.ajax({#}
-    {#                url: url_order,#}
-    {#                type: 'PATCH',#}
-    {#                data: {#}
-    {#                    'status': 2,#}
-    {#                },#}
-    {##}
-    {#                dataType: 'json',#}
-    {#                success: function () {#}
-    {#                    alert("changed");#}
-    {#                },#}
-    {#                error: function () {#}
-    {#                    alert('error sts')#}
-    {#                }#}
-    {#            });#}
-    {#        });#}
-    {#    </script>#}
-    {#    <script>#}
-    {#        $('#deleteorder').click(function (e) {#}
-    {#            e.preventDefault();#}
-    {#            var url_order = $('#url-order').text();#}
-    {#            // ajax change status /POSTPONE#}
-    {#            $.ajax({#}
-    {#                url: url_order,#}
-    {#                type: 'DELETE',#}
-    {#                data: {},#}
-    {##}
-    {#                contentType: 'application/json',#}
-    {#                dataType: 'text',#}
-    {#                success: function () {#}
-    {#                    alert("deleted");#}
-    {#                },#}
-    {#                error: function () {#}
-    {#                    alert('error delete')#}
-    {#                }#}
-    {#            });#}
-    {#        });#}
-    {##}
-    {##}
-    {#    </script>#}
+    {% endif %}
+</section>
+{#    <script>#}
+{#        $('#postponeorder').click(function (e) {#}
+{#            e.preventDefault();#}
+{#            var url_order= $('#url-order').text();#}
+{#            // ajax change status /POSTPONE#}
+{#            $.ajax({#}
+{#                url: url_order,#}
+{#                type: 'PATCH',#}
+{#                data: {#}
+{#                    'status': 2,#}
+{#                },#}
+{##}
+{#                dataType: 'json',#}
+{#                success: function () {#}
+{#                    alert("changed");#}
+{#                },#}
+{#                error: function () {#}
+{#                    alert('error sts')#}
+{#                }#}
+{#            });#}
+{#        });#}
+{#    </script>#}
+{#    <script>#}
+{#        $('#deleteorder').click(function (e) {#}
+{#            e.preventDefault();#}
+{#            var url_order = $('#url-order').text();#}
+{#            // ajax change status /POSTPONE#}
+{#            $.ajax({#}
+{#                url: url_order,#}
+{#                type: 'DELETE',#}
+{#                data: {},#}
+{##}
+{#                contentType: 'application/json',#}
+{#                dataType: 'text',#}
+{#                success: function () {#}
+{#                    alert("deleted");#}
+{#                },#}
+{#                error: function () {#}
+{#                    alert('error delete')#}
+{#                }#}
+{#            });#}
+{#        });#}
+{##}
+{##}
+{#    </script>#}
 {% endblock content %}
