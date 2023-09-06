@@ -90,7 +90,9 @@ class OrderChangeView(RetrieveUpdateDestroyAPIView):
     # limitation for only one order open, to prevent form having two opened_order
     def perform_update(self, serializer):
         change_sts_to_started = serializer.validated_data["status"]
-        open_order = Order.objects.filter(worker_owner=self.request.user, status=1)
+        open_order = Order.objects.filter(
+            worker_owner=self.request.user, status=Order.Status.STARTED
+        )
         if change_sts_to_started == 1 and open_order:
             raise ValidationError(
                 "You have active order opened, Please postpone or delete it"
@@ -113,7 +115,9 @@ class OrderCrateView(APIView):
     def get(self, request):
         # validation if open order
         try:
-            order = Order.objects.get(worker_owner=request.user, status=1)
+            order = Order.objects.get(
+                worker_owner=request.user, status=Order.Status.STARTED
+            )
         except ObjectDoesNotExist:
             raise ValidationError("No open order")
 
@@ -122,14 +126,16 @@ class OrderCrateView(APIView):
 
     def post(self, request):
         serialized = OrderCreateSerializer(data=request.data)
-        open_order = Order.objects.filter(worker_owner=request.user, status=1)
+        open_order = Order.objects.filter(
+            worker_owner=request.user, status=Order.Status.STARTED
+        )
         # limitation if there is opened order
         if open_order:
             raise ValidationError(
                 "You have already open order,please close it to open new one"
             )
         if serialized.is_valid():
-            serialized.save(status=1, worker_owner=self.request.user)
+            serialized.save(status=Order.Status.STARTED, worker_owner=self.request.user)
             return Response(serialized.data)
         return Response(serialized.errors, status=400)
 
@@ -147,7 +153,9 @@ class OrderItemCreate(CreateAPIView):
         serializer = self.get_serializer(data=request.data)
 
         # limitation for open order first ,then add orderitem(ice)
-        activeorder = Order.objects.filter(worker_owner=request.user, status=1).first()
+        activeorder = Order.objects.filter(
+            worker_owner=request.user, status=Order.Status.STARTED
+        ).first()
         if not activeorder:
             raise ValidationError(
                 "No opened order ,please create one to add orderitems(ices)"
@@ -163,7 +171,7 @@ class OrderItemCreate(CreateAPIView):
     def perform_create(self, serializer):
         # setting id of order to which adding orderitem-ice, todo: consider different realtions: forignkey ??
         activeorder = Order.objects.filter(
-            worker_owner=self.request.user, status=1
+            worker_owner=self.request.user, status=Order.Status.STARTED
         ).first()
         serializer.save(order=[activeorder.id])
 
@@ -173,12 +181,12 @@ class DeleteOrderitem(RetrieveDestroyAPIView):
     endpoint: deleting orderitem(ice) from the current cart
     """
 
-    queryset = OrderItem.objects.filter(order__status=1)
+    queryset = OrderItem.objects.filter(order__status=Order.Status.STARTED)
     serializer_class = OrderItemCreateSerializer
 
     def get_queryset(self):
         queryset = OrderItem.objects.filter(
-            order__status=1, order__worker_owner=self.request.user
+            order__status=Order.Status.STARTED, order__worker_owner=self.request.user
         )
         return queryset
 

@@ -69,7 +69,9 @@ class CreateOrderItemView(LoginRequiredMixin, View):
     def get(self, request):
         add_order_form = AddOrderItem()
         try:
-            opened_order = Order.objects.get(worker_owner=request.user, status=1)
+            opened_order = Order.objects.get(
+                worker_owner=request.user, status=Order.Status.STARTED
+            )
             summarize = opened_order.get_total()
         except ObjectDoesNotExist:
             opened_order, summarize = None, None
@@ -97,7 +99,9 @@ class CreateOrderItemView(LoginRequiredMixin, View):
             ice_in_order.flavour.set(request.POST.getlist("flavour"))
 
             # Order add order-items-ices to cart
-            order = Order.objects.get(worker_owner=request.user, status=1)
+            order = Order.objects.get(
+                worker_owner=request.user, status=Order.Status.STARTED
+            )
             ice_in_order.order.add(order.id)
 
             ice_in_order.save()
@@ -117,10 +121,10 @@ def open_order(request: HttpRequest) -> HttpResponseRedirect:
     """
     if request.method == "POST":
         order_opened = Order.objects.filter(
-            worker_owner=request.user, status=1
+            worker_owner=request.user, status=Order.Status.STARTED
         ).exists()
         if not order_opened:
-            Order.objects.create(worker_owner=request.user, status=1)
+            Order.objects.create(worker_owner=request.user, status=Order.Status.STARTED)
             messages.info(request, "You have opened order")
             return redirect("create-order-item")
         else:
@@ -149,9 +153,9 @@ def change_status_order_for_finish(
     """
     if request.method == "POST":
         order_to_change_status = Order.objects.get(
-            id=pk, worker_owner=request.user, status=1
+            id=pk, worker_owner=request.user, status=Order.Status.STARTED
         )
-        order_to_change_status.status = 3
+        order_to_change_status.status = Order.Status.FINISHED
         order_to_change_status.save()
     return redirect("create-order-item")
 
@@ -164,9 +168,9 @@ def postpone_order(request: HttpRequest, pk: int) -> HttpResponseRedirect:
     """
     if request.method == "POST":
         order_to_change_status = Order.objects.get(
-            id=pk, worker_owner=request.user, status="1"
+            id=pk, worker_owner=request.user, status=Order.Status.STARTED
         )
-        order_to_change_status.status = 2
+        order_to_change_status.status = Order.Status.WAITING
         order_to_change_status.save()
     return redirect("create-order-item")
 
@@ -179,14 +183,16 @@ def reactivate_order(request: HttpRequest, pk: int) -> HttpResponseRedirect:
     Only the same user can return the order to active
     ONLY ONE ORDER CAN BE ACTIVE IN CART
     """
-    if Order.objects.filter(worker_owner=request.user, status=1).exists():
+    if Order.objects.filter(
+        worker_owner=request.user, status=Order.Status.STARTED
+    ).exists():
         messages.info(
             request, "You have active order opened, Please postpone or delete it"
         )
         return redirect("create-order-item")
     else:
         order_to_change_status = Order.objects.get(worker_owner=request.user, id=pk)
-        order_to_change_status.status = 1
+        order_to_change_status.status = Order.Status.STARTED
         order_to_change_status.save()
         return redirect("create-order-item")
 

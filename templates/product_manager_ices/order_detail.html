@@ -4,35 +4,30 @@
 {% load cloudinary %}
 {% block content %}
     <article class="bg-light border border-primary rounded p-2">
-        <h1 class="text-center"> Order Details</h1>
-
+        <h1 class="text-center">Order Details</h1>
         <div class="card text-white bg-secondary mb-3 col-md-6 offset-md-3">
-
             <div class="card-header">
-                <span class="d-inline-block"> Order number: {{ object.id }}</span>
+                <span class="d-inline-block">Order number: {{ object.id }}</span>
                 <span class="d-inline-block float-right">{{ object.time_sell|date:'Y-m-d H:i' }}</span>
             </div>
             <div class="card-body p-2">
                 <h5 class="card-title">Products in order:</h5>
                 <ul class="list-unstyled">
-{#                {{ object.orderitem }}#}
+                    {#                {{ object.orderitem }}#}
                     {% for product in object.orderitem.all %}
                         <li>{{ product }}</li>
-
                     {% empty %}
                         <li>Order was empty</li>
-                        </ul>
-                    {% endfor %}
+                    </ul>
+                {% endfor %}
                 <p>Total: {{ object.get_total }}</p>
-                <h7 class="float-right">{{ object.worker_owner }}</h7>
-                <h7 class="float-left">Status:<span class="statusoforder">{{ order.status }}</span></h7>
-
+                <h7 class="float-right">
+                {{ object.worker_owner }}
+                </h7>
+                <h7 class="float-left">
+                Status:<span>{{ order.get_status_diplay }}</span>
+                </h7>
             </div>
-
         </div>
-
     </article>
-
-
-
-{% endblock %}
+{% endblock content %}

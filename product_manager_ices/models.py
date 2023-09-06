@@ -26,19 +26,19 @@ def get_sentinel_user():
 
 
 class Order(models.Model):
-    STATUS_CHOICE = (
-        (1, "Started"),
-        (2, "Waiting"),
-        (3, "Finished"),
-    )
+    class Status(models.IntegerChoices):
+        STARTED = 1, "Started"
+        WAITING = 2, "Waiting"
+        FINISHED = 3, "Finished"
+
     worker_owner = models.ForeignKey(
         User, on_delete=models.SET(get_sentinel_user), null=True
     )
     time_sell = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=9, choices=STATUS_CHOICE, default=1)
+    status = models.IntegerField(choices=Status.choices, default=Status.STARTED)
 
     def __str__(self):
-        return f"User:{self.worker_owner} sell-time: {self.time_sell} status: {self.status}"
+        return f"User:{self.worker_owner} sell-time: {self.time_sell} status: {self.get_status_display()}"
 
     def get_total(self):
         total = 0

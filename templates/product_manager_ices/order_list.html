@@ -36,7 +36,7 @@
                                    href="{% url 'detail-order' pk=order.id %}">Nr:{{ order.id }}
                                     Data:{{ order.time_sell | date:'Y-m-d H:i' }} Employee: {{ order.worker_owner }}
                                     <br>
-                                Status:<span class="statusoforder">{{ order.status }}</span></a>
+                                Status:<span>{{ order.get_status_display }}</span></a>
                             </div>
                             {% if request.user.id == order.worker_owner_id %}
                                 <div class="d-inline-block col-md-3">

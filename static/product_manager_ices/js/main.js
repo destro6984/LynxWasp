@@ -51,20 +51,6 @@ $(function () {
   }
 
   // end
-  // change number to status detail view
-  sts = $(".statusoforder");
-  switch (sts.text()) {
-    case "1":
-      sts.text("Started");
-      break;
-    case "2":
-      sts.text("Postponed");
-      break;
-    case "3":
-      sts.text("Finished");
-      break;
-  }
-  // end
   // #Setting crsf token  for all ajax form django docs.#
 
   function getCookie(name) {
