@@ -16,37 +16,53 @@ $(function () {
     quantity.attr("value", parseInt(quantity.val()) - 1);
   });
   // end
-  // Adding ices
-  var input_name_ice = $("input[name='ice']");
-  var input_name_flavour = $("input[name=flavour]");
 
-  input_name_ice.on("change", function () {
+  // Check if Opened Order
+  var openOrderButton = $("#openedOrder");
+  function isOrderOpened() {
+    var orderItemForm = $("#orderitem-form");
+    if (openOrderButton.length) {
+      orderItemForm.toggleClass("fade-out");
+    }
+  }
+  isOrderOpened();
+
+  openOrderButton.on("click", function () {
+    isOrderOpened();
+  });
+
+  // end
+  // Adding ices
+  var inputNameIce = $("input[name='ice']");
+  var inputNameFlavour = $("input[name=flavour]");
+
+  inputNameIce.on("change", function () {
     // reset checkbox after change
     resetCount();
 
-    input_name_flavour.on("click", addIce);
+    inputNameFlavour.on("click", addIce);
   });
 
   function resetCount() {
-    input_name_flavour.prop("checked", false);
+    inputNameFlavour.prop("checked", false);
     $(".count").attr("value", 1);
-    input_name_flavour.prop("disabled", false);
+    inputNameFlavour.prop("disabled", false);
   }
   function addIce() {
     // adding thai ice
     if ($("#THAI").prev("input[name='ice']").is(":checked")) {
       $(".count").attr("value", 1);
-      // only 3 flavoures can be picked for Thai ice
+      // only 3 flavours can be picked for Thai ice
       if ($("input[name=flavour]:checked").length >= 3) {
         $(":checkbox:not(:checked)").prop("disabled", true);
       } else {
-        input_name_flavour.prop("disabled", false);
+        inputNameFlavour.prop("disabled", false);
       }
     }
     // adding scope depending on flavours number
     else if ($("#SCOOPE").prev("input[name='ice']").is(":checked")) {
-      var input_flavour = $("input[name=flavour]:checked").length;
-      $(".count").attr("value", input_flavour);
+      var inputFlavour = $("input[name=flavour]:checked").length;
+      $(".count").attr("value", inputFlavour);
     }
   }
 
