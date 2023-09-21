@@ -3,18 +3,19 @@ from decimal import Decimal
 from django.contrib.auth import get_user_model
 from django.db import models
 
+from product_manager_ices.fields import TypeField
 from users_app.models import User
 
 
 class Flavour(models.Model):
-    flavour = models.CharField(max_length=45)
+    flavour = TypeField(max_length=45)
 
     def __str__(self):
         return f"{self.flavour}"
 
 
 class Ices(models.Model):
-    type = models.CharField(max_length=50)
+    type = TypeField(max_length=50)
     price = models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
