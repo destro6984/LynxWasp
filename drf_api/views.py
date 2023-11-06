@@ -5,11 +5,12 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.generics import (
     CreateAPIView,
     ListAPIView,
+    ListCreateAPIView,
     RetrieveDestroyAPIView,
     RetrieveUpdateAPIView,
     RetrieveUpdateDestroyAPIView,
 )
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -21,25 +22,32 @@ from drf_api.serializers import (
     OrderListSerializer,
     UserSerializer,
 )
-from product_manager_ices.models import Order, OrderItem
+from product_manager_ices.models import Flavour, Ices, Order, OrderItem
 from users_app.models import User
 
 
-class AddIceCreateAPIView(CreateAPIView):
+class IcesListCreateAPIView(ListCreateAPIView):
     """
     endpoint for adding types of ice
     """
 
     permission_classes = [IsAdminUser]
     serializer_class = AddIcesSerializers
+    queryset = Ices.objects.all()
+
+    def get_permissions(self):
+        if self.request.method == "POST":
+            return [permission() for permission in self.permission_classes]
+        return [IsAuthenticated()]
 
 
-class AddFlavourCreateAPIView(CreateAPIView):
+class FlavourListCreateAPIView(ListCreateAPIView):
     """
     endpoint for adding flavours
     """
 
     serializer_class = AddFlavourSerializers
+    queryset = Flavour.objects.all()
 
 
 class OrdersListAPIView(ListAPIView):
@@ -87,7 +95,7 @@ class OrderChangeView(RetrieveUpdateDestroyAPIView):
         )
         return queryset
 
-    # limitation for only one order open, to prevent form having two opened_order
+    # limitation for only one order open, to prevent from having two opened_order
     def perform_update(self, serializer):
         change_sts_to_started = serializer.validated_data["status"]
         open_order = Order.objects.filter(
@@ -107,7 +115,7 @@ class OrderChangeView(RetrieveUpdateDestroyAPIView):
             raise ValidationError("Only owner can delete the order")
 
 
-class OrderCrateView(APIView):
+class OrderCreateView(APIView):
     """
     endpoint: adding order
     """

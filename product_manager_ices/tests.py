@@ -26,12 +26,12 @@ class IceCreamTestData(TestCase):
             first_name=cls.first_name,
             last_name=cls.last_name,
         )
-        cls.thai_ice = Ices.objects.create(type="thai", price=10)
-        cls.scoope_ice = Ices.objects.create(type="scoope", price=5)
-        cls.chocolate = Flavour.objects.create(flavour="chocolate")
-        cls.cream = Flavour.objects.create(flavour="cream")
-        cls.strawberry = Flavour.objects.create(flavour="strawberry")
-        cls.blueberry = Flavour.objects.create(flavour="blueberry")
+        cls.thai_ice = Ices.objects.get_or_create(type="thai", price=10)
+        cls.scoope_ice = Ices.objects.get_or_create(type="scoope", price=5)
+        cls.chocolate = Flavour.objects.get_or_create(flavour="chocolate")
+        cls.cream = Flavour.objects.get_or_create(flavour="cream")
+        cls.strawberry = Flavour.objects.get_or_create(flavour="strawberry")
+        cls.blueberry = Flavour.objects.get_or_create(flavour="blueberry")
 
     def setUp(self):
         self.factory = RequestFactory()
