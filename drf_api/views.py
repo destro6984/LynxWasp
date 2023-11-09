@@ -15,8 +15,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from drf_api.serializers import (
-    AddFlavourSerializers,
-    AddIcesSerializers,
+    FlavourSerializers,
+    IceSerializers,
     OrderCreateSerializer,
     OrderItemCreateSerializer,
     OrderListSerializer,
@@ -32,7 +32,7 @@ class IcesListCreateAPIView(ListCreateAPIView):
     """
 
     permission_classes = [IsAdminUser]
-    serializer_class = AddIcesSerializers
+    serializer_class = IceSerializers
     queryset = Ices.objects.all()
 
     def get_permissions(self):
@@ -46,7 +46,7 @@ class FlavourListCreateAPIView(ListCreateAPIView):
     endpoint for adding flavours
     """
 
-    serializer_class = AddFlavourSerializers
+    serializer_class = FlavourSerializers
     queryset = Flavour.objects.all()
 
 

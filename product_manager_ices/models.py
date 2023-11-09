@@ -8,14 +8,14 @@ from users_app.models import User
 
 
 class Flavour(models.Model):
-    flavour = TypeField(max_length=45)
+    flavour = TypeField(max_length=45, unique=True)
 
     def __str__(self):
         return f"{self.flavour}"
 
 
 class Ices(models.Model):
-    type = TypeField(max_length=50)
+    type = TypeField(max_length=50, unique=True)
     price = models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):

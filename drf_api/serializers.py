@@ -5,18 +5,10 @@ from rest_framework.exceptions import ValidationError
 from product_manager_ices.models import Flavour, Ices, Order, OrderItem
 
 
-class AddIcesSerializers(serializers.ModelSerializer):
+class IceSerializers(serializers.ModelSerializer):
     class Meta:
         model = Ices
         fields = "__all__"
-
-    def validate_type(self, value):
-        """
-        Check the duplicate
-        """
-        if Ices.objects.filter(type=value.lower()):
-            raise serializers.ValidationError("There already exist such type")
-        return value
 
     def to_representation(self, instance):
         """
@@ -27,20 +19,10 @@ class AddIcesSerializers(serializers.ModelSerializer):
         return ret
 
 
-class AddFlavourSerializers(serializers.ModelSerializer):
+class FlavourSerializers(serializers.ModelSerializer):
     class Meta:
         model = Flavour
         fields = ["flavour"]
-
-    def validate_flavour(self, value):
-        """
-        Check the duplicate
-        """
-        if Flavour.objects.filter(flavour=value.lower()):
-            raise serializers.ValidationError(
-                "There already exist such flavour"
-            )  # noqa
-        return value
 
     def to_representation(self, instance):
         """
