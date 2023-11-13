@@ -33,7 +33,7 @@ class FlavourSerializers(serializers.ModelSerializer):
         return ret
 
 
-class OrderListSerializer(serializers.ModelSerializer):
+class OrderSerializer(serializers.ModelSerializer):
     orderitem = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
@@ -56,7 +56,9 @@ class OrderCreateSerializer(serializers.ModelSerializer):
 
 
 class OrderItemCreateSerializer(serializers.ModelSerializer):
-    order = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    order = serializers.HyperlinkedRelatedField(
+        view_name="order-manage", lookup_field="id", many=True, read_only=True
+    )
 
     class Meta:
         model = OrderItem

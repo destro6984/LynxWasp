@@ -1,9 +1,8 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
-from rest_framework import status
+from rest_framework import filters, status
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import (
-    CreateAPIView,
     ListAPIView,
     ListCreateAPIView,
     RetrieveDestroyAPIView,
@@ -19,7 +18,7 @@ from drf_api.serializers import (
     IceSerializers,
     OrderCreateSerializer,
     OrderItemCreateSerializer,
-    OrderListSerializer,
+    OrderSerializer,
     UserSerializer,
 )
 from product_manager_ices.models import Flavour, Ices, Order, OrderItem
@@ -57,7 +56,7 @@ class OrdersListAPIView(ListAPIView):
     status-choices=1-Started/2-postponed/3-finished
     """
 
-    serializer_class = OrderListSerializer
+    serializer_class = OrderSerializer
 
     # Order-detail only for owner of order/ simple search of order
     def get_queryset(self):
@@ -80,13 +79,14 @@ class OrdersListAPIView(ListAPIView):
         return queryset
 
 
-class OrderChangeView(RetrieveUpdateDestroyAPIView):
+class OrderRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     """
     endpoint changing order status
     endpoint for detail of order
     """
 
-    serializer_class = OrderListSerializer
+    queryset = Order.objects.all()
+    serializer_class = OrderCreateSerializer
     lookup_field = "id"
 
     def get_queryset(self):
@@ -115,7 +115,7 @@ class OrderChangeView(RetrieveUpdateDestroyAPIView):
             raise ValidationError("Only owner can delete the order")
 
 
-class OrderCreateView(APIView):
+class OrderView(APIView):
     """
     endpoint: adding order
     """
@@ -148,7 +148,7 @@ class OrderCreateView(APIView):
         return Response(serialized.errors, status=400)
 
 
-class OrderItemCreate(CreateAPIView):
+class OrderItemListCreateAPIView(ListCreateAPIView):
     """
     endpoint: adding order-item(ice)
 
@@ -213,6 +213,8 @@ class DeleteOrderItem(RetrieveDestroyAPIView):
 class UserListView(ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ["email"]
 
 
 class UserProfileUpdate(RetrieveUpdateAPIView):
