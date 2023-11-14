@@ -71,7 +71,7 @@
       "ice": 2,
       "quantity": 1,
       "flavour": [2, 3, 4],
-      "order": [2]
+      "order": 2
     }
   },
   {
@@ -81,7 +81,7 @@
       "ice": 3,
       "quantity": 3,
       "flavour": [3, 4, 5],
-      "order": [1]
+      "order": 1
     }
   },
   {
@@ -91,7 +91,7 @@
       "ice": 3,
       "quantity": 3,
       "flavour": [3, 4, 5],
-      "order": [4]
+      "order": 4
     }
   },
   {
@@ -101,7 +101,7 @@
       "ice": 3,
       "quantity": 4,
       "flavour": [2, 3, 4, 5],
-      "order": [5]
+      "order": 5
     }
   },
   {
@@ -111,7 +111,7 @@
       "ice": 2,
       "quantity": 1,
       "flavour": [2, 3, 4],
-      "order": [5]
+      "order": 5
     }
   },
   {
@@ -121,7 +121,7 @@
       "ice": 2,
       "quantity": 1,
       "flavour": [1, 7],
-      "order": [5]
+      "order": 5
     }
   },
   {

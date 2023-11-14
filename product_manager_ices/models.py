@@ -43,7 +43,7 @@ class Order(models.Model):
 
     def get_total(self):
         total = 0
-        for order_item in self.orderitem.all():
+        for order_item in self.order_item.all():
             total += order_item.get_final_price()
         return total
 
@@ -52,7 +52,13 @@ class OrderItem(models.Model):
     ice = models.ForeignKey(Ices, on_delete=models.CASCADE)
     flavour = models.ManyToManyField(Flavour)
     quantity = models.IntegerField(default=1)
-    order = models.ManyToManyField(Order, related_name="orderitem")
+    order = models.ForeignKey(
+        Order,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="order_item",
+    )
 
     def __str__(self):
         return (

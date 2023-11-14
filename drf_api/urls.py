@@ -7,8 +7,7 @@ from .views import (
     IcesListCreateAPIView,
     OrderItemListCreateAPIView,
     OrderRetrieveUpdateDestroyAPIView,
-    OrdersListAPIView,
-    OrderView,
+    OrdersListCreateAPIView,
     UserListView,
     UserProfileUpdate,
 )
@@ -19,13 +18,12 @@ urlpatterns = [
     path("", schema_view),
     path("ices/", IcesListCreateAPIView.as_view(), name="ices"),
     path("flavours/", FlavourListCreateAPIView.as_view(), name="flavours"),
-    path("orders/", OrdersListAPIView.as_view(), name="order-list"),
+    path("orders/", OrdersListCreateAPIView.as_view(), name="orders"),
     path(
-        "orders/manage/<int:id>",
+        "orders/<int:id>",
         OrderRetrieveUpdateDestroyAPIView.as_view(),
         name="order-manage",
     ),
-    path("orders/create/", OrderView.as_view(), name="order-create"),
     path("order-items/", OrderItemListCreateAPIView.as_view(), name="order-items"),
     path("order-items/<int:pk>", DeleteOrderItem.as_view(), name="order-item-delete"),
     # DRF API auth-users

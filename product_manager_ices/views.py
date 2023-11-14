@@ -92,17 +92,18 @@ class CreateOrderItemView(LoginRequiredMixin, View):
             ice = add_order_form.cleaned_data.get("ice")
             quantity = add_order_form.cleaned_data.get("quantity")
 
-            # Create order-items-ices
-            ice_in_order = OrderItem.objects.create(ice_id=ice.id, quantity=quantity)
-
-            # Adding flavour to order-item(ice)
-            ice_in_order.flavour.set(request.POST.getlist("flavour"))
-
             # Order add order-items-ices to cart
             order = Order.objects.get(
                 worker_owner=request.user, status=Order.Status.STARTED
             )
-            ice_in_order.order.add(order.id)
+
+            # Create order-items-ices
+            ice_in_order = OrderItem.objects.create(
+                ice_id=ice.id, quantity=quantity, order=order
+            )
+
+            # Adding flavour to order-item(ice)
+            ice_in_order.flavour.set(request.POST.getlist("flavour"))
 
             ice_in_order.save()
             messages.success(request, "Added to cart")

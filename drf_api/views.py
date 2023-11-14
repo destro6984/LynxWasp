@@ -1,4 +1,3 @@
-from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from rest_framework import filters, status
 from rest_framework.exceptions import ValidationError
@@ -11,12 +10,11 @@ from rest_framework.generics import (
 )
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from drf_api.serializers import (
     FlavourSerializers,
     IceSerializers,
-    OrderCreateSerializer,
+    OrderCreateUpdateSerializer,
     OrderItemCreateSerializer,
     OrderSerializer,
     UserSerializer,
@@ -49,16 +47,25 @@ class FlavourListCreateAPIView(ListCreateAPIView):
     queryset = Flavour.objects.all()
 
 
-class OrdersListAPIView(ListAPIView):
+class OrdersListCreateAPIView(ListCreateAPIView):
     """
-    endpoint list of orders
-    search
-    status-choices=1-Started/2-postponed/3-finished
+    List of Orders/Create;Update Order
+    Input:
+    {
+        "status": null,
+        "order_item": []
+    }
     """
 
     serializer_class = OrderSerializer
+    queryset = Order.objects.all()
 
-    # Order-detail only for owner of order/ simple search of order
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return OrderCreateUpdateSerializer
+        return self.serializer_class
+
+    # Order only for owner of order/ simple search of order
     def get_queryset(self):
         search = self.request.query_params.get("q", None)
         if search is not None:
@@ -78,6 +85,21 @@ class OrdersListAPIView(ListAPIView):
             )
         return queryset
 
+    def post(self, request):
+        serialized = self.serializer_class(data=request.data)
+        open_order = Order.objects.filter(
+            worker_owner=request.user, status=Order.Status.STARTED
+        )
+        # limitation if there is opened order
+        if open_order:
+            raise ValidationError(
+                "You have already open order,please close it to open new one"
+            )
+        if serialized.is_valid():
+            serialized.save(status=Order.Status.STARTED, worker_owner=self.request.user)
+            return Response(serialized.data)
+        return Response(serialized.errors, status=400)
+
 
 class OrderRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     """
@@ -86,7 +108,7 @@ class OrderRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     """
 
     queryset = Order.objects.all()
-    serializer_class = OrderCreateSerializer
+    serializer_class = OrderCreateUpdateSerializer
     lookup_field = "id"
 
     def get_queryset(self):
@@ -94,6 +116,11 @@ class OrderRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
             "-time_sell"
         )
         return queryset
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return OrderSerializer
+        return self.serializer_class
 
     # limitation for only one order open, to prevent from having two opened_order
     def perform_update(self, serializer):
@@ -113,39 +140,6 @@ class OrderRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
             instance.delete()
         else:
             raise ValidationError("Only owner can delete the order")
-
-
-class OrderView(APIView):
-    """
-    endpoint: adding order
-    """
-
-    def get(self, request):
-        # validation if open order
-        try:
-            order = Order.objects.get(
-                worker_owner=request.user, status=Order.Status.STARTED
-            )
-        except ObjectDoesNotExist:
-            raise ValidationError("No open order")
-
-        serialized = OrderCreateSerializer(order)
-        return Response(serialized.data)
-
-    def post(self, request):
-        serialized = OrderCreateSerializer(data=request.data)
-        open_order = Order.objects.filter(
-            worker_owner=request.user, status=Order.Status.STARTED
-        )
-        # limitation if there is opened order
-        if open_order:
-            raise ValidationError(
-                "You have already open order,please close it to open new one"
-            )
-        if serialized.is_valid():
-            serialized.save(status=Order.Status.STARTED, worker_owner=self.request.user)
-            return Response(serialized.data)
-        return Response(serialized.errors, status=400)
 
 
 class OrderItemListCreateAPIView(ListCreateAPIView):
@@ -177,11 +171,10 @@ class OrderItemListCreateAPIView(ListCreateAPIView):
         )
 
     def perform_create(self, serializer):
-        # setting id of order to which adding order-item-ice, todo: consider different relations: foreigkey ??
         active_order = Order.objects.filter(
             worker_owner=self.request.user, status=Order.Status.STARTED
         ).first()
-        serializer.save(order=[active_order.id])
+        serializer.save(order=active_order.id)
 
 
 class DeleteOrderItem(RetrieveDestroyAPIView):

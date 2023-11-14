@@ -120,7 +120,7 @@
                             </div>
                             <div class="order_list my-1 p-0">
                                 <ul class="list-unstyled list-group">
-                                    {% for ices in opened_order.orderitem.all %}
+                                    {% for ices in opened_order.order_item.all %}
                                         <form action="{% url 'delete-order-item' pk=ices.id %}" method="post">
                                             {% csrf_token %}
                                             <div class="d-inline-block col-md-12 p-0 align-text-center">
@@ -201,7 +201,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {% for ices in opened_order.orderitem.all %}
+                                                {% for ices in opened_order.order_item.all %}
                                                     <tr>
                                                         <th scope="row" class="text-center">{{ forloop.counter }}</th>
                                                         <td>{{ ices.quantity }}</td>
