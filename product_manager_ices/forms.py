@@ -53,7 +53,7 @@ class AddOrderItem(forms.Form):
 
         if ice_type == "thai" and len(flavours) > 3:
             raise ValidationError("Thai Ice cannot be mixed with more than 3 flavours")
-        if ice_type == "scoope" and len(flavours) != quantity:
-            raise ValidationError("Only One flavour per scoope")
+        if ice_type == "scoop" and len(flavours) != quantity:
+            raise ValidationError("Only One flavour per scoop")
 
         return cleaned_data

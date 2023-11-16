@@ -33,7 +33,7 @@ class Order(models.Model):
         FINISHED = 3, "Finished"
 
     worker_owner = models.ForeignKey(
-        User, on_delete=models.SET(get_sentinel_user), null=True
+        User, on_delete=models.SET(get_sentinel_user), null=True, blank=True
     )
     time_sell = models.DateTimeField(auto_now_add=True)
     status = models.IntegerField(choices=Status.choices, default=Status.STARTED)

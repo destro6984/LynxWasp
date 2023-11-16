@@ -27,7 +27,7 @@ class IceCreamTestData(TestCase):
             last_name=cls.last_name,
         )
         cls.thai_ice = Ices.objects.get_or_create(type="thai", price=10)
-        cls.scoope_ice = Ices.objects.get_or_create(type="scoope", price=5)
+        cls.scoop_ice = Ices.objects.get_or_create(type="scoop", price=5)
         cls.chocolate = Flavour.objects.get_or_create(flavour="chocolate")
         cls.cream = Flavour.objects.get_or_create(flavour="cream")
         cls.strawberry = Flavour.objects.get_or_create(flavour="strawberry")
@@ -131,12 +131,12 @@ class OrderItemViewTest(IceCreamTestData):
             1,
         )
 
-    def test_create_order_item_view_add_scoope(self):
+    def test_create_order_item_view_add_scoop(self):
         self.client.force_login(self.test_user),
         Order.objects.create(worker_owner=self.test_user, status=Order.Status.STARTED)
 
         order_item_data = {
-            "ice": self.scoope_ice.id,
+            "ice": self.scoop_ice.id,
             "quantity": 1,
             "flavour": [self.chocolate.id],
         }
@@ -146,19 +146,19 @@ class OrderItemViewTest(IceCreamTestData):
         self.assertEqual(len(self.test_user.order_set.all()), 1)
         self.assertContains(response, "Added to cart")
 
-    def test_create_order_item_view_add_scoope_more_flavour_than_quantity(self):
+    def test_create_order_item_view_add_scoop_more_flavour_than_quantity(self):
         self.client.force_login(self.test_user),
         Order.objects.create(worker_owner=self.test_user, status=Order.Status.STARTED)
 
         order_item_data = {
-            "ice": self.scoope_ice.id,
+            "ice": self.scoop_ice.id,
             "quantity": 1,
             "flavour": [self.chocolate.id, self.strawberry.id],
         }
         response = self.client.post(
             reverse("create-order-item"), data=order_item_data, follow=True
         )
-        self.assertContains(response, "Only One flavour per scoope")
+        self.assertContains(response, "Only One flavour per scoop")
 
     def test_create_order_item_view_add_more_than_three_thai(self):
         self.client.force_login(self.test_user),
@@ -188,7 +188,7 @@ class OrderItemViewTest(IceCreamTestData):
             worker_owner=self.test_user, status=Order.Status.STARTED
         )
 
-        order_item = OrderItem.objects.create(ice=self.scoope_ice, quantity=1)
+        order_item = OrderItem.objects.create(ice=self.scoop_ice, quantity=1)
         order_item.flavour.set([self.chocolate])
         order_item.order.set([opened_order])
 

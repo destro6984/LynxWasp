@@ -69,10 +69,10 @@ class CreateOrderItemView(LoginRequiredMixin, View):
     def get(self, request):
         add_order_form = AddOrderItem()
         try:
-            opened_order = Order.objects.get(
+            opened_order = Order.objects.filter(
                 worker_owner=request.user, status=Order.Status.STARTED
-            )
-            summarize = opened_order.get_total()
+            ).first()
+            summarize = opened_order.get_total() if opened_order else None
         except ObjectDoesNotExist:
             opened_order, summarize = None, None
         return render(

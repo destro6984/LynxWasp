@@ -60,7 +60,7 @@ $(function () {
       }
     }
     // adding scope depending on flavours number
-    else if ($("#SCOOPE").prev("input[name='ice']").is(":checked")) {
+    else if ($("#SCOOP").prev("input[name='ice']").is(":checked")) {
       var inputFlavour = $("input[name=flavour]:checked").length;
       $(".count").attr("value", inputFlavour);
     }

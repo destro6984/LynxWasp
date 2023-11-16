@@ -43,10 +43,14 @@ class OrderSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class OrderCreateUpdateSerializer(OrderSerializer):
+class OrderCreateUpdateSerializer(serializers.ModelSerializer):
+    worker_owner = serializers.PrimaryKeyRelatedField(
+        read_only=True, default=serializers.CurrentUserDefault()
+    )
+
     class Meta:
         model = Order
-        fields = ["status", "order_item"]
+        fields = ["status", "order_item", "worker_owner"]
 
     def create(self, validated_data):
         order_items = validated_data.pop("order_item", [])
@@ -56,7 +60,7 @@ class OrderCreateUpdateSerializer(OrderSerializer):
         return order
 
     def update(self, instance, validated_data):
-        order_items = validated_data.pop("order_item", [])
+        order_items = validated_data.pop("order_item", instance.order_item.all())
         instance.status = validated_data.get("status", instance.status)
         instance.order_item.set(order_items)
         instance.save()
@@ -77,12 +81,12 @@ class OrderItemCreateSerializer(serializers.ModelSerializer):
         order_ids = validated_data.pop("order")
         order_item = OrderItem.objects.create(**validated_data)
 
-        # validation for Thai ice to only 3 flavoures
+        # validation for Thai ice to only 3 flavours
         if (len([*flavour]) > 3) and (order_item.ice.type == "thai"):
-            raise ValidationError("Thai ice can be made only from 3 flavoures")
+            raise ValidationError("Thai ice can be made only from 3 flavours")
 
-        # validation for scoope ice, quantity == number of flavoures(scoope)
-        if order_item.ice.type == "scoope":
+        # validation for scoop ice, quantity == number of flavours(scoop)
+        if order_item.ice.type == "scoop":
             order_item.quantity = len([*flavour])
 
         order_item.flavour.add(*flavour)

@@ -60,7 +60,7 @@
     "model": "product_manager_ices.ices",
     "pk": 3,
     "fields": {
-      "type": "scoope",
+      "type": "scoop",
       "price": "5.00"
     }
   },

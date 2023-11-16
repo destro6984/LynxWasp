@@ -57,13 +57,10 @@ class OrdersListCreateAPIView(ListCreateAPIView):
     }
     """
 
-    serializer_class = OrderSerializer
-    queryset = Order.objects.all()
-
     def get_serializer_class(self):
-        if self.request.method == "POST":
-            return OrderCreateUpdateSerializer
-        return self.serializer_class
+        if self.request.method == "GET":
+            return OrderSerializer
+        return OrderCreateUpdateSerializer
 
     # Order only for owner of order/ simple search of order
     def get_queryset(self):
@@ -73,8 +70,8 @@ class OrdersListCreateAPIView(ListCreateAPIView):
                 Order.objects.filter(
                     Q(worker_owner__username__icontains=search)
                     | Q(time_sell__icontains=search)
-                    | Q(orderitem__flavour__flavour__icontains=search)
-                    | Q(orderitem__ice__type__contains=search)
+                    | Q(order_item__flavour__flavour__icontains=search)
+                    | Q(order_item__ice__type__contains=search)
                 )
                 .order_by("-time_sell")
                 .distinct()
@@ -85,30 +82,33 @@ class OrdersListCreateAPIView(ListCreateAPIView):
             )
         return queryset
 
-    def post(self, request):
-        serialized = self.serializer_class(data=request.data)
+    def perform_create(self, serializer):
         open_order = Order.objects.filter(
-            worker_owner=request.user, status=Order.Status.STARTED
+            worker_owner=self.request.user, status=Order.Status.STARTED
         )
         # limitation if there is opened order
         if open_order:
             raise ValidationError(
-                "You have already open order,please close it to open new one"
+                "You have already open order, please close it to open new one"
             )
-        if serialized.is_valid():
-            serialized.save(status=Order.Status.STARTED, worker_owner=self.request.user)
-            return Response(serialized.data)
-        return Response(serialized.errors, status=400)
+        serializer.save(status=Order.Status.STARTED, worker_owner=self.request.user)
 
 
 class OrderRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     """
-    endpoint changing order status
-    endpoint for detail of order
+    output:
+    {
+        "status": 3,
+        "order_item": [
+            7,
+            3
+        ],
+        "worker_owner": 1
+    }
+
     """
 
     queryset = Order.objects.all()
-    serializer_class = OrderCreateUpdateSerializer
     lookup_field = "id"
 
     def get_queryset(self):
@@ -120,18 +120,19 @@ class OrderRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     def get_serializer_class(self):
         if self.request.method == "GET":
             return OrderSerializer
-        return self.serializer_class
+        return OrderCreateUpdateSerializer
 
     # limitation for only one order open, to prevent from having two opened_order
     def perform_update(self, serializer):
-        change_sts_to_started = serializer.validated_data["status"]
-        open_order = Order.objects.filter(
-            worker_owner=self.request.user, status=Order.Status.STARTED
-        )
-        if change_sts_to_started == 1 and open_order:
+        change_sts_to_started = serializer.validated_data.get("status", 0)
+        open_order = self.get_object()
+        if change_sts_to_started == Order.Status.STARTED and open_order:
             raise ValidationError(
                 "You have active order opened, Please postpone or delete it"
             )
+        if open_order.worker_owner != self.request.user:
+            raise ValidationError("Only owner can update the order")
+
         serializer.save()
 
     def perform_destroy(self, instance):
@@ -160,7 +161,7 @@ class OrderItemListCreateAPIView(ListCreateAPIView):
         ).first()
         if not active_order:
             raise ValidationError(
-                "No opened order ,please create one to add orderitems(ices)"
+                "No opened order ,please create one to add order_items(ices)"
             )
 
         serializer.is_valid(raise_exception=True)

@@ -13,11 +13,11 @@ Point of Sale System for IceCream Shop (named: Lynx&Wasp)
 This program is a web based Application developed in Python/Django as a simple POS system.
 
 - There are 2 types of ices
-- Each type can have different flavoures (Thai type can mix only 3 flavours)
+- Each type can have different flavours (Thai type can mix only 3 flavours)
 
 ##### Pricing:
 
-###### - Scoope: price per scoope(one scoope-one flavour)
+###### - Scoop: price per scoop(one scoop-one flavour)
 
 ###### - Thai-Ice: price per flavour .
 
