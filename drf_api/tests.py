@@ -24,7 +24,7 @@ class IceCreamTestAPIData(APITestCase, IceCreamTestData):
             first_name=cls.first_name2,
             last_name=cls.last_name2,
         )
-        cls.order_item = OrderItem.objects.create(ice=cls.scoop_ice[0], quantity=1)
+        cls.order_item = OrderItem.objects.create(ice=cls.scoop_ice, quantity=1)
 
 
 class IceApiViewTest(IceCreamTestAPIData):

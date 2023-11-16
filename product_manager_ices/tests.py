@@ -26,12 +26,12 @@ class IceCreamTestData(TestCase):
             first_name=cls.first_name,
             last_name=cls.last_name,
         )
-        cls.thai_ice = Ices.objects.get_or_create(type="thai", price=10)
-        cls.scoop_ice = Ices.objects.get_or_create(type="scoop", price=5)
-        cls.chocolate = Flavour.objects.get_or_create(flavour="chocolate")
-        cls.cream = Flavour.objects.get_or_create(flavour="cream")
-        cls.strawberry = Flavour.objects.get_or_create(flavour="strawberry")
-        cls.blueberry = Flavour.objects.get_or_create(flavour="blueberry")
+        cls.thai_ice, _ = Ices.objects.get_or_create(type="thai", price=10)
+        cls.scoop_ice, _ = Ices.objects.get_or_create(type="scoop", price=5)
+        cls.chocolate, _ = Flavour.objects.get_or_create(flavour="chocolate")
+        cls.cream, _ = Flavour.objects.get_or_create(flavour="cream")
+        cls.strawberry, _ = Flavour.objects.get_or_create(flavour="strawberry")
+        cls.blueberry, _ = Flavour.objects.get_or_create(flavour="blueberry")
 
     def setUp(self):
         self.factory = RequestFactory()
@@ -190,7 +190,7 @@ class OrderItemViewTest(IceCreamTestData):
 
         order_item = OrderItem.objects.create(ice=self.scoop_ice, quantity=1)
         order_item.flavour.set([self.chocolate])
-        order_item.order.set([opened_order])
+        order_item.order = opened_order
 
         self.client.post(reverse("delete-order-item", kwargs={"pk": order_item.id}))
         self.assertFalse(len(OrderItem.objects.all()))
