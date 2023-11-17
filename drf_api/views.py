@@ -15,7 +15,7 @@ from drf_api.serializers import (
     FlavourSerializers,
     IceSerializers,
     OrderCreateUpdateSerializer,
-    OrderItemCreateSerializer,
+    OrderItemSerializer,
     OrderSerializer,
     UserSerializer,
 )
@@ -149,20 +149,11 @@ class OrderItemListCreateAPIView(ListCreateAPIView):
 
     """
 
-    serializer_class = OrderItemCreateSerializer
+    serializer_class = OrderItemSerializer
     queryset = OrderItem.objects.all()
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-
-        # limitation for open order first ,then add order-item(ice)
-        active_order = Order.objects.filter(
-            worker_owner=request.user, status=Order.Status.STARTED
-        ).first()
-        if not active_order:
-            raise ValidationError(
-                "No opened order ,please create one to add order_items(ices)"
-            )
 
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
@@ -172,36 +163,29 @@ class OrderItemListCreateAPIView(ListCreateAPIView):
         )
 
     def perform_create(self, serializer):
+        # limitation for open order first ,then add order-item(ice)
         active_order = Order.objects.filter(
             worker_owner=self.request.user, status=Order.Status.STARTED
         ).first()
-        serializer.save(order=active_order.id)
+        if not active_order:
+            raise ValidationError(
+                "No opened order ,please create one to add order_items(ices)"
+            )
+
+        serializer.save(order=active_order)
 
 
-class DeleteOrderItem(RetrieveDestroyAPIView):
+class OrderItemRetrieveDestroyAPIView(RetrieveDestroyAPIView):
     """
     endpoint: deleting order-item(ice) from the current cart
     """
 
-    queryset = OrderItem.objects.filter(order__status=Order.Status.STARTED)
-    serializer_class = OrderItemCreateSerializer
+    serializer_class = OrderItemSerializer
 
     def get_queryset(self):
-        queryset = OrderItem.objects.filter(
+        return OrderItem.objects.filter(
             order__status=Order.Status.STARTED, order__worker_owner=self.request.user
         )
-        return queryset
-
-    # user can delete only order-items(ices) from current open order
-    def retrieve(self, request, *args, **kwargs):
-        try:
-            instance = self.get_object()
-        except (TypeError, ValueError, ValidationError):
-            raise ValidationError(
-                "For this user there is no open current order and no orderitem"
-            )
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
 
 
 class UserListView(ListAPIView):

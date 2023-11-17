@@ -2,10 +2,10 @@ from django.urls import include, path
 from rest_framework.schemas import get_schema_view
 
 from .views import (
-    DeleteOrderItem,
     FlavourListCreateAPIView,
     IcesListCreateAPIView,
     OrderItemListCreateAPIView,
+    OrderItemRetrieveDestroyAPIView,
     OrderRetrieveUpdateDestroyAPIView,
     OrdersListCreateAPIView,
     UserListView,
@@ -25,7 +25,11 @@ urlpatterns = [
         name="order-manage",
     ),
     path("order-items/", OrderItemListCreateAPIView.as_view(), name="order-items"),
-    path("order-items/<int:pk>", DeleteOrderItem.as_view(), name="order-item-delete"),
+    path(
+        "order-items/<int:pk>",
+        OrderItemRetrieveDestroyAPIView.as_view(),
+        name="order-item-delete",
+    ),
     # DRF API auth-users
     path("users/", UserListView.as_view(), name="users-list"),
     path("dj-rest-auth/", include("dj_rest_auth.urls")),

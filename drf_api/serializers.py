@@ -67,18 +67,17 @@ class OrderCreateUpdateSerializer(serializers.ModelSerializer):
         return instance
 
 
-class OrderItemCreateSerializer(serializers.ModelSerializer):
+class OrderItemSerializer(serializers.ModelSerializer):
     order = serializers.HyperlinkedRelatedField(
-        view_name="order-manage", lookup_field="id", many=True, read_only=True
+        view_name="order-manage", lookup_field="id", read_only=True
     )
 
     class Meta:
         model = OrderItem
-        fields = ["id", "quantity", "ice", "ice_id", "flavour", "order"]
+        fields = ["id", "quantity", "ice", "flavour", "order"]
 
     def create(self, validated_data):
         flavour = validated_data.pop("flavour")
-        order_ids = validated_data.pop("order")
         order_item = OrderItem.objects.create(**validated_data)
 
         # validation for Thai ice to only 3 flavours
@@ -90,7 +89,6 @@ class OrderItemCreateSerializer(serializers.ModelSerializer):
             order_item.quantity = len([*flavour])
 
         order_item.flavour.add(*flavour)
-        order_item.order.add(*order_ids)
         order_item.save()
         return order_item
 

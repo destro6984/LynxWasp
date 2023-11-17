@@ -53,11 +53,7 @@ class OrderItem(models.Model):
     flavour = models.ManyToManyField(Flavour)
     quantity = models.IntegerField(default=1)
     order = models.ForeignKey(
-        Order,
-        null=True,
-        blank=True,
-        on_delete=models.CASCADE,
-        related_name="order_item",
+        Order, on_delete=models.CASCADE, related_name="order_item", default=None
     )
 
     def __str__(self):

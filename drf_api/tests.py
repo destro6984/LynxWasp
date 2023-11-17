@@ -24,7 +24,9 @@ class IceCreamTestAPIData(APITestCase, IceCreamTestData):
             first_name=cls.first_name2,
             last_name=cls.last_name2,
         )
-        cls.order_item = OrderItem.objects.create(ice=cls.scoop_ice, quantity=1)
+        cls.order_item, _ = OrderItem.objects.get_or_create(
+            ice=cls.scoop_ice, quantity=1, order=cls.order
+        )
 
 
 class IceApiViewTest(IceCreamTestAPIData):
@@ -202,3 +204,103 @@ class OrderRetrieveUpdateDestroyAPIViewTest(IceCreamTestAPIData):
         self.client.force_authenticate(user=self.test_user2)
         response = self.client.delete(self.url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+
+class OrderItemListCreateAPIViewTest(IceCreamTestAPIData):
+    def setUp(self):
+        self.order = Order.objects.create(
+            worker_owner=self.test_user, status=Order.Status.STARTED
+        )
+        self.url = reverse("order-items")
+
+    def test_list_not_logged(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_list(self):
+        self.client.force_authenticate(user=self.test_user)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data["results"]), 1)
+
+    def test_create(self):
+        self.client.force_authenticate(user=self.test_user)
+        data = {
+            "quantity": 2,
+            "ice": self.scoop_ice.id,
+            "flavour": [self.chocolate.id, self.strawberry.id],
+        }
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        response.data.pop("id")
+        self.assertEqual(
+            response.data,
+            {
+                "quantity": 2,
+                "ice": self.scoop_ice.id,
+                "flavour": [self.chocolate.id, self.strawberry.id],
+                "order": f"http://testserver/api/orders/{self.order.id}",
+            },
+        )
+
+    def test_create_quantity_scoop_not_equal_flavours(self):
+        self.client.force_authenticate(user=self.test_user)
+        data = {
+            "quantity": 99,
+            "ice": self.scoop_ice.id,
+            "flavour": [self.chocolate.id, self.strawberry.id],
+        }
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data["quantity"], 2)
+
+    def test_create_more_than_3_thai_flavours(self):
+        self.client.force_authenticate(user=self.test_user)
+        data = {
+            "quantity": 1,
+            "ice": self.thai_ice.id,
+            "flavour": [
+                self.chocolate.id,
+                self.strawberry.id,
+                self.cream.id,
+                self.blueberry.id,
+            ],
+        }
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("Thai ice can be made only from 3 flavours", *response.data)
+
+
+class OrderItemRetrieveDeleteAPIViewTest(IceCreamTestAPIData):
+    def setUp(self):
+        self.order = Order.objects.create(
+            worker_owner=self.test_user, status=Order.Status.STARTED
+        )
+        self.order.order_item.set([self.order_item])
+        self.url = reverse("order-item-delete", kwargs={"pk": self.order_item.pk})
+        self.order_item, _ = OrderItem.objects.get_or_create(
+            quantity=2, ice=self.thai_ice.id, order=self.order
+        )
+
+    def test_retrieve_not_logged(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_retrieve(self):
+        self.client.force_authenticate(user=self.test_user)
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response.data.pop("id")
+        self.assertEqual(
+            response.data,
+            {
+                "quantity": self.order_item.quantity,
+                "ice": self.order_item.ice.id,
+                "flavour": [],
+                "order": f"http://testserver/api/orders/{self.order.id}",
+            },
+        )
+
+    def test_delete(self):
+        pass
