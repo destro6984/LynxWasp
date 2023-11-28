@@ -148,10 +148,6 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
-]
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
@@ -181,7 +177,3 @@ SITE_ID = 1
 AUTH_USER_MODEL = "users_app.User"
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
-
-# CORS
-
-CORS_ALLOWED_ORIGINS = env.list("ALLOWED_HOSTS_CORS")
