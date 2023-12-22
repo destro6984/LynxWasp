@@ -24,9 +24,6 @@ class IceCreamTestAPIData(APITestCase, IceCreamTestData):
             first_name=cls.first_name2,
             last_name=cls.last_name2,
         )
-        cls.order_item, _ = OrderItem.objects.get_or_create(
-            ice=cls.scoop_ice, quantity=1, order=cls.order
-        )
 
 
 class IceApiViewTest(IceCreamTestAPIData):
@@ -115,10 +112,10 @@ class OrderListCreateApiViewTest(IceCreamTestAPIData):
         self.assertEqual(len(response.data["results"]), 0)
 
     def test_create(self):
-        self.client.force_authenticate(user=self.test_user)
+        self.client.force_authenticate(user=self.test_user2)
         order_data = {
             "status": Order.Status.STARTED,
-            "order_item": [self.order_item.id],
+            "order_item": [],
         }
         response = self.client.post(self.url, data=order_data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -126,8 +123,8 @@ class OrderListCreateApiViewTest(IceCreamTestAPIData):
             response.data,
             {
                 "status": 1,
-                "order_item": [self.order_item.id],
-                "worker_owner": self.test_user.id,
+                "order_item": [],
+                "worker_owner": self.test_user2.id,
             },
         )
 
@@ -149,6 +146,9 @@ class OrderRetrieveUpdateDestroyAPIViewTest(IceCreamTestAPIData):
         self.order = Order.objects.create(
             worker_owner=self.test_user2, status=Order.Status.STARTED
         )
+        self.order_item, _ = OrderItem.objects.get_or_create(
+            ice=self.scoop_ice, quantity=1, order=self.order
+        )
         self.url = reverse("order-manage", kwargs={"id": self.order.id})
 
     def test_retrieve_not_logged(self):
@@ -164,7 +164,7 @@ class OrderRetrieveUpdateDestroyAPIViewTest(IceCreamTestAPIData):
             response.data,
             {
                 "id": self.order.id,
-                "order_item": [],
+                "order_item": [self.order_item.id],
                 "status": Order.Status.STARTED,
                 "worker_owner": self.test_user2.id,
             },
@@ -210,6 +210,9 @@ class OrderItemListCreateAPIViewTest(IceCreamTestAPIData):
     def setUp(self):
         self.order = Order.objects.create(
             worker_owner=self.test_user, status=Order.Status.STARTED
+        )
+        self.order_item, _ = OrderItem.objects.get_or_create(
+            ice=self.scoop_ice, quantity=1, order=self.order
         )
         self.url = reverse("order-items")
 
@@ -276,11 +279,11 @@ class OrderItemRetrieveDeleteAPIViewTest(IceCreamTestAPIData):
         self.order = Order.objects.create(
             worker_owner=self.test_user, status=Order.Status.STARTED
         )
+        self.order_item, _ = OrderItem.objects.get_or_create(
+            quantity=2, ice=self.thai_ice, order=self.order
+        )
         self.order.order_item.set([self.order_item])
         self.url = reverse("order-item-delete", kwargs={"pk": self.order_item.pk})
-        self.order_item, _ = OrderItem.objects.get_or_create(
-            quantity=2, ice=self.thai_ice.id, order=self.order
-        )
 
     def test_retrieve_not_logged(self):
         response = self.client.get(self.url)

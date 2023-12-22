@@ -188,9 +188,10 @@ class OrderItemViewTest(IceCreamTestData):
             worker_owner=self.test_user, status=Order.Status.STARTED
         )
 
-        order_item = OrderItem.objects.create(ice=self.scoop_ice, quantity=1)
+        order_item = OrderItem.objects.create(
+            ice=self.scoop_ice, quantity=1, order=opened_order
+        )
         order_item.flavour.set([self.chocolate])
-        order_item.order = opened_order
 
         self.client.post(reverse("delete-order-item", kwargs={"pk": order_item.id}))
         self.assertFalse(len(OrderItem.objects.all()))

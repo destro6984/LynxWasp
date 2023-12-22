@@ -52,8 +52,7 @@ class OrdersListCreateAPIView(ListCreateAPIView):
     List of Orders/Create;Update Order
     Input:
     {
-        "status": null,
-        "order_item": []
+        "status": Order.Status
     }
     """
 
