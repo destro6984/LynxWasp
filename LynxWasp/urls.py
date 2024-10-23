@@ -6,4 +6,5 @@ urlpatterns = [
     path("", include("product_manager_ices.urls")),
     path("api/", include("drf_api.urls")),
     path("user/", include("users_app.urls")),
+    path('__debug__/', include('debug_toolbar.urls')),
 ]

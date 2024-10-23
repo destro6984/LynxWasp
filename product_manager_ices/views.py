@@ -222,7 +222,7 @@ class OrderListView(LoginRequiredMixin, ListView):
         query = self.request.GET.get("q")
         if query:
             queryset = (
-                Order.objects.filter(worker_owner=self.request.user)
+                Order.objects.select_related('worker_owner').filter(worker_owner=self.request.user)
                 .filter(
                     Q(worker_owner__username__icontains=query)
                     | Q(time_sell__icontains=query)
@@ -233,7 +233,7 @@ class OrderListView(LoginRequiredMixin, ListView):
                 .distinct()
             )
         else:
-            queryset = Order.objects.filter(worker_owner=self.request.user).order_by(
+            queryset = Order.objects.select_related('worker_owner').filter(worker_owner=self.request.user).order_by(
                 "-time_sell"
             )
         return queryset

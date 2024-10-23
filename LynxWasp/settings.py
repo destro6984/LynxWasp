@@ -4,7 +4,6 @@ import os
 import cloudinary  # noqa
 import environ
 
-
 env = environ.Env(DEBUG=(bool, False))
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -13,7 +12,6 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 DEBUG = env("DEBUG")
 
 SECRET_KEY = env("SECRET_KEY")
-
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
 
@@ -45,6 +43,7 @@ INSTALLED_APPS = [
     "crispy_forms",
     "crispy_bootstrap4",
     "django_filters",
+    "debug_toolbar",
 ]
 
 MIDDLEWARE = [
@@ -58,6 +57,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     'allauth.account.middleware.AccountMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = "LynxWasp.urls"
@@ -158,10 +158,8 @@ CRISPY_TEMPLATE_PACK = "bootstrap4"
 LOGIN_REDIRECT_URL = "homepage"
 LOGIN_URL = "login"
 
-
 # close session at close page
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-
 
 SITE_ID = 1
 
@@ -171,5 +169,15 @@ DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 # CORS
 
-CORS_ALLOW_ALL_ORIGINS=True
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGINS = env.list("ALLOWED_HOSTS_CORS")
+
+ # debug toolbar
+INTERNAL_IPS = [
+    "0.0.0.0",
+    "127.0.0.1"
+]
+if DEBUG:
+    import socket
+    hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+    INTERNAL_IPS += [".".join(ip.split(".")[:-1] + ["1"]) for ip in ips]
