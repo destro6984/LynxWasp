@@ -4,21 +4,26 @@ import os
 import cloudinary  # noqa
 import environ
 
+
 env = environ.Env(DEBUG=(bool, False))
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
+DEBUG = env("DEBUG")
 
 SECRET_KEY = env("SECRET_KEY")
 
-DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
 
 # Application definition
 
 INSTALLED_APPS = [
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -30,9 +35,7 @@ INSTALLED_APPS = [
     # dj rest_auth
     "dj_rest_auth",
     "django.contrib.sites",
-    "allauth",
-    "allauth.account",
-    "allauth.socialaccount",
+
     "dj_rest_auth.registration",
     # other 3td
     "corsheaders",
@@ -54,10 +57,15 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = "LynxWasp.urls"
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend'
+]
 # Rest framework validations
 
 REST_FRAMEWORK = {
@@ -99,13 +107,10 @@ TEMPLATES = [
 WSGI_APPLICATION = "LynxWasp.wsgi.application"
 
 # Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {"default": env.db()}
 
 # Password validation
-# https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -166,4 +171,5 @@ DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 # CORS
 
+CORS_ALLOW_ALL_ORIGINS=True
 CORS_ALLOWED_ORIGINS = env.list("ALLOWED_HOSTS_CORS")
