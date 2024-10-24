@@ -2,6 +2,7 @@ from decimal import Decimal
 
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.db.models import Sum, F
 
 from product_manager_ices.fields import TypeField
 from users_app.models import User
@@ -42,10 +43,7 @@ class Order(models.Model):
         return f"User:{self.worker_owner} sell-time: {self.time_sell} status: {self.get_status_display()}"
 
     def get_total(self):
-        total = 0
-        for order_item in self.order_item.all():
-            total += order_item.get_final_price()
-        return total
+        return self.order_item.aggregate(total=Sum(F('quantity')*F('ice__price')))["total"] or 0
 
 
 class OrderItem(models.Model):
@@ -59,7 +57,6 @@ class OrderItem(models.Model):
     def __str__(self):
         return (
             f"{self.quantity} of {self.ice.type} {self.ice.price}zł "
-            f"Flavours:{'/'.join([str(flav) for flav in self.flavour.all()])}"
         )
 
     def get_total_ice_price(self):

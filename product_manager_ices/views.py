@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.postgres.aggregates import StringAgg
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.http import HttpRequest, HttpResponseRedirect
@@ -146,7 +147,7 @@ def delete_orderitem(request: HttpRequest, pk: int) -> HttpResponseRedirect:
 
 @login_required
 def change_status_order_for_finish(
-    request: HttpRequest, pk: int
+        request: HttpRequest, pk: int
 ) -> HttpResponseRedirect:
     """
     Change status of order to finished
@@ -185,7 +186,7 @@ def reactivate_order(request: HttpRequest, pk: int) -> HttpResponseRedirect:
     ONLY ONE ORDER CAN BE ACTIVE IN CART
     """
     if Order.objects.filter(
-        worker_owner=request.user, status=Order.Status.STARTED
+            worker_owner=request.user, status=Order.Status.STARTED
     ).exists():
         messages.info(
             request, "You have active order opened, Please postpone or delete it"
@@ -246,6 +247,9 @@ class OrderDetailView(UserPassesTestMixin, LoginRequiredMixin, DetailView):
     """
 
     model = Order
+    queryset = Order.objects.annotate(
+            flavour_names=StringAgg('order_item__flavour__flavour', delimiter=', ')
+        ).prefetch_related("order_item").select_related('worker_owner')
 
     def test_func(self):
         user = Order.objects.get(id=self.kwargs.get("pk"))
