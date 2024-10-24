@@ -1,3 +1,9 @@
+**You can check demo here: [https://ice-cream-shop-eszj.onrender.com/](https://ice-cream-shop-eszj.onrender.com)**.  
+Credentials for testing:
+
+- username: tester1
+- pass testing1234
+
 ### To start App
 
     docker compose up
@@ -28,10 +34,5 @@ This program is a web based Application developed in Python/Django as a simple P
 - overview of all made orders
 - possible reactivation of order
 
-**You can check demo here: [https://ice-cream-shop-eszj.onrender.com/](https://ice-cream-shop-eszj.onrender.com)**.  
-Credentials for testing:
-
-- username: tester1
-- pass testing1234
 
 **Contact: tmwzaip@gmail.com**.
